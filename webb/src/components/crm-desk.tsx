@@ -16,6 +16,23 @@ import {
 const SEGMENTS_KEY = "visalight-crm-segments";
 const LOG_KEY = "visalight-crm-log";
 const MINE_KEY = "visalight-crm-mine";
+const CLAIMS_KEY = "visalight-crm-claims";
+const USER_KEY = "visalight-crm-user";
+
+const STAFF = [
+  { id: "anna", name: "Anna Berg" },
+  { id: "erik", name: "Erik Holm" },
+  { id: "mira", name: "Mira Lind" },
+] as const;
+
+type StaffId = (typeof STAFF)[number]["id"];
+
+type Claim = {
+  orgNr: string;
+  userId: StaffId;
+  userName: string;
+  at: string;
+};
 
 type Segment = {
   id: string;
@@ -53,18 +70,20 @@ export function CrmDesk() {
   const [segmentError, setSegmentError] = useState("");
   const [segments, setSegments] = useState<Segment[]>([]);
   const [entries, setEntries] = useState<LogEntry[]>([]);
-  const [mine, setMine] = useState<string[]>([]);
+  const [claims, setClaims] = useState<Claim[]>([]);
+  const [userId, setUserId] = useState<StaffId>(STAFF[0].id);
   const [ready, setReady] = useState(false);
   const [activeOrgNr, setActiveOrgNr] = useState<string | null>(null);
   const [channel, setChannel] = useState<Channel>("samtal");
   const [note, setNote] = useState("");
   const [noteError, setNoteError] = useState("");
-  const [panel, setPanel] = useState<"sok" | "segment" | "logg">("sok");
+  const [panel, setPanel] = useState<"sok" | "mina" | "segment" | "logg">("sok");
 
   useEffect(() => {
     setSegments(readList<Segment>(SEGMENTS_KEY).map(normalizeSegment));
     setEntries(readList<LogEntry>(LOG_KEY));
-    setMine(readList<string>(MINE_KEY).filter((item) => typeof item === "string"));
+    setClaims(readClaims());
+    setUserId(readUserId());
     setReady(true);
   }, []);
 
@@ -80,10 +99,21 @@ export function CrmDesk() {
 
   useEffect(() => {
     if (!ready) return;
-    sessionStorage.setItem(MINE_KEY, JSON.stringify(mine));
-  }, [mine, ready]);
+    sessionStorage.setItem(CLAIMS_KEY, JSON.stringify(claims));
+  }, [claims, ready]);
+
+  useEffect(() => {
+    if (!ready) return;
+    sessionStorage.setItem(USER_KEY, userId);
+  }, [userId, ready]);
 
   const rows = useMemo(() => (searched ? filterCompanies(applied) : []), [searched, applied]);
+  const currentUser = STAFF.find((person) => person.id === userId) ?? STAFF[0];
+  const myCompanies = claims.flatMap((claim) => {
+    if (claim.userId !== userId) return [];
+    const company = COMPANIES.find((item) => item.orgNr === claim.orgNr);
+    return company ? [{ claim, company }] : [];
+  });
   const active = COMPANIES.find((company) => company.orgNr === activeOrgNr) ?? null;
   const newest = [...entries].sort((a, b) => b.at.localeCompare(a.at));
   const visibleLog = active ? newest.filter((entry) => entry.orgNr === active.orgNr) : newest;
@@ -156,6 +186,22 @@ export function CrmDesk() {
     setNote("");
   }
 
+  function claimActive() {
+    if (!active) return;
+    setClaims((current) => {
+      if (current.some((item) => item.orgNr === active.orgNr)) return current;
+      return [
+        { orgNr: active.orgNr, userId: currentUser.id, userName: currentUser.name, at: new Date().toISOString() },
+        ...current,
+      ];
+    });
+  }
+
+  function releaseActive() {
+    if (!active) return;
+    setClaims((current) => current.filter((item) => !(item.orgNr === active.orgNr && item.userId === userId)));
+  }
+
   const hint = !searched
     ? "Gör valen och tryck Sök bolag. Förslagen kommer från exempelregistret."
     : dirty
@@ -179,6 +225,9 @@ export function CrmDesk() {
           <NavButton pressed={panel === "sok"} onClick={() => setPanel("sok")}>
             Sök bolag
           </NavButton>
+          <NavButton pressed={panel === "mina"} onClick={() => setPanel("mina")}>
+            Mina företag{myCompanies.length ? ` · ${myCompanies.length}` : ""}
+          </NavButton>
           <NavButton pressed={panel === "segment"} onClick={() => setPanel("segment")}>
             Segment{segments.length ? ` · ${segments.length}` : ""}
           </NavButton>
@@ -186,6 +235,23 @@ export function CrmDesk() {
             Aktivitet{entries.length ? ` · ${entries.length}` : ""}
           </NavButton>
         </nav>
+        <label className="mx-3 mb-4 block text-sm">
+          <span className="mb-1.5 block text-white/70">Säljare</span>
+          <select
+            value={userId}
+            onChange={(event) => setUserId(event.target.value as StaffId)}
+            className="h-10 w-full rounded-xl border border-white/15 bg-white/10 px-2 text-sm text-white"
+          >
+            {STAFF.map((person) => (
+              <option key={person.id} value={person.id} className="text-ink">
+                {person.name}
+              </option>
+            ))}
+          </select>
+          <span className="mt-1.5 block text-xs leading-5 text-white/60">
+            Exempelkonton. Byt säljare för att se någon annans bolag.
+          </span>
+        </label>
         <p className="mt-auto hidden px-5 py-5 text-sm leading-6 text-white/70 lg:block">
           Exempelbolag tills det riktiga registret är kopplat. Inget raderas härifrån.
         </p>
@@ -193,8 +259,66 @@ export function CrmDesk() {
 
       <main className="min-w-0 px-4 py-5 sm:px-6 sm:py-6">
         <p className="rounded-2xl bg-amber-soft px-4 py-3 text-sm leading-6">
-          Förhandsvisning med exempelbolag. Sök, segment och logg sparas i den här webbläsaren.
+          Förhandsvisning med exempelbolag. Sök, ägarskap, segment och logg sparas i den här webbläsaren.
         </p>
+
+        {panel === "mina" ? (
+          <div className="mt-5 grid items-start gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
+            <section>
+              <h1 className="text-3xl tracking-tight">Mina företag</h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+                Bolag som {currentUser.name} själv markerat. Kollegorna ser ägaren på kundkortet och i träfflistan,
+                så de vet att en annan säljare redan bearbetar bolaget.
+              </p>
+              {myCompanies.length === 0 ? (
+                <p className="mt-4 rounded-3xl border border-dashed border-line bg-white px-4 py-8 text-sm leading-6 text-muted">
+                  Inga bolag markerade. Öppna ett kundkort under Sök bolag och välj Markera som mitt.
+                </p>
+              ) : (
+                <ul className="mt-4 divide-y divide-line overflow-hidden rounded-3xl border border-line bg-white">
+                  {myCompanies.map(({ claim, company }) => (
+                    <li key={company.orgNr}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveOrgNr(company.orgNr);
+                          setNoteError("");
+                        }}
+                        className={`flex w-full items-start justify-between gap-3 px-4 py-3 text-left ${
+                          activeOrgNr === company.orgNr ? "bg-foam" : "bg-white"
+                        }`}
+                        aria-pressed={activeOrgNr === company.orgNr}
+                      >
+                        <span>
+                          <span className="block font-medium">{company.name}</span>
+                          <span className="mt-0.5 block text-sm text-muted">
+                            {company.orgNr} · {company.city} · {company.industry}
+                          </span>
+                        </span>
+                        <span className="shrink-0 text-xs text-sea">Sedan {formatStamp(claim.at)}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+            <CompanyCard
+              company={active}
+              claim={active ? (claims.find((item) => item.orgNr === active.orgNr) ?? null) : null}
+              currentUserId={userId}
+              onClaim={claimActive}
+              onRelease={releaseActive}
+              channel={channel}
+              onChannel={setChannel}
+              note={note}
+              onNote={setNote}
+              noteError={noteError}
+              onLog={addLog}
+              entries={visibleLog}
+              onOpenLog={(orgNr) => setActiveOrgNr(orgNr)}
+            />
+          </div>
+        ) : null}
 
         {panel === "segment" ? (
           <section className="mt-5 rounded-3xl border border-line bg-white p-4 sm:p-5">
@@ -309,11 +433,9 @@ export function CrmDesk() {
                               {company.orgNr} · {company.city} · {company.industry} · SNI {company.sni}
                             </span>
                           </span>
-                          <span className="flex shrink-0 flex-col items-end gap-1">
+                          <span className="flex shrink-0 flex-col items-end gap-1 text-right">
                             <span className="rounded-full bg-paper px-2 py-0.5 text-xs">{legalFormLabel(company.form)}</span>
-                            {mine.includes(company.orgNr) ? (
-                              <span className="text-xs text-sea">Bearbetas av dig</span>
-                            ) : null}
+                            <OwnerBadge claim={claims.find((item) => item.orgNr === company.orgNr)} currentUserId={userId} />
                           </span>
                         </button>
                       </li>
@@ -325,15 +447,10 @@ export function CrmDesk() {
 
             <CompanyCard
               company={active}
-              mine={active ? mine.includes(active.orgNr) : false}
-              onClaim={() => {
-                if (!active) return;
-                setMine((current) =>
-                  current.includes(active.orgNr)
-                    ? current.filter((item) => item !== active.orgNr)
-                    : [active.orgNr, ...current],
-                );
-              }}
+              claim={active ? (claims.find((item) => item.orgNr === active.orgNr) ?? null) : null}
+              currentUserId={userId}
+              onClaim={claimActive}
+              onRelease={releaseActive}
               channel={channel}
               onChannel={setChannel}
               note={note}
@@ -374,10 +491,22 @@ function NavButton({
   );
 }
 
+function OwnerBadge({ claim, currentUserId }: { claim: Claim | undefined; currentUserId: StaffId }) {
+  if (!claim) return null;
+  const mine = claim.userId === currentUserId;
+  return (
+    <span className={`text-xs font-medium ${mine ? "text-sea" : "text-rust"}`}>
+      {mine ? "Ditt bolag" : `Bearbetas av ${claim.userName}`}
+    </span>
+  );
+}
+
 function CompanyCard({
   company,
-  mine,
+  claim,
+  currentUserId,
   onClaim,
+  onRelease,
   channel,
   onChannel,
   note,
@@ -388,8 +517,10 @@ function CompanyCard({
   onOpenLog,
 }: {
   company: Company | null;
-  mine: boolean;
+  claim: Claim | null;
+  currentUserId: StaffId;
   onClaim: () => void;
+  onRelease: () => void;
   channel: Channel;
   onChannel: (channel: Channel) => void;
   note: string;
@@ -399,6 +530,8 @@ function CompanyCard({
   entries: LogEntry[];
   onOpenLog: (orgNr: string) => void;
 }) {
+  const mine = claim?.userId === currentUserId;
+  const takenByOther = Boolean(claim && !mine);
   return (
     <section className="rounded-3xl border border-line bg-white p-4 sm:p-5 xl:sticky xl:top-4">
       <p className="text-[0.68rem] uppercase tracking-[0.16em] text-sea">Kundkort</p>
@@ -408,10 +541,30 @@ function CompanyCard({
           <p className="mt-1 text-sm text-muted">
             {company.orgNr} · {legalFormLabel(company.form)}
           </p>
-          <button type="button" onClick={onClaim} className="mt-3 h-10 rounded-full border border-line px-3 text-sm font-medium">
-            {mine ? "Släpp kort" : "Tilldela mig"}
-          </button>
-          {mine ? <p className="mt-2 text-sm text-sea">Bearbetas av dig.</p> : null}
+          {mine ? (
+            <div className="mt-3 rounded-2xl bg-foam px-3 py-3">
+              <p className="text-sm font-medium text-sea">Du bearbetar bolaget</p>
+              <p className="mt-1 text-sm leading-6 text-muted">
+                Markerat {formatStamp(claim.at)}. Andra säljare ser att kortet är ditt.
+              </p>
+              <button type="button" onClick={onRelease} className="mt-3 h-10 rounded-full border border-line bg-white px-3 text-sm font-medium">
+                Avmarkera
+              </button>
+            </div>
+          ) : null}
+          {takenByOther && claim ? (
+            <div className="mt-3 rounded-2xl bg-amber-soft px-3 py-3">
+              <p className="text-sm font-medium">Bearbetas av {claim.userName}</p>
+              <p className="mt-1 text-sm leading-6 text-muted">
+                Markerat {formatStamp(claim.at)}. En annan säljare äger kortet, så det går inte att ta över.
+              </p>
+            </div>
+          ) : null}
+          {!claim ? (
+            <button type="button" onClick={onClaim} className="mt-3 h-10 rounded-full bg-sea px-4 text-sm font-medium text-white">
+              Markera som mitt
+            </button>
+          ) : null}
           <dl className="mt-4 space-y-2 text-sm">
             <div>
               <dt className="text-muted">Adress</dt>
@@ -532,6 +685,28 @@ function normalizeSegment(raw: Segment): Segment {
     sni: raw.sni ?? "",
     forms: Array.isArray(raw.forms) ? raw.forms : [],
   };
+}
+
+function readClaims(): Claim[] {
+  const stored = sessionStorage.getItem(CLAIMS_KEY);
+  if (stored) {
+    return readList<Claim>(CLAIMS_KEY).flatMap((item) => {
+      if (!item || typeof item.orgNr !== "string" || typeof item.at !== "string") return [];
+      const person = STAFF.find((staff) => staff.id === item.userId);
+      if (!person) return [];
+      return [{ orgNr: item.orgNr, userId: person.id, userName: person.name, at: item.at }];
+    });
+  }
+  return readList<string>(MINE_KEY).flatMap((orgNr) => {
+    if (typeof orgNr !== "string") return [];
+    return [{ orgNr, userId: STAFF[0].id, userName: STAFF[0].name, at: new Date().toISOString() }];
+  });
+}
+
+function readUserId(): StaffId {
+  const stored = sessionStorage.getItem(USER_KEY);
+  const person = STAFF.find((staff) => staff.id === stored);
+  return person?.id ?? STAFF[0].id;
 }
 
 function readList<T>(key: string): T[] {
