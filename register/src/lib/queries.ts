@@ -46,19 +46,46 @@ export const SELLABLE_SQL = `c.manual_exclude = 0
   AND c.city IS NOT NULL AND trim(c.city) != ''
   AND EXISTS (SELECT 1 FROM industries i WHERE i.org_nr = c.org_nr AND trim(i.sni) != '')`;
 
+export function ftsMatch(query: string): string | null {
+  const words = query
+    .normalize("NFC")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .split(/\s+/)
+    .map((word) => word.trim())
+    .filter((word) => word.length >= 2);
+  if (words.length === 0) return null;
+  return words.map((word) => `"${word}"*`).join(" AND ");
+}
+
+function likeContains(value: string) {
+  return `%${value.replace(/[\\%_]/g, (char) => `\\${char}`)}%`;
+}
+
 function where(filters: Filters, sellableOnly: boolean) {
   const clauses = ["1=1"];
   const args: Record<string, string | number> = {};
+  const match = filters.q ? ftsMatch(filters.q) : null;
+  let from = "companies c";
   if (sellableOnly || !filters.includeSuppressed) {
     clauses.push(SELLABLE_SQL);
   }
-  if (filters.q) {
+  if (match) {
+    args.fts = match;
     const digits = filters.q.replace(/\D/g, "");
-    const parts = ["c.name LIKE @q COLLATE NOCASE"];
-    args.q = `%${filters.q}%`;
+    const hasLetter = /\p{L}/u.test(filters.q);
+    const orgDigits = !hasLetter || digits.length >= 6 ? digits : "";
+    const nameHit = `SELECT c.* FROM company_fts JOIN companies c ON c.org_nr = company_fts.org_nr WHERE company_fts MATCH @fts`;
+    from = orgDigits
+      ? `(${nameHit} UNION SELECT c.* FROM companies c WHERE c.org_nr LIKE @orgPrefix) c`
+      : `(${nameHit}) c`;
+    if (orgDigits) args.orgPrefix = `${orgDigits}%`;
+  } else if (filters.q) {
+    const digits = filters.q.replace(/\D/g, "");
+    const parts = ["c.name LIKE @q ESCAPE '\\'"];
+    args.q = likeContains(filters.q);
     if (digits) {
-      parts.push("c.org_nr LIKE @qDigits");
-      args.qDigits = `%${digits}%`;
+      parts.push("c.org_nr LIKE @qDigits ESCAPE '\\'");
+      args.qDigits = likeContains(digits);
     }
     clauses.push(`(${parts.join(" OR ")})`);
   }
@@ -86,7 +113,7 @@ function where(filters: Filters, sellableOnly: boolean) {
       WHERE e.org_nr = c.org_nr AND e.removed_on IS NULL
     )`);
   }
-  return { sql: clauses.join(" AND "), args };
+  return { sql: clauses.join(" AND "), args, from };
 }
 
 export type CompanyListItem = CompanyRow & { sni: string | null; flag_count: number };
@@ -99,7 +126,7 @@ export function listCompanies(filters: Filters, limit = 50): CompanyListItem[] {
          SELECT i.sni FROM industries i WHERE i.org_nr = c.org_nr ORDER BY i.rank LIMIT 1
        ) AS sni,
        (SELECT COUNT(*) FROM flags f WHERE f.org_nr = c.org_nr) AS flag_count
-       FROM companies c
+       FROM ${filter.from}
        WHERE ${filter.sql}
        ORDER BY c.name
        LIMIT @limit`,
@@ -109,7 +136,7 @@ export function listCompanies(filters: Filters, limit = 50): CompanyListItem[] {
 
 export function countCompanies(filters: Filters, sellableOnly: boolean): number {
   const filter = where(filters, sellableOnly);
-  const row = db().prepare(`SELECT COUNT(*) AS n FROM companies c WHERE ${filter.sql}`).get(filter.args) as { n: number };
+  const row = db().prepare(`SELECT COUNT(*) AS n FROM ${filter.from} WHERE ${filter.sql}`).get(filter.args) as { n: number };
   return row.n;
 }
 
@@ -118,13 +145,13 @@ export function priceFor(filters: Filters): { counts: PriceCounts; quote: PriceQ
   const filter = where(sellable, true);
   const connection = db();
   const companies = (
-    connection.prepare(`SELECT COUNT(*) AS n FROM companies c WHERE ${filter.sql}`).get(filter.args) as { n: number }
+    connection.prepare(`SELECT COUNT(*) AS n FROM ${filter.from} WHERE ${filter.sql}`).get(filter.args) as { n: number }
   ).n;
   const phones = (
     connection
       .prepare(
         `SELECT COUNT(*) AS n FROM phones p
-         JOIN companies c ON c.org_nr = p.org_nr
+         JOIN ${filter.from} ON c.org_nr = p.org_nr
          WHERE ${filter.sql}
            AND p.removed_on IS NULL AND p.kind != 'signatory'`,
       )
@@ -134,7 +161,7 @@ export function priceFor(filters: Filters): { counts: PriceCounts; quote: PriceQ
     connection
       .prepare(
         `SELECT COUNT(*) AS n FROM phones p
-         JOIN companies c ON c.org_nr = p.org_nr
+         JOIN ${filter.from} ON c.org_nr = p.org_nr
          WHERE ${filter.sql}
            AND p.removed_on IS NULL AND p.kind = 'signatory'`,
       )
@@ -144,7 +171,7 @@ export function priceFor(filters: Filters): { counts: PriceCounts; quote: PriceQ
     connection
       .prepare(
         `SELECT COUNT(*) AS n FROM emails e
-         JOIN companies c ON c.org_nr = e.org_nr
+         JOIN ${filter.from} ON c.org_nr = e.org_nr
          WHERE ${filter.sql}
            AND e.removed_on IS NULL`,
       )

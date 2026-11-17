@@ -1,9 +1,12 @@
-import { Field } from "./Shell";
+import { applyFilters } from "@/lib/filter-action";
 import type { Filters } from "@/lib/queries";
+import { SearchButton } from "./SearchButton";
+import { Field } from "./Shell";
 
 export function FilterForm({ filters, action }: { filters: Filters; action: string }) {
   return (
-    <form action={action} className="card grid gap-3 md:grid-cols-4">
+    <form action={applyFilters} className="card grid gap-3 md:grid-cols-4">
+      <input type="hidden" name="path" value={action} />
       <Field label="Namn eller org.nr">
         <input name="q" defaultValue={filters.q} />
       </Field>
@@ -33,7 +36,7 @@ export function FilterForm({ filters, action }: { filters: Filters; action: stri
         <input className="w-auto" type="checkbox" name="alla" value="1" defaultChecked={filters.includeSuppressed} />
         Visa även ofullständiga
       </label>
-      <button type="submit">Visa urval</button>
+      <SearchButton />
     </form>
   );
 }

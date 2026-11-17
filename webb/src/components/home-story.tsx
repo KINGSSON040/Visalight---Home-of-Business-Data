@@ -1,10 +1,12 @@
+import Link from "next/link";
 import { EMAIL_ORE, formatKronor, PHONE_ORE, SIGNATORY_ORE, BASE_ORE, MINIMUM_ORE } from "@/lib/pricing";
+import { linkedIndustries, topicPath } from "@/lib/topics";
 
 const steps = [
   {
     number: "01",
     title: "Välj urval",
-    text: "Filtrera på ort och bransch. Kryssa i telefon och e-post om de ska med i filen.",
+    text: "Filtrera på ort och bransch i den uppdaterade företagsdatan. Kryssa i telefon och e-post om de ska med i filen.",
   },
   {
     number: "02",
@@ -47,6 +49,9 @@ export function HomeStory() {
       <section id="sa-funkar-det" className="bg-foam">
         <div className="mx-auto max-w-6xl px-4 py-10">
           <h2 className="font-serif text-4xl tracking-tight">Så funkar ett köp</h2>
+          <p className="mt-3 max-w-2xl text-muted">
+            Urvalet byggs på verifierad, uppdaterad och färsk företagsdata från officiella register. Det som källan inte har med lämnas tomt.
+          </p>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {steps.map((step) => (
               <article key={step.number} className="rounded-3xl border border-line bg-card p-5">
@@ -94,14 +99,38 @@ export function HomeStory() {
           {[
             "Reklamspärrade bolag lämnas ute ur filen.",
             "Avregistrerade bolag lämnas ute ur filen.",
-            "Ett tomt telefon- eller e-postfält kostar inget.",
-            "Vi skriver inte in ett nummer eller en adress som källan inte har angett.",
+            "Ett tomt telefon- eller e-postfält kostar inget. Finns inte uppgiften i källan lämnas rutan tom.",
+            "Vi fyller inte i ett nummer eller en adress som det officiella registret inte har angett.",
           ].map((item) => (
             <li key={item} className="rounded-2xl border border-line bg-card px-4 py-4 text-sm leading-6">
               {item}
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <h2 className="font-serif text-4xl tracking-tight">Branscher och ord</h2>
+        <p className="mt-3 max-w-2xl text-muted">
+          Sidorna beskriver urval för vanliga branscher och registerord. Verktyget visar fortfarande exempelbolag tills det riktiga registret är kopplat.
+        </p>
+        <ul className="mt-6 flex flex-wrap gap-2">
+          {linkedIndustries().map((topic) => (
+            <li key={topic.slug}>
+              <Link href={topicPath(topic)} className="inline-flex rounded-full border border-line bg-card px-3 py-2 text-sm">
+                {topic.nav}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 flex flex-wrap gap-4 text-sm font-medium">
+          <Link href="/bransch" className="text-sea">
+            Alla branscher
+          </Link>
+          <Link href="/ord" className="text-sea">
+            Ord om företagsdata
+          </Link>
+        </p>
       </section>
     </>
   );

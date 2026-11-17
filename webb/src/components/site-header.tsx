@@ -4,7 +4,7 @@ export function SiteHeader() {
   return (
     <div className="sticky top-0 z-40 border-b border-sea-deep bg-sea text-white">
       <p className="bg-amber px-4 py-2 text-center text-sm font-medium text-ink">
-        Exempeldata. Priserna är de riktiga. Bolagen är påhittade tills registret från SCB är inläst.
+        Förhandsvisning med exempelbolag. Priserna är de riktiga. Bolagen som syns är exempel tills det riktiga registret är kopplat.
       </p>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="min-w-0">
@@ -20,6 +20,9 @@ export function SiteHeader() {
           <Link href="/#pris">Pris</Link>
           <Link className="hidden md:inline" href="/#sa-funkar-det">
             Så funkar det
+          </Link>
+          <Link className="hidden lg:inline" href="/bransch">
+            Branscher
           </Link>
           <Link href="/kassa" className="rounded-full bg-amber px-3.5 py-2 font-medium text-ink">
             Kassa

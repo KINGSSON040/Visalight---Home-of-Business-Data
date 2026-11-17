@@ -115,7 +115,7 @@ export function Builder({ initial }: { initial: Selection }) {
             <div className="mt-6 rounded-2xl border border-dashed border-line px-4 py-10 text-center">
               <p className="font-serif text-2xl">Inget exempelbolag matchar</p>
               <p className="mt-2 text-sm text-muted">
-                Prova en annan ort eller bransch. När SCB är inläst söker samma filter i hela registret.
+                Prova en annan ort eller bransch. Raderna här är exempel tills det riktiga registret är kopplat.
               </p>
             </div>
           ) : (

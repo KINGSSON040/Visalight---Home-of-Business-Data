@@ -43,6 +43,11 @@ button, .button {
   font-size: 0.875rem;
 }
 
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .button.secondary, button.secondary {
   background: white;
   color: var(--ink);

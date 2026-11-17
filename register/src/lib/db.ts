@@ -114,11 +114,60 @@ export function db(): Database.Database {
     CREATE INDEX IF NOT EXISTS industries_sni ON industries(sni);
     CREATE INDEX IF NOT EXISTS phones_org ON phones(org_nr);
     CREATE INDEX IF NOT EXISTS emails_org ON emails(org_nr);
+
+    CREATE VIRTUAL TABLE IF NOT EXISTS company_fts USING fts5(
+      org_nr UNINDEXED,
+      name,
+      tokenize = "unicode61 remove_diacritics 2"
+    );
+
+    CREATE TABLE IF NOT EXISTS company_fts_row (
+      org_nr TEXT PRIMARY KEY,
+      fts_rowid INTEGER NOT NULL
+    );
+
+    CREATE TRIGGER IF NOT EXISTS companies_fts_insert AFTER INSERT ON companies BEGIN
+      INSERT INTO company_fts(org_nr, name) VALUES (new.org_nr, new.name);
+      INSERT INTO company_fts_row(org_nr, fts_rowid) VALUES (new.org_nr, last_insert_rowid());
+    END;
+
+    CREATE TRIGGER IF NOT EXISTS companies_fts_delete AFTER DELETE ON companies BEGIN
+      DELETE FROM company_fts WHERE rowid = (
+        SELECT fts_rowid FROM company_fts_row WHERE org_nr = old.org_nr
+      );
+      DELETE FROM company_fts_row WHERE org_nr = old.org_nr;
+    END;
+
+    CREATE TRIGGER IF NOT EXISTS companies_fts_update AFTER UPDATE OF name ON companies BEGIN
+      DELETE FROM company_fts WHERE rowid = (
+        SELECT fts_rowid FROM company_fts_row WHERE org_nr = old.org_nr
+      );
+      DELETE FROM company_fts_row WHERE org_nr = old.org_nr;
+      INSERT INTO company_fts(org_nr, name) VALUES (new.org_nr, new.name);
+      INSERT INTO company_fts_row(org_nr, fts_rowid) VALUES (new.org_nr, last_insert_rowid());
+    END;
   `);
   const count = connection.prepare("SELECT COUNT(*) AS n FROM companies").get() as { n: number };
   if (count.n === 0) seed(connection);
+  ensureCompanySearch(connection);
   database = connection;
   return connection;
+}
+
+function ensureCompanySearch(connection: Database.Database) {
+  const companies = (connection.prepare("SELECT COUNT(*) AS n FROM companies").get() as { n: number }).n;
+  const indexed = (connection.prepare("SELECT COUNT(*) AS n FROM company_fts").get() as { n: number }).n;
+  const mapped = (connection.prepare("SELECT COUNT(*) AS n FROM company_fts_row").get() as { n: number }).n;
+  if (companies === indexed && indexed === mapped) return;
+  console.log(`Bygger sökindex för ${companies.toLocaleString("sv-SE")} bolag. Första starten tar en stund.`);
+  const rebuild = connection.transaction(() => {
+    connection.exec("DELETE FROM company_fts");
+    connection.exec("DELETE FROM company_fts_row");
+    connection.exec("INSERT INTO company_fts(org_nr, name) SELECT org_nr, name FROM companies");
+    connection.exec("INSERT INTO company_fts_row(org_nr, fts_rowid) SELECT org_nr, rowid FROM company_fts");
+  });
+  rebuild();
+  console.log("Sökindex klart.");
 }
 
 export type CompanyRow = {
