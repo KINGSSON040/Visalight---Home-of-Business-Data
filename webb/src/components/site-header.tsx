@@ -1,14 +1,12 @@
 import Link from "next/link";
+import { BrandLockup } from "@/components/logo-mark";
 
 export function SiteHeader() {
   return (
     <div className="site-header sticky top-0 z-40 text-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-2.5 sm:gap-4 sm:py-3">
         <Link href="/" className="min-w-0">
-          <span className="block truncate font-serif text-xl leading-none tracking-tight text-white sm:text-2xl">
-            VisaLight
-          </span>
-          <span className="mt-1 block text-[0.68rem] uppercase tracking-[0.16em] text-white/90">Företagsdata</span>
+          <BrandLockup tone="white" subtitle="Företagsdata" compact />
         </Link>
         <nav className="flex shrink-0 items-center gap-2 text-sm sm:gap-4">
           <Link className="hidden text-white hover:text-white sm:inline" href="/#pris">

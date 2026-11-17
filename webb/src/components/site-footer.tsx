@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLockup } from "@/components/logo-mark";
 import { StatusChip } from "@/components/status-chip";
 import { Mark, SELLER } from "@/lib/seller";
 
@@ -13,7 +14,7 @@ export function SiteFooter({
     <footer className="theme-wash px-4 py-8 text-sm text-ink/80">
       <div className="mx-auto flex max-w-6xl flex-col gap-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-serif text-lg text-ink">{SELLER.tradeName}</p>
+          <BrandLockup />
           <p>Färsk företagsdata för svenska bolag. Priser exkl. moms. Lägsta order 399 kr.</p>
         </div>
         <StatusChip updatedLabel={updatedLabel ?? null} registerReady={registerReady} />

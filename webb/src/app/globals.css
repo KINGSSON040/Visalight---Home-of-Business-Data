@@ -171,7 +171,8 @@ section[id],
   position: relative;
   min-width: 0;
   max-width: 100%;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   border: 1px solid var(--line);
   background:
     linear-gradient(90deg, var(--sea-bright), var(--sea) 55%, var(--sea-deep)) top / 100% 3px no-repeat,

@@ -51,6 +51,23 @@ export const LEGAL_FORMS: { code: string; label: string }[] = [
   { code: "stat", label: "Statlig enhet" },
 ];
 
+/**
+ * Butikens sju val. Koderna är samma som LEGAL_FORMS och det urvalet räknar på.
+ * Stiftelse och ideell förening är ett val. Övriga samlar former som inte har egen rad.
+ */
+export const FORM_GROUPS: { label: string; codes: string[] }[] = [
+  { label: "Aktiebolag", codes: ["ab"] },
+  { label: "Enskild firma", codes: ["ef"] },
+  { label: "Handelsbolag", codes: ["hb"] },
+  { label: "Kommanditbolag", codes: ["kb"] },
+  { label: "Ekonomisk förening", codes: ["ek"] },
+  { label: "Stiftelse/Ideell förening", codes: ["stiftelse", "if"] },
+  {
+    label: "Övriga",
+    codes: ["brf", "filial", "europabolag", "samfallighet", "trossamfund", "enkelt", "kommun", "region", "stat"],
+  },
+];
+
 export type Industry = {
   sni: string;
   code: string;
@@ -142,6 +159,8 @@ const EMPLOYEE_BY_ORG: Record<string, string> = {
   "559100-1022": "10–19",
   "559100-1023": "20–49",
   "559100-1024": "5–9",
+  "559100-1025": "10–19",
+  "559100-1026": "1–4",
 };
 
 /** Län som används i urvalet. Koden är SCB:s länsnummer. */
@@ -202,6 +221,8 @@ export const COMPANIES: Company[] = [
   company("559100-1022", "Kontoret vid Hamnen AB", "Exempelgatan 17", "211 20", "Malmö", "69201", ["010-000 00 18"], ["010-000 00 96"], ["kontoret@exempel.test"], "ab"),
   company("559100-1023", "Siffrans Byrå AB", "Exempelgatan 22", "722 12", "Västerås", "69201", ["010-000 00 19"], [], ["siffran@exempel.test"], "ab"),
   company("559100-1024", "Nordlig Revision AB", "Exempelgatan 23", "903 26", "Umeå", "69202", [], [], ["revision@exempel.test"], "ab"),
+  company("559100-1025", "Möllevångens Kök AB", "Exempelgatan 30", "214 24", "Malmö", "56110", ["010-000 00 20", "010-000 00 21"], ["010-000 00 97"], ["mollevang@exempel.test"], "ab"),
+  company("559100-1026", "Limhamns Matsal", "Exempelgatan 31", "216 13", "Malmö", "56110", ["010-000 00 22"], [], [], "ef"),
 ];
 
 export const CITIES = [...new Set(COMPANIES.map((item) => item.city))].sort((a, b) =>
@@ -312,6 +333,14 @@ export function countAudience(input: { sni: string; county: string; employees: s
 
 export function legalFormLabel(code: string): string {
   return LEGAL_FORMS.find((item) => item.code === code)?.label ?? code;
+}
+
+/** Stängd bolagsform: "Alla", ett namn, eller "Aktiebolag +2". */
+export function formGroupLabel(forms: string[]): string {
+  const picked = FORM_GROUPS.filter((group) => group.codes.some((code) => forms.includes(code)));
+  if (picked.length === 0) return "Alla";
+  if (picked.length === 1) return picked[0].label;
+  return `${picked[0].label} +${picked.length - 1}`;
 }
 
 export function industryLabel(sni: string): string {

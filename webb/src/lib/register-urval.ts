@@ -259,6 +259,10 @@ function exampleUrval(selection: Selection): UrvalResult {
     if (filter.kind === "prefix" && !company.sni.startsWith(filter.prefix)) return false;
     return true;
   });
+  const note =
+    rows.length === 0
+      ? "Registret är inte inkopplat. Inget exempelbolag matchar de här filtren."
+      : "Registret är inte inkopplat. Antalet gäller exempelbolag.";
   return ready(
     "example",
     rows.length,
@@ -271,7 +275,7 @@ function exampleUrval(selection: Selection): UrvalResult {
       city: row.city,
       sni: row.sni,
     })),
-    "Det här är exempelbolag. Synka registret så att register/data/visalight.sqlite finns, och starta om sidan.",
+    note,
   );
 }
 

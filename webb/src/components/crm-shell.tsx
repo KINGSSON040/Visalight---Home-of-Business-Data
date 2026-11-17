@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { LogoMark } from "@/components/logo-mark";
 import { STAFF, type StaffId, useCrmStore } from "@/lib/crm-store";
 
 export function CrmFrame({ children }: { children: React.ReactNode }) {
@@ -37,10 +38,13 @@ function CrmFrameInner({ children }: { children: React.ReactNode }) {
     <div className="min-h-dvh text-ink lg:grid lg:grid-cols-[16.5rem_minmax(0,1fr)]">
       <aside className="border-b border-line bg-white lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:border-b-0 lg:border-r">
         <div className="flex items-center justify-between gap-3 px-5 py-4 lg:block">
-          <div>
-            <p className="text-[0.68rem] uppercase tracking-[0.18em] text-sea">Internt</p>
-            <p className="text-2xl tracking-tight">VisaLight</p>
-            <p className="text-sm text-muted">CRM</p>
+          <div className="flex items-center gap-2.5">
+            <LogoMark className="h-8 w-8 shrink-0" />
+            <div>
+              <p className="text-[0.68rem] uppercase tracking-[0.18em] text-sea">Internt</p>
+              <p className="text-2xl tracking-tight">VisaLight</p>
+              <p className="text-sm text-muted">CRM</p>
+            </div>
           </div>
           <Link href="/" className="text-sm text-sea lg:hidden">
             Till butiken
