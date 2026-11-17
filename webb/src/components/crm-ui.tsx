@@ -1,6 +1,8 @@
 "use client";
 
-import { useCrmStore, type Claim } from "@/lib/crm-store";
+import { useRouter } from "next/navigation";
+import { FLAGS, formatStamp, stageInfo, useCrmStore, type Claim, type StageId } from "@/lib/crm-store";
+import type { Company } from "@/lib/catalog";
 
 export function StarButton({
   filled,
@@ -71,8 +73,16 @@ export function OwnerStar({ orgNr, size = "md" }: { orgNr: string; size?: "md" |
     <StarButton
       size={size}
       filled={Boolean(claim)}
-      disabled={taken}
-      label={taken && claim ? `Bearbetas av ${claim.userName}` : mine ? "Ta bort stjärnan" : "Lägg i Mina företag"}
+      disabled={taken && !store.isAdmin}
+      label={
+        taken && claim
+          ? store.isAdmin
+            ? `Släpp ${claim.userName}s bolag (admin)`
+            : `Bearbetas av ${claim.userName}`
+          : mine
+            ? "Ta bort stjärnan"
+            : "Lägg i Mina kunder"
+      }
       onClick={() => store.toggleStar(orgNr)}
     />
   );
@@ -138,3 +148,97 @@ export function Field({
 export function telHref(value: string): string {
   return `tel:${value.replace(/[^\d+]/g, "")}`;
 }
+
+export function kundHref(orgNr: string): string {
+  return `/crm/kund/${encodeURIComponent(orgNr)}`;
+}
+
+export function BackLink({ fallback = "/crm", label = "Tillbaka" }: { fallback?: string; label?: string }) {
+  const router = useRouter();
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        if (typeof window !== "undefined" && window.history.length > 1 && document.referrer.startsWith(window.location.origin)) {
+          router.back();
+        } else {
+          router.push(fallback);
+        }
+      }}
+      className="inline-flex h-10 items-center gap-1.5 rounded-full border border-line bg-white px-4 text-sm font-semibold text-sea hover:bg-foam"
+    >
+      <span aria-hidden="true">←</span> {label}
+    </button>
+  );
+}
+
+export function StageChip({ stage }: { stage: StageId | string }) {
+  const info = stageInfo(stage);
+  return <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${info.chip}`}>{info.label}</span>;
+}
+
+export function isSoleProprietor(company: Company): boolean {
+  return company.form === "ef";
+}
+
+export function CompanyWarnings({ company, compact = false }: { company: Company; compact?: boolean }) {
+  const store = useCrmStore();
+  const meta = store.metaOf(company.orgNr);
+  const items = [
+    ...meta.flags.map((entry) => {
+      const flag = FLAGS.find((item) => item.id === entry.id);
+      return {
+        key: entry.id,
+        label: flag?.label ?? entry.id,
+        detail: `${flag?.detail ?? ""} Satt ${formatStamp(entry.at)} av ${entry.by}.`,
+        tone: "bad" as const,
+      };
+    }),
+    ...(isSoleProprietor(company)
+      ? [
+          {
+            key: "ef",
+            label: "Enskild firma · GDPR-känslig",
+            detail:
+              "Organisationsnumret är ofta ägarens personnummer. Det maskeras i export. Kontakta bara i affärssyfte och respektera invändningar direkt.",
+            tone: "warn" as const,
+          },
+        ]
+      : []),
+  ];
+  if (items.length === 0) return null;
+  if (compact) {
+    return (
+      <>
+        {items.map((item) => (
+          <span
+            key={item.key}
+            title={item.detail}
+            className={`rounded-full px-2 py-0.5 text-xs font-semibold ${item.tone === "bad" ? "bg-rust text-white" : "bg-amber text-ink"}`}
+          >
+            {item.label}
+          </span>
+        ))}
+      </>
+    );
+  }
+  return (
+    <div className="mt-3 space-y-2" role="alert">
+      {items.map((item) => (
+        <div
+          key={item.key}
+          className={`rounded-2xl border-2 px-4 py-3 text-sm leading-6 ${
+            item.tone === "bad" ? "border-rust bg-rust/10" : "border-amber bg-amber-soft"
+          }`}
+        >
+          <p className="font-semibold">
+            {item.tone === "bad" ? "Spärr: " : "Varning: "}
+            {item.label}
+          </p>
+          <p>{item.detail}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
