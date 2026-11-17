@@ -1,28 +1,6 @@
-import Link from "next/link";
-import { CrmCard } from "@/components/crm-card";
-import { CrmWorkspace } from "@/components/crm-workspace";
-import { COMPANIES } from "@/lib/catalog";
+import { redirect } from "next/navigation";
 
-export default async function CompanyCardPage({ params }: { params: Promise<{ orgNr: string }> }) {
+export default async function LegacyCompanyPage({ params }: { params: Promise<{ orgNr: string }> }) {
   const { orgNr } = await params;
-  const company = COMPANIES.find((item) => item.orgNr === decodeURIComponent(orgNr));
-  if (!company) {
-    return (
-      <CrmWorkspace>
-        <section>
-          <h1 className="text-3xl tracking-tight">Bolaget finns inte i exempelregistret</h1>
-          <p className="mt-2 text-sm text-muted">
-            <Link href="/crm" className="text-sea">
-              Tillbaka till sök
-            </Link>
-          </p>
-        </section>
-      </CrmWorkspace>
-    );
-  }
-  return (
-    <CrmWorkspace selected={company.orgNr}>
-      <CrmCard company={company} />
-    </CrmWorkspace>
-  );
+  redirect(`/crm/kund/${orgNr}`);
 }
