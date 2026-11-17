@@ -26,6 +26,7 @@ export function CompanySearch({
   beforeForms,
   queryPlaceholder = "Bransch, SNI, namn eller organisationsnummer",
   querySuggestions = suggestQuery,
+  segmentOnly = false,
   children,
 }: {
   draft: Selection;
@@ -38,9 +39,15 @@ export function CompanySearch({
   beforeForms?: ReactNode;
   queryPlaceholder?: string;
   querySuggestions?: (text: string) => Suggestion[];
+  /** Kundsidan får bara bransch, ort, län och liknande. Aldrig ett bolagsnamn. */
+  segmentOnly?: boolean;
   children?: ReactNode;
 }) {
   const forms = draft.forms ?? [];
+  const suggestionsFor = (text: string) => {
+    const found = querySuggestions(text);
+    return segmentOnly ? found.filter((item) => item.kind !== "bolag") : found;
+  };
 
   function applySuggestion(suggestion: Suggestion) {
     const { form, ...rest } = suggestion.apply;
@@ -80,7 +87,7 @@ export function CompanySearch({
         label="Sök"
         value={draft.query}
         placeholder={queryPlaceholder}
-        suggestions={querySuggestions(draft.query)}
+        suggestions={suggestionsFor(draft.query)}
         onValue={(query) => onChange({ query })}
         onPick={applySuggestion}
         dense={live}
@@ -219,14 +226,17 @@ function SuggestField({
   }
 
   return (
-    <label className={`relative block text-sm ${open ? "z-20" : ""}`} htmlFor={id}>
-      <span className={`block font-medium ${dense ? "mb-0.5 text-xs leading-4" : "mb-1.5"}`}>{label}</span>
+    <div className={`relative block text-sm ${open ? "z-20" : ""}`}>
+      <label htmlFor={id} className={`block font-medium ${dense ? "mb-0.5 text-xs leading-4" : "mb-1.5"}`}>
+        {label}
+      </label>
       <input
         id={id}
         value={value}
         role="combobox"
         aria-expanded={open && visible.length > 0}
         aria-controls={listId}
+        aria-activedescendant={highlighted && visible[active] ? `${listId}-${active}` : undefined}
         aria-autocomplete="list"
         autoComplete="off"
         spellCheck={false}
@@ -280,8 +290,11 @@ function SuggestField({
                 ) : null}
                 <button
                   type="button"
+                  id={`${listId}-${index}`}
                   role="option"
+                  data-suggestion={suggestion.title}
                   aria-selected={highlighted && index === active}
+                  onPointerDown={(event) => event.preventDefault()}
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => pick(suggestion)}
                   className={`flex w-full flex-col px-3 py-2 text-left ${highlighted && index === active ? "bg-foam" : "bg-white"}`}
@@ -299,7 +312,7 @@ function SuggestField({
           Inget förslag matchar.
         </p>
       ) : null}
-    </label>
+    </div>
   );
 }
 

@@ -176,9 +176,114 @@ section[id],
   border: 1px solid var(--line);
   background:
     linear-gradient(90deg, var(--sea-bright), var(--sea) 55%, var(--sea-deep)) top / 100% 3px no-repeat,
-    #ffffff;
+    var(--card);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.9) inset,
     0 20px 36px -22px rgba(0, 54, 214, 0.38),
     0 2px 6px -3px rgba(21, 32, 51, 0.12);
+}
+
+html[data-theme="klardag"] {
+  --paper: #ffffff;
+  --ink: #102040;
+  --muted: #3d5278;
+  --line: #d5e2f5;
+  --card: #ffffff;
+  --sea: #0047ff;
+  --sea-bright: #3d74ff;
+  --sea-deep: #002fcc;
+  --foam: #e7f0ff;
+  --amber: #ffd000;
+}
+
+html[data-theme="klardag"] .site-header {
+  background-image: linear-gradient(128deg, #ffffff 0%, #eaf1ff 55%, #d7e6ff 100%);
+  color: var(--ink);
+  box-shadow: 0 10px 24px -18px rgba(0, 71, 255, 0.45);
+}
+
+html[data-theme="klardag"] .site-header a,
+html[data-theme="klardag"] .site-header span {
+  color: var(--ink);
+}
+
+html[data-theme="natt"] {
+  --paper: #071433;
+  --ink: #f5f8ff;
+  --muted: #c9d6f5;
+  --line: #2c4a8a;
+  --card: #102456;
+  --green: #3dff9a;
+  --green-soft: #123d32;
+  --sea: #3ecbff;
+  --sea-bright: #8af3ff;
+  --sea-deep: #1490ff;
+  --amber: #ffe14a;
+  --amber-soft: #3d3408;
+  --foam: #17306e;
+}
+
+html[data-theme="natt"] body,
+html[data-theme="natt"] .theme-wash,
+html[data-theme="natt"] .band-white,
+html[data-theme="natt"] .band-mint,
+html[data-theme="natt"] .band-lime {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+html[data-theme="natt"] .builder-card {
+  box-shadow: 0 0 0 1px #3ecbff, 0 22px 40px -24px rgba(62, 203, 255, 0.8);
+}
+
+html[data-theme="signal"] {
+  --paper: #f3fff6;
+  --ink: #06210f;
+  --muted: #245c34;
+  --line: #b7ebc4;
+  --card: #ffffff;
+  --green: #00a33a;
+  --sea: #008a32;
+  --sea-bright: #1ec85a;
+  --sea-deep: #006622;
+  --foam: #dcffe6;
+  --amber: #ffcc00;
+  --rust: #e10600;
+}
+
+html[data-theme="signal"] h1,
+html[data-theme="signal"] h2 {
+  letter-spacing: -0.045em;
+  font-weight: 750;
+}
+
+html[data-theme="signal"] .home-hero {
+  display: flex;
+  flex-direction: column;
+}
+
+html[data-theme="signal"] .builder-slot {
+  order: -1;
+}
+
+html[data-theme="violett"] {
+  --paper: #f6f2ff;
+  --ink: #1b1033;
+  --muted: #5c4a7a;
+  --line: #ddd0f5;
+  --card: #ffffff;
+  --sea: #6d28ff;
+  --sea-bright: #9b6bff;
+  --sea-deep: #4c12d4;
+  --green: #00c853;
+  --foam: #efe7ff;
+  --amber: #ffcc00;
+}
+
+html[data-theme="violett"] .site-header {
+  background-image: linear-gradient(128deg, #b08cff 0%, #6d28ff 48%, #3b0ca8 100%);
+}
+
+html[data-theme="klardag"] .home-hero {
+  gap: 2.5rem;
 }

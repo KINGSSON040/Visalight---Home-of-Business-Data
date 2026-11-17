@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ListBuilder } from "@/components/builder";
+import { UrvalWalkthrough } from "@/components/urval-walkthrough";
 import { HomeMore } from "@/components/home-more";
 import { SampleOffer } from "@/components/sample-offer";
 import { selectionForCount, selectionToQuery, type Selection } from "@/lib/catalog";
@@ -97,7 +98,14 @@ export function CustomerHome({
   }, [searchKey]);
 
   useEffect(() => {
-    window.history.replaceState(null, "", share ? `/?${share}` : "/");
+    const current = new URLSearchParams(window.location.search);
+    const next = new URLSearchParams(share);
+    const tema = current.get("tema");
+    const filter = current.get("filter");
+    if (tema) next.set("tema", tema);
+    if (filter) next.set("filter", filter);
+    const query = next.toString();
+    window.history.replaceState(null, "", query ? `/?${query}` : "/");
   }, [share]);
 
   function patch(next: Partial<Selection>) {
@@ -119,7 +127,7 @@ export function CustomerHome({
 
   return (
     <main>
-      <section className="mx-auto grid max-w-6xl items-start gap-6 px-4 py-3 sm:py-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(20rem,1fr)] lg:gap-8 lg:py-4">
+      <section className="home-hero mx-auto grid max-w-6xl items-start gap-6 px-4 py-3 sm:py-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(20rem,1fr)] lg:gap-8 lg:py-4">
         <article className="min-w-0">
           <p className="text-sm uppercase tracking-[0.18em] text-sea">Färsk företagsdata</p>
           <h1 className="mt-3 max-w-xl text-4xl leading-[1.08] tracking-tight text-balance sm:text-5xl">
@@ -148,8 +156,12 @@ export function CustomerHome({
           <p className="mt-2 text-xs text-muted">Priser exklusive moms. Lägsta order 399 kr.</p>
         </article>
 
-        <ListBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} />
+        <div className="builder-slot min-w-0">
+          <ListBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} />
+        </div>
       </section>
+
+      <UrvalWalkthrough onUse={patch} />
 
       <section id="sa-funkar-det" className="band-white">
         <div className="mx-auto max-w-6xl px-4 py-8 sm:py-10">
