@@ -10,6 +10,7 @@ import { BASE_ORE, EMAIL_ORE, formatKronor, MINIMUM_ORE, PHONE_ORE, SIGNATORY_OR
 import type { UrvalResult } from "@/lib/urval";
 import { PUBLIC_FAQ } from "@/lib/public-faq";
 import { linkedIndustries, topicBuilderHref } from "@/lib/topics";
+import { StatusChip } from "@/components/status-chip";
 
 const LEFT_OUT = [
   {
@@ -49,10 +50,12 @@ export function CustomerHome({
   initial,
   initialUrval,
   updatedLabel,
+  registerReady = false,
 }: {
   initial: Selection;
   initialUrval: UrvalResult;
   updatedLabel: string | null;
+  registerReady?: boolean;
 }) {
   const [draft, setDraft] = useState(initial);
   const [urval, setUrval] = useState(initialUrval);
@@ -126,11 +129,9 @@ export function CustomerHome({
             Välj bransch och ort i utdraget. Ni ser antalet och priset direkt, och slipper hämta, rensa och uppdatera
             uppgifterna själva.
           </p>
-          <p className="mt-3 max-w-xl text-base font-medium leading-7">
-            {updatedLabel
-              ? `Senast uppdaterat ${updatedLabel}. Äldre årgångar används inte.`
-              : "Utdraget tas alltid från den senaste uppdateringen. Äldre årgångar används inte."}
-          </p>
+          <div className="mt-4">
+            <StatusChip updatedLabel={updatedLabel} registerReady={registerReady} />
+          </div>
           <Link href="/#urval" className="btn-fade-sea mt-5 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
             Skapa ert utdrag
           </Link>

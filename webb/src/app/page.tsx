@@ -3,6 +3,7 @@ import { CustomerHome } from "@/components/customer-home";
 import { selectionFromRecord } from "@/lib/catalog";
 import { PUBLIC_FAQ } from "@/lib/public-faq";
 import { loadUrval } from "@/lib/register-urval";
+import { registerDatabasePath } from "@/lib/register-path";
 import { registerUpdatedLabel } from "@/lib/register-status";
 import { siteOrigin } from "@/lib/topics";
 
@@ -44,7 +45,12 @@ export default async function Home({
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <CustomerHome initial={selection} initialUrval={initialUrval} updatedLabel={registerUpdatedLabel()} />
+      <CustomerHome
+        initial={selection}
+        initialUrval={initialUrval}
+        updatedLabel={registerUpdatedLabel()}
+        registerReady={registerDatabasePath() !== null}
+      />
     </>
   );
 }

@@ -47,6 +47,13 @@ body {
   color: var(--ink);
 }
 
+.site-header {
+  background-color: var(--sea);
+  background-image: linear-gradient(128deg, var(--sea-bright) 0%, var(--sea) 46%, var(--sea-deep) 100%);
+  color: #fff;
+  box-shadow: 0 12px 22px -16px rgba(0, 54, 214, 0.85);
+}
+
 .band-white {
   background: #ffffff;
   border-top: 1px solid var(--line);
@@ -79,7 +86,7 @@ body {
 section[id],
 #urval,
 #pris {
-  scroll-margin-top: 6.5rem;
+  scroll-margin-top: 5rem;
 }
 
 /* Mjuk toning: ljusare mättat hörn mot ett rikare. Ingen disig glöd. */

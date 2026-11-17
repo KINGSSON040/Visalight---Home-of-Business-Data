@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckoutForm } from "@/components/checkout-form";
 import { PricePanel } from "@/components/price-panel";
+import { StatusChip } from "@/components/status-chip";
 import { describeSelection, selectionFromRecord, selectionToQuery } from "@/lib/catalog";
+import { registerDatabasePath } from "@/lib/register-path";
 import { loadUrval } from "@/lib/register-urval";
+import { registerUpdatedLabel } from "@/lib/register-status";
 import { Mark, SELLER } from "@/lib/seller";
 import { pricedCounts } from "@/lib/urval";
 
@@ -36,6 +39,9 @@ export default async function CheckoutPage({
         {SELLER.tradeName} är inte ett registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark>{" "}
         · <Mark>{SELLER.vatNr}</Mark>
       </p>
+      <div className="mt-4">
+        <StatusChip updatedLabel={registerUpdatedLabel()} registerReady={registerDatabasePath() !== null} />
+      </div>
       {companies === 0 ? (
         <div className="mt-8 rounded-3xl border border-dashed border-line bg-card px-6 py-12">
           <p className="font-serif text-3xl">Urvalet är tomt</p>

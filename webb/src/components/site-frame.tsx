@@ -6,20 +6,20 @@ import { SiteHeader } from "@/components/site-header";
 
 export function SiteFrame({
   children,
-  registerReady,
+  registerReady = false,
   updatedLabel,
 }: {
   children: React.ReactNode;
-  registerReady: boolean;
+  registerReady?: boolean;
   updatedLabel: string | null;
 }) {
   const path = usePathname();
   if (path.startsWith("/crm")) return children;
   return (
     <>
-      <SiteHeader registerReady={registerReady} updatedLabel={updatedLabel} />
+      <SiteHeader />
       {children}
-      <SiteFooter />
+      <SiteFooter updatedLabel={updatedLabel} registerReady={registerReady} />
     </>
   );
 }

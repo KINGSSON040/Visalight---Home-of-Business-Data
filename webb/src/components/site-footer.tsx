@@ -1,14 +1,22 @@
 import Link from "next/link";
+import { StatusChip } from "@/components/status-chip";
 import { Mark, SELLER } from "@/lib/seller";
 
-export function SiteFooter() {
+export function SiteFooter({
+  updatedLabel,
+  registerReady = false,
+}: {
+  updatedLabel?: string | null;
+  registerReady?: boolean;
+}) {
   return (
     <footer className="theme-wash px-4 py-8 text-sm text-ink/80">
       <div className="mx-auto flex max-w-6xl flex-col gap-4">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-serif text-lg text-ink">{SELLER.tradeName}</p>
-          <p>Färsk företagsdata för svenska bolag. Priser exkl. moms. Lägsta order 399 kr. Beställning öppnar snart.</p>
+          <p>Färsk företagsdata för svenska bolag. Priser exkl. moms. Lägsta order 399 kr.</p>
         </div>
+        <StatusChip updatedLabel={updatedLabel ?? null} registerReady={registerReady} />
         <p className="text-sm leading-6 text-muted">
           {SELLER.tradeName} är inte ett registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark> ·{" "}
           <Mark>{SELLER.vatNr}</Mark>
