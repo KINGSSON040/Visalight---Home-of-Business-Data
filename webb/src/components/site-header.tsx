@@ -5,7 +5,7 @@ export function SiteHeader({ registerReady }: { registerReady: boolean }) {
     <div className="theme-wash sticky top-0 z-40 border-b border-ink/10 text-ink">
       <p className="bg-amber-soft px-4 py-2 text-center text-sm font-medium text-ink">
         {registerReady
-          ? "Registret på den här datorn är inkopplat. Listan visar säljbara bolag från den senaste synken."
+          ? "Registret på den här datorn är inkopplat. Utdraget visar säljbara bolag från den senaste synken."
           : "Registret är inte inkopplat i den här körningen. Bolagen som syns är exempel tills register/data/visalight.sqlite finns."}
       </p>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">

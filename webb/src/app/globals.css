@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f7f6f1;
-  --ink: #243028;
-  --muted: #5c6b60;
-  --line: #e3e8dc;
+  --paper: #f4f8f2;
+  --ink: #1b2a22;
+  --muted: #4d6256;
+  --line: #d3e4d6;
   --card: #ffffff;
-  --green: #6d8b74;
-  --green-soft: #eef3ea;
+  --green: #3c8f4e;
+  --green-soft: #e5f4e4;
   --rust: #a33b32;
-  --sea: #3d6b4f;
-  --sea-deep: #2c4a38;
-  --amber: #e4d48a;
-  --amber-soft: #f6f1df;
-  --foam: #eef2e8;
+  --sea: #2f7a3e;
+  --sea-deep: #1f5c30;
+  --amber: #d5e35a;
+  --amber-soft: #f1f6d4;
+  --foam: #e7f5e6;
 }
 
 @theme inline {
@@ -36,17 +36,32 @@
 }
 
 body {
-  background-color: #f7f6f1;
-  background-image: linear-gradient(115deg, #f3f6ee 0%, #f7f6f1 46%, #f8f4e8 100%);
+  background-color: #f4f8f2;
+  background-image: linear-gradient(165deg, #eef6ea 0%, #f7faf4 46%, #f3f6df 100%);
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-sans), sans-serif;
 }
 
 .theme-wash {
-  background-color: #f4f5ef;
-  background-image: linear-gradient(180deg, #f3f6ee 0%, #f7f3e8 100%);
+  background-color: rgba(244, 248, 242, 0.92);
+  background-image: linear-gradient(180deg, rgba(238, 246, 234, 0.96) 0%, rgba(243, 246, 223, 0.94) 100%);
   color: var(--ink);
+}
+
+.band-white {
+  background: #ffffff;
+  border-top: 1px solid var(--line);
+}
+
+.band-mint {
+  background: linear-gradient(180deg, #f3faf2 0%, #e7f5e4 100%);
+  border-top: 1px solid var(--line);
+}
+
+.band-lime {
+  background: linear-gradient(180deg, #f8faef 0%, #f1f5dc 100%);
+  border-top: 1px solid var(--line);
 }
 
 .font-mono {
@@ -54,8 +69,8 @@ body {
 }
 
 ::selection {
-  background: #e4d48a;
-  color: #243028;
+  background: #d5e35a;
+  color: #1b2a22;
 }
 
 :focus-visible {

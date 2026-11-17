@@ -10,9 +10,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "VisaLight — Företagslistor utan abonnemang",
+  title: "VisaLight — Företagsdata utan abonnemang",
   description:
-    "Välj bransch och ort, se priset och få listan med e-post. Grunduppgifter 10 öre per bolag. Inget konto.",
+    "Skapa ett utdrag av företagsregistret. Välj bransch och ort, se priset och slippa hämta uppgifterna själva.",
 };
 
 export default function RootLayout({

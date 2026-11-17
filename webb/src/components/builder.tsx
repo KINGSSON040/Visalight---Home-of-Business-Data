@@ -28,9 +28,9 @@ export function ListBuilder({
       : urval.note;
 
   return (
-    <div id="urval" className="rounded-[1.75rem] border border-line bg-white px-5 py-5 text-ink shadow-[0_24px_60px_-32px_rgba(16,42,54,0.45)] sm:px-6">
+    <div id="urval" className="rounded-[1.75rem] border border-line bg-white px-5 py-5 text-ink shadow-[0_24px_50px_-28px_rgba(47,122,62,0.35)] sm:px-6">
       <div>
-        <h2 className="text-2xl tracking-tight">Skapa företagslista</h2>
+        <h2 className="text-2xl tracking-tight">Skapa ert utdrag</h2>
         <p className="mt-1 text-sm leading-6 text-muted">
           Skriv en bransch, till exempel frisör, restaurang eller revisionsbyrå. Förslagen är branscher, inte bolag.
         </p>

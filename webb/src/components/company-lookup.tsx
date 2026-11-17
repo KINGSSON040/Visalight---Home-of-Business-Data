@@ -12,7 +12,7 @@ export function CompanyLookup() {
   const ready = query.trim().length >= 2;
 
   return (
-    <section id="uppslag" className="border-t border-line">
+    <section id="uppslag" className="band-white">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Gratis uppslag</p>
         <h2 className="mt-3 max-w-3xl text-4xl tracking-tight">Slå upp ett bolag och se grunduppgifterna.</h2>
@@ -84,7 +84,7 @@ function Preview({ company }: { company: Company }) {
         <Locked label="Beslutsfattare" present={company.signatoryPhones.length > 0} price="0,40 kr/nummer" />
       </div>
       <Link href="/#urval" className="mt-5 inline-flex text-sm font-medium text-sea">
-        Ta med bolaget i en lista
+        Ta med bolaget i utdraget
       </Link>
     </article>
   );

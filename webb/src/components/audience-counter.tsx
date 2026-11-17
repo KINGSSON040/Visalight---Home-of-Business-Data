@@ -15,7 +15,7 @@ export function AudienceCounter() {
       : `Vi hittade ${result.companies.toLocaleString("sv-SE")} bolag som matchar ditt urval.`;
 
   return (
-    <section id="raknare" className="border-t border-line bg-white">
+    <section id="raknare" className="band-mint">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Aktuellt urval</p>
         <h2 className="mt-3 max-w-3xl text-4xl tracking-tight">Se antalet innan du köper.</h2>
@@ -50,13 +50,13 @@ export function AudienceCounter() {
               ))}
             </Select>
           </div>
-          <div className="rounded-3xl bg-sea-deep p-5 text-white" aria-live="polite">
-            <p className="text-xs uppercase tracking-[0.16em] text-white/60">Träffar</p>
-            <p className="mt-2 text-5xl tracking-tight">
+          <div className="rounded-2xl border border-line bg-white p-5" aria-live="polite">
+            <p className="text-xs uppercase tracking-[0.16em] text-sea">Träffar</p>
+            <p className="mt-2 text-5xl tracking-tight text-sea">
               {(result.decisionMakers > 0 ? result.decisionMakers : result.companies).toLocaleString("sv-SE")}
             </p>
             <p className="mt-3 text-base leading-7">{headline}</p>
-            <p className="mt-2 text-sm leading-6 text-white/70">
+            <p className="mt-2 text-sm leading-6 text-muted">
               {result.companies.toLocaleString("sv-SE")} bolag
               {result.decisionMakers > 0
                 ? `, varav ${result.decisionMakers.toLocaleString("sv-SE")} med beslutsfattarnummer i källan.`
@@ -64,7 +64,7 @@ export function AudienceCounter() {
               Exempelregistret tills det riktiga uttaget från SCB är kopplat till sidan.
             </p>
             <Link href="/#urval" className="mt-5 inline-flex h-11 items-center rounded-full bg-amber px-4 font-medium text-ink">
-              Bygg listan och se priset
+              Skapa utdraget och se priset
             </Link>
           </div>
         </div>
