@@ -41,7 +41,7 @@ const STEPS = [
   },
   {
     title: "Få filen",
-    text: "Betala som gäst. Filen skickas till er e-post, utan konto och utan abonnemang.",
+    text: "Förhandsboka med e-post. Beställning öppnar snart. Ingen betalning dras.",
   },
 ];
 

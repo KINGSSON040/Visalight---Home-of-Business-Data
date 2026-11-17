@@ -5,7 +5,7 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Ingår moms?",
-    a: "Priserna i utdraget är exklusive moms, som är det vanliga mot företag i Sverige. Moms visas på fakturan när säljaren är momsregistrerad. Organisationsnummer och adress står på fakturaunderlaget.",
+    a: "Priserna i utdraget är exklusive moms. VisaLight är inte momsregistrerat ännu. Momsnummer fylls i som [Momsregistreringsnummer] när bolaget finns.",
   },
   {
     q: "Hur aktuellt är utdraget?",
@@ -13,7 +13,7 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Hur betalar vi?",
-    a: "Ni betalar som gäst, med kort eller faktura, utan konto och utan abonnemang. Filen skickas till e-postadressen ni anger. Ingen betalning dras förrän betalsättet är anslutet, och ni ser beloppet innan ni bekräftar.",
+    a: "Beställning öppnar snart. Tills dess kan ni förhandsboka utdraget med e-post. Ingen betalning dras och ingen fil skickas.",
   },
   {
     q: "Får vi kontakta bolagen?",

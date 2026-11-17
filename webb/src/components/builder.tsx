@@ -158,7 +158,7 @@ function LivePrice({
           href={href}
           className="btn-fade-sea mt-1.5 flex h-8 items-center justify-center rounded-full text-sm font-medium text-white"
         >
-          Till kassan
+          Förhandsboka
         </Link>
       ) : null}
     </div>

@@ -7,7 +7,7 @@ import { loadUrval } from "@/lib/register-urval";
 import { pricedCounts } from "@/lib/urval";
 
 export const metadata: Metadata = {
-  title: "Kassa — VisaLight",
+  title: "Förhandsboka — VisaLight",
 };
 
 export default async function CheckoutPage({
@@ -25,9 +25,9 @@ export default async function CheckoutPage({
       <Link href={back} className="text-sm font-medium text-sea">
         Ändra urvalet
       </Link>
-      <h1 className="mt-3 font-serif text-5xl tracking-tight">Kassa</h1>
+      <h1 className="mt-3 font-serif text-5xl tracking-tight">Förhandsboka</h1>
       <p className="mt-3 max-w-xl text-muted">
-        Ni betalar som gäst. Inget konto krävs, och filen skickas till e-postadressen. {describeSelection(selection)}.{" "}
+        Beställning öppnar snart. Ingen betalning dras och ingen fil skickas. {describeSelection(selection)}.{" "}
         {companies.toLocaleString("sv-SE")} {urval.source === "register" ? "bolag" : "exempelbolag"} i urvalet.
       </p>
       {companies === 0 ? (

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIntro } from "@/components/page-intro";
+import { Mark, SELLER } from "@/lib/seller";
 
 export const metadata: Metadata = {
   title: "Integritet — VisaLight",
@@ -14,8 +15,15 @@ export default function IntegrityPage() {
     <PageIntro
       eyebrow="Integritet"
       title="Uppgifter om bolag, och om er beställning."
-      lead="De flesta raderna i utdraget är uppgifter om ett företag. Ett direktnummer eller en enskild firma kan samtidigt vara en personuppgift. Beställningen görs som gäst."
+      lead="De flesta raderna i utdraget är uppgifter om ett företag. VisaLight är inte ett registrerat bolag ännu, så det finns ingen utsedd personuppgiftsansvarig med organisationsnummer."
     >
+      <section>
+        <h2 className="text-2xl tracking-tight">Ansvarig, när bolaget finns</h2>
+        <p className="mt-2 leading-7 text-muted">
+          Plats för uppgifterna: <Mark>{SELLER.orgNr}</Mark>, <Mark>{SELLER.address}</Mark>, <Mark>{SELLER.vatNr}</Mark>.
+          Inget av det är ifyllt.
+        </p>
+      </section>
       <section>
         <h2 className="text-2xl tracking-tight">Utdraget</h2>
         <p className="mt-2 leading-7 text-muted">
@@ -27,8 +35,8 @@ export default function IntegrityPage() {
       <section>
         <h2 className="text-2xl tracking-tight">Er beställning</h2>
         <p className="mt-2 leading-7 text-muted">
-          För att leverera filen och fakturan behöver vi e-postadress, företagsnamn, organisationsnummer och
-          kontaktperson. De används för ordern, inte för ett nyhetsbrev. Vi säljer inte era beställningsuppgifter.
+          En förhandsbokning ber bara om e-post. Den sparas i webbläsaren på den dator ni använder, inte hos en
+          betalare, och skickas inte vidare. Vi säljer inte adressen.
         </p>
       </section>
       <section>
