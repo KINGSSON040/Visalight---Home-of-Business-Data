@@ -43,7 +43,7 @@ const NOT_A_COMPANY =
 const CITY_SQL =
   "lower(replace(replace(replace(replace(replace(replace(c.city, 'Ö', 'o'), 'ö', 'o'), 'Ä', 'a'), 'ä', 'a'), 'Å', 'a'), 'å', 'a'))";
 
-const SELLABLE = [
+export const SELLABLE = [
   "c.manual_exclude = 0",
   "(c.ended_on IS NULL OR trim(c.ended_on) = '')",
   "(c.status_code IS NULL OR c.status_code != 'avregistrerad')",
@@ -344,3 +344,4 @@ export function loadUrval(selection: Selection): UrvalResult {
   }
   return exampleUrval(selection);
 }
+
