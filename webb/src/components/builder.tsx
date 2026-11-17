@@ -25,7 +25,7 @@ export function ListBuilder({
       : urval.note;
 
   return (
-    <div id="urval" className="rounded-[1.75rem] border border-line bg-white px-5 py-5 text-ink shadow-[0_24px_50px_-28px_rgba(47,122,62,0.35)] sm:px-6">
+    <div id="urval" className="rounded-[1.75rem] border border-line bg-white px-5 py-5 text-ink shadow-[0_24px_50px_-28px_rgba(47,107,255,0.35)] sm:px-6">
       <div>
         <h2 className="text-2xl tracking-tight">Skapa ert utdrag</h2>
         <p className="mt-1 text-sm leading-6 text-muted">
@@ -130,9 +130,9 @@ function LivePrice({
         <p className="mt-2 text-sm leading-6 text-muted">{loading ? "Räknar bolag i registret." : urval.note}</p>
       ) : (
         <>
-          <p className="mt-2 text-3xl tracking-tight">
+          <p className="mt-2 text-3xl tracking-tight text-sea">
             {counts.companies.toLocaleString("sv-SE")}{" "}
-            <span className="text-base text-muted">{urval.source === "register" ? "bolag" : "exempelbolag"}</span>
+            <span className="text-base font-normal text-muted">{urval.source === "register" ? "bolag" : "exempelbolag"}</span>
           </p>
           <ul className="mt-3 space-y-2 text-sm">
             {lines.map((line) => {
@@ -154,7 +154,7 @@ function LivePrice({
           </ul>
           <p className="mt-3 flex items-baseline justify-between gap-3 border-t border-line pt-3">
             <span className="text-sm font-medium">Att betala</span>
-            <span className="text-2xl tracking-tight">{formatKronor(price.totalOre)} kr</span>
+            <span className="text-2xl tracking-tight text-green">{formatKronor(price.totalOre)} kr</span>
           </p>
           {counts.companies > 0 && price.minimumApplied ? (
             <p className="mt-1 text-sm leading-6 text-muted">

@@ -147,15 +147,15 @@ export function CustomerHome({
           <p className="mt-3 max-w-xl text-base leading-7 text-muted">
             Inget abonnemang och inget konto. Priset visas alltid innan ni köper. Lägsta order är 399 kr.
           </p>
-          <dl id="pris" className="mt-8 grid max-w-xl grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
-            <div>
+          <dl id="pris" className="mt-8 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl bg-foam px-3 py-3">
               <dt className="text-sm text-muted">Lägsta order</dt>
-              <dd className="mt-1 text-2xl tracking-tight">{(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr</dd>
+              <dd className="mt-1 text-2xl tracking-tight text-sea">{(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr</dd>
             </div>
-            <PriceUnit label="Grunduppgifter" ore={BASE_ORE} detail="per komplett rad" />
-            <PriceUnit label="Telefon" ore={PHONE_ORE} detail="per nummer" />
-            <PriceUnit label="E-post" ore={EMAIL_ORE} detail="per adress" />
-            <PriceUnit label="Beslutsfattare" ore={SIGNATORY_ORE} detail="per nummer" />
+            <PriceUnit label="Grunduppgifter" ore={BASE_ORE} detail="per komplett rad" tone="green" />
+            <PriceUnit label="Telefon" ore={PHONE_ORE} detail="per nummer" tone="blue" />
+            <PriceUnit label="E-post" ore={EMAIL_ORE} detail="per adress" tone="green" />
+            <PriceUnit label="Beslutsfattare" ore={SIGNATORY_ORE} detail="per nummer" tone="yellow" />
           </dl>
         </article>
 
@@ -195,7 +195,7 @@ export function CustomerHome({
           <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             {LEFT_OUT.map((item) => (
               <li key={item.title} className="rounded-2xl border border-line bg-white/80 px-4 py-4">
-                <h3 className="text-lg tracking-tight">{item.title}</h3>
+                <h3 className={`text-lg tracking-tight ${item.title === "Konkurs och näringsförbud" ? "text-rust" : ""}`}>{item.title}</h3>
                 <p className="mt-1.5 text-sm leading-6 text-muted">{item.text}</p>
               </li>
             ))}
@@ -257,11 +257,23 @@ function StepNumber({ n }: { n: string }) {
   );
 }
 
-function PriceUnit({ label, ore, detail }: { label: string; ore: number; detail: string }) {
+function PriceUnit({
+  label,
+  ore,
+  detail,
+  tone,
+}: {
+  label: string;
+  ore: number;
+  detail: string;
+  tone: "blue" | "green" | "yellow";
+}) {
+  const wash = tone === "green" ? "bg-green-soft" : tone === "yellow" ? "bg-amber-soft" : "bg-foam";
+  const number = tone === "green" ? "text-green" : tone === "yellow" ? "text-ink" : "text-sea";
   return (
-    <div>
+    <div className={`rounded-2xl px-3 py-3 ${wash}`}>
       <dt className="text-sm text-muted">{label}</dt>
-      <dd className="mt-1 text-2xl tracking-tight text-sea">{formatKronor(ore)} kr</dd>
+      <dd className={`mt-1 text-2xl tracking-tight ${number}`}>{formatKronor(ore)} kr</dd>
       <p className="text-xs text-muted">
         {ore} öre {detail}
       </p>

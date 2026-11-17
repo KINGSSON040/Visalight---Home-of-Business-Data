@@ -32,7 +32,7 @@ export function SiteHeader({ registerReady }: { registerReady: boolean }) {
           <Link href="/crm" className="text-ink/70 hover:text-ink">
             Logga in
           </Link>
-          <Link href="/kassa" className="rounded-full border border-ink/15 bg-white px-3.5 py-2 font-medium text-ink">
+          <Link href="/kassa" className="rounded-full bg-sea px-3.5 py-2 font-medium text-white">
             Kassa
           </Link>
         </nav>
