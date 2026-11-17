@@ -24,8 +24,9 @@ export default function SourcesPage() {
       <section>
         <h2 className="text-2xl tracking-tight">Så ofta det uppdateras</h2>
         <p className="mt-2 leading-7 text-muted">
-          Registret uppdateras vid varje ny synk mot SCB, inte som en realtidsström och inte från en gammal årsfil.
-          Nya bolag kommer med. Bolag som avregistrerats, är inaktiva eller har näringsförbud tas ur filen du köper.
+          Vi arbetar endast med aktuella uppgifter. Registret uppdateras vid varje ny synk mot SCB, och utdraget tas
+          alltid från den senaste uppdateringen. Äldre register används inte. Det är inte en realtidsström. Nya bolag
+          kommer med. Bolag som avregistrerats, är inaktiva eller har näringsförbud tas ur filen du köper.
         </p>
       </section>
       <section>

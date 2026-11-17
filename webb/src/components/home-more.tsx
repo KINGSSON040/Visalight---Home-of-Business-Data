@@ -67,7 +67,7 @@ export function HomeMore({ updatedLabel }: { updatedLabel: string | null }) {
       <section id="kallor" className="band-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Källa</p>
-          <h2 className="mt-3 max-w-3xl text-3xl tracking-tight">Uppgifterna byts ut när registret uppdateras.</h2>
+          <h2 className="mt-3 max-w-3xl text-3xl tracking-tight">Vi arbetar endast med aktuella uppgifter.</h2>
           <p className="mt-3 text-lg font-medium text-ink">
             {updatedLabel
               ? `Senast uppdaterat ${updatedLabel}.`
@@ -83,8 +83,8 @@ export function HomeMore({ updatedLabel }: { updatedLabel: string | null }) {
             <article className="rounded-2xl border border-line bg-foam/50 px-4 py-4">
               <h3 className="text-lg tracking-tight">Vid varje uppdatering</h3>
               <p className="mt-1.5 text-sm leading-6 text-muted">
-                Nästa köp använder det nya registret. Det är inte en direktström, och det är inte en fil som ligger
-                kvar i flera år. Avregistrerade bolag följer inte med.
+                Utdraget tas alltid från den senaste uppdateringen. Äldre register används inte. Det är inte en
+                direktström, och avregistrerade bolag följer inte med.
               </p>
             </article>
             <article className="rounded-2xl border border-line bg-foam/50 px-4 py-4">

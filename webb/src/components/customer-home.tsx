@@ -50,7 +50,7 @@ const QUESTIONS = [
   },
   {
     q: "Hur aktuellt är utdraget?",
-    a: "Namn, adress, bransch och SNI kommer från SCB:s företagsregister. Registret byts ut när det uppdateras. Det är inte en direktuppdatering varje minut, och det är inte en fil som ligger kvar från förra året.",
+    a: "Vi arbetar endast med aktuella uppgifter. Namn, adress, bransch och SNI kommer från SCB:s företagsregister, och utdraget tas alltid från den senaste uppdateringen. Äldre register används inte. Det är inte en direktuppdatering varje minut.",
   },
   {
     q: "Måste jag skapa ett konto?",
