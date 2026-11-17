@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   DEFAULT_FILTER,
   DEFAULT_THEME,
@@ -51,12 +51,11 @@ function writeUrl(theme: ThemeId, filter: FilterId) {
   const query = params.toString();
   const next = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
   window.history.replaceState(null, "", next);
-  document.documentElement.dataset.theme = theme;
   window.localStorage.setItem("visalight-tema", theme);
   window.localStorage.setItem("visalight-filter", filter);
 }
 
-export function AppearanceProvider({ children }: { children: React.ReactNode }) {
+export function AppearanceProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeId>(DEFAULT_THEME);
   const [filter, setFilterState] = useState<FilterId>(DEFAULT_FILTER);
 
@@ -64,7 +63,9 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
     const initial = readUrl();
     setThemeState(initial.theme);
     setFilterState(initial.filter);
-    document.documentElement.dataset.theme = initial.theme;
+    window.localStorage.setItem("visalight-tema", initial.theme);
+    window.localStorage.setItem("visalight-filter", initial.filter);
+    delete document.documentElement.dataset.theme;
   }, []);
 
   const value = useMemo<AppearanceValue>(
@@ -85,8 +86,10 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
 
   return (
     <AppearanceContext.Provider value={value}>
-      {children}
-      <AppearanceBar />
+      <div className="customer-site" data-theme={theme} data-filter={filter}>
+        {children}
+        <AppearanceBar />
+      </div>
     </AppearanceContext.Provider>
   );
 }
@@ -97,7 +100,7 @@ function AppearanceBar() {
   const current = THEMES.find((item) => item.id === theme) ?? THEMES[0];
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 max-w-[calc(100vw-2rem)]">
+    <div className="fixed right-3 bottom-3 z-50 max-w-[calc(100vw-1.5rem)]">
       {open ? (
         <div className="mb-2 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-line bg-card p-3 text-ink shadow-xl">
           <p className="text-sm font-semibold">Prova utseende</p>

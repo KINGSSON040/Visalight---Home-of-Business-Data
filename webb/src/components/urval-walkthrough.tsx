@@ -13,7 +13,7 @@ const FRAMES = [
 export function UrvalWalkthrough({ onUse }: { onUse: (patch: Partial<Selection>) => void }) {
   const [frame, setFrame] = useState(0);
   const [typed, setTyped] = useState("");
-  const [live, setLive] = useState<{ companies: number; phones: number; emails: number } | null>(null);
+  const [live, setLive] = useState<{ companies: number; withPhone: number; withEmail: number; withSignatory: number } | null>(null);
   const current = FRAMES[frame];
 
   useEffect(() => {
@@ -49,12 +49,17 @@ export function UrvalWalkthrough({ onUse }: { onUse: (patch: Partial<Selection>)
     const controller = new AbortController();
     fetch(`/api/urval?${selectionToQuery(selection)}`, { signal: controller.signal })
       .then((response) => response.json())
-      .then((data: { companies?: number; phones?: number; emails?: number; status?: string }) => {
+      .then((data: { companies?: number; withPhone?: number; withEmail?: number; withSignatory?: number; status?: string }) => {
         if (data.status !== "ready") {
           setLive(null);
           return;
         }
-        setLive({ companies: data.companies ?? 0, phones: data.phones ?? 0, emails: data.emails ?? 0 });
+        setLive({
+          companies: data.companies ?? 0,
+          withPhone: data.withPhone ?? 0,
+          withEmail: data.withEmail ?? 0,
+          withSignatory: data.withSignatory ?? 0,
+        });
       })
       .catch(() => setLive(null));
     return () => controller.abort();
@@ -66,8 +71,8 @@ export function UrvalWalkthrough({ onUse }: { onUse: (patch: Partial<Selection>)
         <div>
           <h2 className="text-3xl tracking-tight">Så blir ett sökord ett urval</h2>
           <p className="mt-3 max-w-xl leading-7 text-muted">
-            Skriv en bransch, välj ort och kryssa i tillvalen. Antalet bolag, nummer och e-postadresser ändras direkt.
-            Prova samma sak i utdraget.
+            Skriv en bransch och välj ort. Antalet bolag, och hur många som har telefon, e-post och kontaktperson, ändras direkt.
+            Samma val går att ta med till utdraget.
           </p>
           <ol className="mt-4 space-y-2 text-sm">
             {FRAMES.slice(1).map((item, index) => (
@@ -84,7 +89,8 @@ export function UrvalWalkthrough({ onUse }: { onUse: (patch: Partial<Selection>)
           </ol>
           <button
             type="button"
-            onClick={() =>
+            className="btn-fade-sea mt-4 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white"
+            onClick={() => {
               onUse({
                 query: "",
                 bransch: "Restaurangverksamhet",
@@ -92,9 +98,9 @@ export function UrvalWalkthrough({ onUse }: { onUse: (patch: Partial<Selection>)
                 city: "Malmö",
                 phones: true,
                 emails: true,
-              })
-            }
-            className="btn-fade-sea mt-4 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white"
+              });
+              document.getElementById("urval")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
           >
             Lägg exemplet i utdraget
           </button>
@@ -111,12 +117,12 @@ export function UrvalWalkthrough({ onUse }: { onUse: (patch: Partial<Selection>)
             {current.phones ? <span className="rounded-full bg-green-soft px-2 py-1 text-green">Kontaktnummer</span> : null}
             {current.emails ? <span className="rounded-full bg-green-soft px-2 py-1 text-green">E-postkontakt</span> : null}
           </div>
-          <p className="mt-4 text-5xl font-semibold tracking-tight text-sea">{live ? live.companies.toLocaleString("sv-SE") : "–"}</p>
-          <p className="text-sm text-muted">bolag i urvalet</p>
-          <p className="mt-2 text-sm">
-            {live ? `${live.phones.toLocaleString("sv-SE")} med nummer` : current.phonesN} ·{" "}
-            {live ? `${live.emails.toLocaleString("sv-SE")} med e-post` : current.emailsN}
-          </p>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <CountTile label="Bolag" value={live ? live.companies.toLocaleString("sv-SE") : "–"} />
+            <CountTile label="Med telefon" value={live ? live.withPhone.toLocaleString("sv-SE") : "–"} />
+            <CountTile label="Med e-post" value={live ? live.withEmail.toLocaleString("sv-SE") : "–"} />
+            <CountTile label="Med kontaktperson" value={live ? live.withSignatory.toLocaleString("sv-SE") : "–"} />
+          </div>
           <p className="mt-3 text-sm leading-6">{current.label}</p>
           <a href="#urval" className="mt-3 inline-flex text-sm font-medium text-sea">
             Gå till utdraget
@@ -124,5 +130,14 @@ export function UrvalWalkthrough({ onUse }: { onUse: (patch: Partial<Selection>)
         </div>
       </div>
     </section>
+  );
+}
+
+function CountTile({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl bg-foam px-2 py-2">
+      <p className="text-2xl font-semibold tracking-tight text-sea tabular-nums">{value}</p>
+      <p className="text-xs text-muted">{label}</p>
+    </div>
   );
 }

@@ -15,6 +15,10 @@ export type UrvalResult = {
   phones: number;
   signatoryPhones: number;
   emails: number;
+  /** Bolag i urvalet som har minst ett telefonnummer, en e-postadress eller en kontaktperson. */
+  withPhone: number;
+  withEmail: number;
+  withSignatory: number;
   preview: UrvalPreview[];
   note: string;
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { AppearanceProvider } from "@/components/appearance";
 import { SiteFooter } from "@/components/site-footer";
@@ -15,7 +16,7 @@ export function SiteFrame({
   updatedLabel: string | null;
 }) {
   const path = usePathname();
-  if (path.startsWith("/crm")) return children;
+  if (path.startsWith("/crm")) return <CrmFrame>{children}</CrmFrame>;
   return (
     <AppearanceProvider>
       <SiteHeader />
@@ -23,4 +24,11 @@ export function SiteFrame({
       <SiteFooter updatedLabel={updatedLabel} registerReady={registerReady} />
     </AppearanceProvider>
   );
+}
+
+function CrmFrame({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    delete document.documentElement.dataset.theme;
+  }, []);
+  return children;
 }

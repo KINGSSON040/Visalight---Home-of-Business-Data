@@ -27,6 +27,8 @@ export function CompanySearch({
   queryPlaceholder = "Bransch, SNI, namn eller organisationsnummer",
   querySuggestions = suggestQuery,
   segmentOnly = false,
+  part = "all",
+  questions = false,
   children,
 }: {
   draft: Selection;
@@ -39,15 +41,31 @@ export function CompanySearch({
   beforeForms?: ReactNode;
   queryPlaceholder?: string;
   querySuggestions?: (text: string) => Suggestion[];
-  /** Kundsidan får bara bransch, ort, län och liknande. Aldrig ett bolagsnamn. */
+  /** Kundsidan får bara bransch, SNI, ort och län. Aldrig ett bolagsnamn. */
   segmentOnly?: boolean;
+  /** Vilken del av formuläret som visas. "all" är hela panelen, även i CRM. */
+  part?: "all" | "query" | "place" | "trade" | "form" | "size";
+  /** Frågeformuleringar och lodrät bolagsform, utan chip-rad. */
+  questions?: boolean;
   children?: ReactNode;
 }) {
   const forms = draft.forms ?? [];
+  const customerKinds = new Set<Suggestion["kind"]>(["bransch", "ort", "lan"]);
   const suggestionsFor = (text: string) => {
     const found = querySuggestions(text);
-    return segmentOnly ? found.filter((item) => item.kind !== "bolag") : found;
+    return segmentOnly ? found.filter((item) => customerKinds.has(item.kind)) : found;
   };
+  const showQuery = part === "all" || part === "query";
+  const showCity = part === "all" || part === "place";
+  const showBransch = part === "all" || part === "trade";
+  const showForms = part === "all" || part === "form";
+  const showCounty = part === "all" || part === "place";
+  const showEmployees = part === "all" || part === "size";
+  const showBefore = part === "all";
+  const showFooter = part === "all";
+  const queryLabel = questions ? "Vad ska utdraget handla om?" : "Sök";
+  const cityLabel = questions ? "Var finns bolagen?" : "Ort";
+  const branschLabel = questions ? "Vilken bransch vill ni ha?" : "Bransch";
 
   function applySuggestion(suggestion: Suggestion) {
     const { form, ...rest } = suggestion.apply;
@@ -83,8 +101,9 @@ export function CompanySearch({
       }}
     >
       <div className={split ? "min-h-0 flex-1 overflow-y-auto pb-3" : "min-w-0"}>
+      {showQuery ? (
       <SuggestField
-        label="Sök"
+        label={queryLabel}
         value={draft.query}
         placeholder={queryPlaceholder}
         suggestions={suggestionsFor(draft.query)}
@@ -92,10 +111,13 @@ export function CompanySearch({
         onPick={applySuggestion}
         dense={live}
       />
+      ) : null}
 
-      <div className={`grid sm:grid-cols-2 ${live ? "mt-1.5 gap-2" : "mt-3 gap-3"}`}>
+      {showCity || showBransch ? (
+      <div className={`grid ${showCity && showBransch ? "sm:grid-cols-2" : "grid-cols-1"} ${live ? "mt-1.5 gap-2" : "mt-3 gap-3"}`}>
+        {showCity ? (
         <SuggestField
-          label="Ort"
+          label={cityLabel}
           value={draft.city}
           placeholder="Ort, till exempel Malmö"
           suggestions={suggestCities(draft.city)}
@@ -103,8 +125,10 @@ export function CompanySearch({
           onPick={applySuggestion}
           dense={live}
         />
+        ) : null}
+        {showBransch ? (
         <SuggestField
-          label="Bransch"
+          label={branschLabel}
           value={draft.bransch ?? ""}
           placeholder="Bransch eller SNI"
           suggestions={suggestIndustries(draft.bransch ?? "")}
@@ -112,17 +136,29 @@ export function CompanySearch({
           onPick={applySuggestion}
           dense={live}
         />
+        ) : null}
       </div>
+      ) : null}
 
-      {beforeForms}
+      {showBefore ? beforeForms : null}
 
-      {live ? (
-        <div className="mt-1.5 grid grid-cols-1 gap-2 min-[480px]:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)]">
-          <FormPicker forms={forms} onToggle={toggleGroup} />
-          <CountyField value={draft.county ?? ""} onChange={(county) => onChange({ county })} dense />
-          <EmployeeField value={draft.employees ?? ""} onChange={(employees) => onChange({ employees })} dense />
+      {live && questions && (showForms || showCounty || showEmployees) ? (
+        <div className={showForms || showCounty || showEmployees ? "mt-1.5 space-y-1.5" : ""}>
+          {showForms ? <FormChecklist forms={forms} onToggle={toggleGroup} legend="Vilken bolagsform ska vara med?" /> : null}
+          {showCounty || showEmployees ? (
+            <div className={`grid grid-cols-1 gap-2 ${showCounty && showEmployees ? "min-[480px]:grid-cols-2" : ""}`}>
+              {showCounty ? <CountyField value={draft.county ?? ""} onChange={(county) => onChange({ county })} dense /> : null}
+              {showEmployees ? <EmployeeField value={draft.employees ?? ""} onChange={(employees) => onChange({ employees })} dense /> : null}
+            </div>
+          ) : null}
         </div>
-      ) : (
+      ) : live && (showForms || showCounty || showEmployees) ? (
+        <div className={`mt-1.5 grid grid-cols-1 gap-2 ${showForms && showCounty && showEmployees ? "min-[480px]:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)]" : "min-[480px]:grid-cols-2"}`}>
+          {showForms ? <FormPicker forms={forms} onToggle={toggleGroup} /> : null}
+          {showCounty ? <CountyField value={draft.county ?? ""} onChange={(county) => onChange({ county })} dense /> : null}
+          {showEmployees ? <EmployeeField value={draft.employees ?? ""} onChange={(employees) => onChange({ employees })} dense /> : null}
+        </div>
+      ) : !live ? (
         <>
           <fieldset className="mt-3">
             <legend className="text-sm font-medium">Bolagsform</legend>
@@ -151,10 +187,11 @@ export function CompanySearch({
             <EmployeeField value={draft.employees ?? ""} onChange={(employees) => onChange({ employees })} />
           </div>
         </>
-      )}
+      ) : null}
         {children}
       </div>
 
+      {showFooter ? (
       <div className={split ? "shrink-0 border-t border-line bg-white pt-3" : live ? "mt-1.5" : "mt-3"}>
         <div className={`flex gap-2 ${live ? "items-center" : "flex-col sm:flex-row"}`}>
           {live ? null : (
@@ -186,6 +223,7 @@ export function CompanySearch({
           </p>
         ) : null}
       </div>
+      ) : null}
     </form>
   );
 }
@@ -236,7 +274,7 @@ function SuggestField({
         role="combobox"
         aria-expanded={open && visible.length > 0}
         aria-controls={listId}
-        aria-activedescendant={highlighted && visible[active] ? `${listId}-${active}` : undefined}
+        aria-activedescendant={open && visible[active] ? `${listId}-${active}` : undefined}
         aria-autocomplete="list"
         autoComplete="off"
         spellCheck={false}
@@ -269,7 +307,7 @@ function SuggestField({
             setHighlighted(false);
             return;
           }
-          if (event.key === "Enter" && highlighted && suggestions[active]) {
+          if (event.key === "Enter" && open && suggestions[active]) {
             event.preventDefault();
             pick(suggestions[active]);
           }
@@ -277,7 +315,7 @@ function SuggestField({
         className={`w-full rounded-xl border border-line bg-paper px-3 placeholder:text-ink/40 ${dense ? "h-10 text-sm" : "h-12 text-base"}`}
       />
       {open && visible.length > 0 ? (
-        <ul id={listId} role="listbox" className="absolute z-30 mt-1 max-h-48 w-full overflow-y-auto rounded-xl border border-line bg-white shadow-lg">
+        <ul id={listId} role="listbox" aria-label={label} className="absolute z-30 mt-1 max-h-48 w-full overflow-y-auto rounded-xl border border-line bg-white shadow-lg">
           {visible.map((suggestion, index) => {
             const previous = visible[index - 1];
             const showKind = !previous || previous.kind !== suggestion.kind;
@@ -293,10 +331,17 @@ function SuggestField({
                   id={`${listId}-${index}`}
                   role="option"
                   data-suggestion={suggestion.title}
-                  aria-selected={highlighted && index === active}
-                  onPointerDown={(event) => event.preventDefault()}
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => pick(suggestion)}
+                  aria-selected={index === active}
+                  onPointerDown={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    pick(suggestion);
+                  }}
+                  onMouseDown={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    pick(suggestion);
+                  }}
                   className={`flex w-full flex-col px-3 py-2 text-left ${highlighted && index === active ? "bg-foam" : "bg-white"}`}
                 >
                   <span className="font-medium">{suggestion.title}</span>
@@ -369,6 +414,42 @@ function EmployeeField({
         ))}
       </select>
     </label>
+  );
+}
+
+function FormChecklist({
+  forms,
+  onToggle,
+  legend,
+}: {
+  forms: string[];
+  onToggle: (codes: string[]) => void;
+  legend: string;
+}) {
+  return (
+    <fieldset>
+      <legend className="text-xs font-medium">{legend}</legend>
+      <div className="mt-1 grid grid-cols-1 gap-1 sm:grid-cols-2">
+        {FORM_GROUPS.map((group) => {
+          const all = group.codes.every((code) => forms.includes(code));
+          const some = group.codes.some((code) => forms.includes(code));
+          return (
+            <label key={group.label} className="flex min-w-0 items-start gap-2 rounded-lg px-1 py-1 text-sm">
+              <input
+                type="checkbox"
+                checked={all}
+                ref={(node) => {
+                  if (node) node.indeterminate = some && !all;
+                }}
+                onChange={() => onToggle(group.codes)}
+                className="mt-0.5 h-3.5 w-3.5 shrink-0 accent-sea"
+              />
+              <span className="min-w-0">{group.label}</span>
+            </label>
+          );
+        })}
+      </div>
+    </fieldset>
   );
 }
 

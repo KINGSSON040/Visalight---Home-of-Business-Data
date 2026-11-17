@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useAppearance } from "@/components/appearance";
 import { CompanySearch } from "@/components/company-search";
 import {
-  COUNTIES,
-  FORM_GROUPS,
+  describeSelection,
   formGroupLabel,
   industryLabel,
   resolveQuery,
@@ -40,15 +39,18 @@ export function ListBuilder({
     ? `Uppdaterat ${updatedLabel}. Äldre årgångar används inte.`
     : "Uppdaterat från senaste registret. Äldre årgångar används inte.";
 
+  const sida = filter === "sida";
   return (
-    <div id="urval" className="builder-card rounded-[1.35rem] px-3 py-2.5 text-ink sm:px-4">
+    <div id="urval" data-layout={filter} className="builder-card rounded-[1.35rem] px-3 py-2.5 text-ink sm:px-4">
       <div className="flex items-baseline justify-between gap-2">
         <h2 className="text-base tracking-tight sm:text-lg">Skapa ert utdrag</h2>
         <p className="truncate text-[0.68rem] text-muted">{layoutName}</p>
       </div>
       <p className="mt-0.5 truncate text-[0.7rem] leading-4 text-muted">{fresh}</p>
-      <ResultHero draft={draft} urval={urval} loading={loading} onChange={onChange} />
-      <div className={`mt-2 ${filter === "sida" ? "sm:grid sm:grid-cols-2 sm:gap-2" : ""}`}>
+      <div className={sida ? "sida-split mt-2" : "mt-2"}>
+        <div className={sida ? "sida-result" : ""}>
+          <ResultHero draft={draft} urval={urval} loading={loading} onChange={onChange} />
+        </div>
         <FilterBody filter={filter} draft={draft} onChange={onChange} hint={hint} />
       </div>
     </div>
@@ -75,8 +77,8 @@ function FilterBody({
   onChange: (patch: Partial<Selection>) => void;
   hint: string;
 }) {
-  if (filter === "steg") return <StepFilter draft={draft} onChange={onChange} />;
-  if (filter === "fraga") return <QuestionFilter draft={draft} onChange={onChange} />;
+  if (filter === "steg") return <StepFilter draft={draft} onChange={onChange} hint={hint} />;
+  if (filter === "fraga") return <QuestionFilter draft={draft} onChange={onChange} hint={hint} />;
   return (
     <CompanySearch
       draft={draft}
@@ -93,10 +95,18 @@ function FilterBody({
   );
 }
 
-function Tillval({ draft, onChange }: { draft: Selection; onChange: (patch: Partial<Selection>) => void }) {
+function Tillval({
+  draft,
+  onChange,
+  ask = false,
+}: {
+  draft: Selection;
+  onChange: (patch: Partial<Selection>) => void;
+  ask?: boolean;
+}) {
   return (
     <fieldset className="mt-1.5">
-      <legend className="text-xs font-medium">Tillval</legend>
+      <legend className="text-xs font-medium">{ask ? "Vad ska följa med i filen?" : "Tillval"}</legend>
       <div className="mt-1 grid grid-cols-3 gap-1.5">
         <CheckOption checked={draft.phones} onChange={() => onChange({ phones: !draft.phones })} label="Kontaktnummer" price={`${formatKronor(PHONE_ORE)} kr/nummer`} />
         <CheckOption checked={draft.emails} onChange={() => onChange({ emails: !draft.emails })} label={"E\u2011postkontakt"} price={`${formatKronor(EMAIL_ORE)} kr/adress`} />
@@ -106,71 +116,44 @@ function Tillval({ draft, onChange }: { draft: Selection; onChange: (patch: Part
   );
 }
 
-function StepFilter({ draft, onChange }: { draft: Selection; onChange: (patch: Partial<Selection>) => void }) {
+const STEP_PARTS = ["query", "place", "trade", "form", "size"] as const;
+const STEP_TITLES = ["Sökord", "Ort och län", "Bransch", "Bolagsform", "Storlek och tillval"];
+
+function StepFilter({
+  draft,
+  onChange,
+  hint,
+}: {
+  draft: Selection;
+  onChange: (patch: Partial<Selection>) => void;
+  hint: string;
+}) {
   const [step, setStep] = useState(0);
-  const steps = ["Bransch", "Ort", "Län och storlek", "Bolagsform", "Tillval"];
+  const part = STEP_PARTS[step];
   return (
     <div>
       <p className="text-xs font-medium text-muted">
-        Steg {step + 1} av {steps.length}. {steps[step]}
+        Steg {step + 1} av {STEP_TITLES.length}. {STEP_TITLES[step]}
       </p>
-      {step === 0 ? (
-        <div className="mt-1 flex flex-wrap gap-1">
-          {QUICK_BRANSCH.map((item) => (
-            <button key={item.sni} type="button" onClick={() => onChange({ bransch: item.bransch, sni: item.sni, query: "" })} className="rounded-full bg-foam px-2.5 py-1 text-xs font-medium">
-              {item.label}
-            </button>
-          ))}
-        </div>
-      ) : null}
-      {step === 1 ? (
-        <div className="mt-1 flex flex-wrap gap-1">
-          {QUICK_CITIES.map((city) => (
-            <button key={city} type="button" onClick={() => onChange({ city, query: "" })} className="rounded-full bg-foam px-2.5 py-1 text-xs font-medium">
-              {city}
-            </button>
-          ))}
-        </div>
-      ) : null}
-      {step === 2 ? (
-        <label className="mt-1 block text-xs">
-          Län
-          <select value={draft.county ?? ""} onChange={(event) => onChange({ county: event.target.value })} className="mt-1 h-9 w-full rounded-xl border border-line bg-paper px-2 text-sm">
-            <option value="">Alla län</option>
-            {COUNTIES.map((item) => (
-              <option key={item.code} value={item.label}>{item.label}</option>
-            ))}
-          </select>
-        </label>
-      ) : null}
-      {step === 3 ? (
-        <div className="mt-1 grid gap-1">
-          {FORM_GROUPS.map((group) => {
-            const on = group.codes.every((code) => (draft.forms ?? []).includes(code));
-            return (
-              <label key={group.label} className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={on}
-                  onChange={() => {
-                    const forms = draft.forms ?? [];
-                    onChange({
-                      forms: on ? forms.filter((code) => !group.codes.includes(code)) : [...forms, ...group.codes.filter((code) => !forms.includes(code))],
-                    });
-                  }}
-                />
-                {group.label}
-              </label>
-            );
-          })}
-        </div>
-      ) : null}
-      {step === 4 ? <Tillval draft={draft} onChange={onChange} /> : null}
+      <CompanySearch
+        draft={draft}
+        onChange={onChange}
+        onSearch={() => undefined}
+        live
+        segmentOnly
+        part={part}
+        questions={part === "form"}
+        onClear={() => onChange({ query: "", city: "", county: "", bransch: "", sni: "", forms: [], employees: "" })}
+        queryPlaceholder="Bransch, ort, län eller SNI"
+        querySuggestions={suggestSegment}
+        hint={hint}
+      />
+      {step === 4 ? <Tillval draft={draft} onChange={onChange} ask /> : null}
       <div className="mt-2 flex gap-2">
         <button type="button" disabled={step === 0} onClick={() => setStep((value) => Math.max(0, value - 1))} className="h-8 rounded-full border border-line px-3 text-xs disabled:opacity-40">
           Tillbaka
         </button>
-        <button type="button" disabled={step === steps.length - 1} onClick={() => setStep((value) => Math.min(steps.length - 1, value + 1))} className="btn-fade-sea h-8 rounded-full bg-sea px-3 text-xs text-white disabled:opacity-40">
+        <button type="button" disabled={step === STEP_TITLES.length - 1} onClick={() => setStep((value) => Math.min(STEP_TITLES.length - 1, value + 1))} className="btn-fade-sea h-8 rounded-full bg-sea px-3 text-xs text-white disabled:opacity-40">
           Nästa
         </button>
       </div>
@@ -178,47 +161,29 @@ function StepFilter({ draft, onChange }: { draft: Selection; onChange: (patch: P
   );
 }
 
-function QuestionFilter({ draft, onChange }: { draft: Selection; onChange: (patch: Partial<Selection>) => void }) {
+function QuestionFilter({
+  draft,
+  onChange,
+  hint,
+}: {
+  draft: Selection;
+  onChange: (patch: Partial<Selection>) => void;
+  hint: string;
+}) {
   return (
-    <div className="space-y-2">
-      <p className="text-sm font-medium">Vilken bransch ska utdraget täcka?</p>
-      <div className="flex flex-wrap gap-1">
-        {QUICK_BRANSCH.map((item) => (
-          <button key={item.sni} type="button" onClick={() => onChange({ bransch: item.bransch, sni: item.sni, query: "" })} className={`rounded-full px-2.5 py-1 text-xs font-medium ${draft.sni === item.sni ? "btn-fade-sea text-white" : "bg-foam"}`}>
-            {item.label}
-          </button>
-        ))}
-      </div>
-      <p className="text-sm font-medium">Var finns bolagen?</p>
-      <div className="flex flex-wrap gap-1">
-        {QUICK_CITIES.map((city) => (
-          <button key={city} type="button" onClick={() => onChange({ city })} className={`rounded-full px-2.5 py-1 text-xs font-medium ${draft.city === city ? "btn-fade-sea text-white" : "bg-foam"}`}>
-            {city}
-          </button>
-        ))}
-      </div>
-      <Tillval draft={draft} onChange={onChange} />
-      <label className="block text-xs">
-        Bolagsform
-        <select
-          className="mt-1 h-9 w-full rounded-xl border border-line bg-paper px-2 text-sm"
-          value=""
-          onChange={(event) => {
-            const group = FORM_GROUPS.find((item) => item.label === event.target.value);
-            if (!group) {
-              onChange({ forms: [] });
-              return;
-            }
-            onChange({ forms: group.codes });
-          }}
-        >
-          <option value="">Alla bolagsformer</option>
-          {FORM_GROUPS.map((group) => (
-            <option key={group.label}>{group.label}</option>
-          ))}
-        </select>
-      </label>
-    </div>
+    <CompanySearch
+      draft={draft}
+      onChange={onChange}
+      onSearch={() => undefined}
+      live
+      segmentOnly
+      questions
+      onClear={() => onChange({ query: "", city: "", county: "", bransch: "", sni: "", forms: [], employees: "" })}
+      queryPlaceholder="Skriv en bransch, en ort eller en SNI-kod"
+      querySuggestions={suggestSegment}
+      hint={hint}
+      beforeForms={<Tillval draft={draft} onChange={onChange} ask />}
+    />
   );
 }
 
@@ -278,19 +243,30 @@ function ResultHero({
         <p className="flex items-baseline gap-2">
           <span
             data-urval-count={ready ? String(urval.companies) : ""}
-            className={`text-[2.75rem] leading-none font-semibold tracking-tight tabular-nums sm:text-5xl ${loading && ready ? "opacity-70" : ""}`}
+            className={`result-count text-[2.75rem] leading-none font-semibold tracking-tight tabular-nums sm:text-5xl ${loading && ready ? "opacity-70" : ""}`}
           >
             {figure}
           </span>
           <span className="text-lg leading-none font-medium">bolag</span>
         </p>
-        <p className="mt-1 text-xs font-medium text-muted">{loading && !ready ? "Räknar bolag." : "i ert urval"}</p>
+        <p className="spec-line mt-1 text-xs font-medium">{loading && !ready ? "Räknar bolag." : describeSelection(draft)}</p>
+        <p className="result-price mt-1 flex items-baseline justify-between gap-2">
+          <span className="text-xs font-medium text-muted">Pris, exkl. moms</span>
+          <span className="text-2xl leading-none font-semibold tracking-tight tabular-nums">
+            {ready ? `${formatKronor(price.totalOre)} kr` : "–"}
+          </span>
+        </p>
         {ready ? (
           <p className="mt-1 text-[0.68rem] leading-4 text-muted">
-            {urval.phones.toLocaleString("sv-SE")} med nummer · {urval.emails.toLocaleString("sv-SE")} med e-post ·{" "}
-            {urval.signatoryPhones.toLocaleString("sv-SE")} med beslutsfattare
+            {urval.withPhone.toLocaleString("sv-SE")} bolag med telefon · {urval.withEmail.toLocaleString("sv-SE")} med e-post ·{" "}
+            {urval.withSignatory.toLocaleString("sv-SE")} med kontaktperson
           </p>
-        ) : null}
+        ) : (
+          <p className="mt-1 text-[0.68rem] leading-4 text-muted">Välj bransch eller ort så visas antal och pris.</p>
+        )}
+        <div className="mt-1.5">
+          <ShareLink draft={draft} />
+        </div>
       </div>
       {ready && urval.source === "example" ? <p className="mt-1 text-[0.68rem] leading-4 text-muted">{urval.note}</p> : null}
       {ready && urval.companies === 0 ? <ZeroHelp draft={draft} onChange={onChange} note={urval.note} /> : null}
@@ -316,13 +292,7 @@ function ResultHero({
       ) : null}
       {ready ? (
         <div className="mt-2 border-t border-sea/15 pt-1.5">
-          <p className="flex items-baseline justify-between gap-2">
-            <span className="text-xs font-medium text-muted">Totalt, exkl. moms</span>
-            <span className="text-xl leading-none font-semibold tracking-tight tabular-nums sm:text-2xl">
-              {formatKronor(price.totalOre)} kr
-            </span>
-          </p>
-          <ul className="mt-1 space-y-0.5">
+          <ul className="space-y-0.5">
             {lines.map((line) => {
               const sum = line.on ? line.count * line.unit : 0;
               return (
@@ -342,30 +312,31 @@ function ResultHero({
             </p>
           ) : null}
           {counts.companies > 0 ? (
-            <div className="mt-1.5 flex gap-2">
-              <Link href={href} className="btn-fade-sea flex h-8 flex-1 items-center justify-center rounded-full text-sm font-medium text-white">
-                Förhandsboka
-              </Link>
-              <ShareLink />
-            </div>
+            <Link href={href} className="btn-fade-sea mt-1.5 flex h-8 items-center justify-center rounded-full text-sm font-medium text-white">
+              Förhandsboka
+            </Link>
           ) : null}
-          {counts.companies > 0 ? <PreviewRows draft={draft} /> : null}
+          <PreviewRows draft={draft} />
         </div>
-      ) : (
-        <p className="mt-1 text-[0.68rem] leading-4 text-muted">Välj bransch eller ort så visas antal och pris.</p>
-      )}
+      ) : null}
     </div>
   );
 }
 
-function ShareLink() {
+function ShareLink({ draft }: { draft: Selection }) {
   const [note, setNote] = useState("");
   return (
     <button
       type="button"
       className="h-8 rounded-full border border-line bg-paper px-3 text-xs font-medium text-ink"
       onClick={() => {
-        const url = window.location.href;
+        const params = new URLSearchParams(selectionToQuery(draft));
+        const current = new URLSearchParams(window.location.search);
+        const tema = current.get("tema");
+        const filter = current.get("filter");
+        if (tema) params.set("tema", tema);
+        if (filter) params.set("filter", filter);
+        const url = `${window.location.origin}/?${params.toString()}#urval`;
         void navigator.clipboard.writeText(url).then(
           () => setNote("Länken är kopierad."),
           () => setNote(url),
@@ -381,18 +352,18 @@ function PreviewRows({ draft }: { draft: Selection }) {
   const place = draft.city.trim() || "orten";
   const trade = (draft.bransch ?? "").trim() || "Bransch";
   const rows = [
-    { name: `${trade.split(" ")[0]} ●●●● AB`, city: place, phone: draft.phones ? "070-●●● ●● ●●" : "—", mail: draft.emails ? "●●●@bolag.se" : "—" },
-    { name: `${trade.split(" ")[0]} ●● HB`, city: place, phone: draft.phones ? "08-●●● ●● ●●" : "—", mail: draft.emails ? "●●●@bolag.se" : "—" },
+    { name: `${trade.split(" ")[0]} ●●●● AB`, city: place, phone: draft.phones ? "070-●●● ●● ●●" : "—", mail: draft.emails ? "●●●@bolag.se" : "—", contact: draft.signatory ? "A. ●●●●" : "—" },
+    { name: `${trade.split(" ")[0]} ●● HB`, city: place, phone: draft.phones ? "08-●●● ●● ●●" : "—", mail: draft.emails ? "●●●@bolag.se" : "—", contact: draft.signatory ? "B. ●●●●" : "—" },
   ];
   return (
     <div className="mt-1.5">
-      <p className="text-[0.65rem] font-medium text-muted">Så kan en rad se ut. Uppgifterna är påhittade och maskerade.</p>
+      <p className="text-[0.65rem] font-medium text-muted">Så kan en rad se ut i {place}. Uppgifterna är påhittade och maskerade.</p>
       <ul className="mt-1 space-y-1">
         {rows.map((row) => (
-          <li key={row.name} className="grid grid-cols-[minmax(0,1.2fr)_auto_auto] gap-2 rounded-lg bg-paper px-2 py-1 text-[0.65rem] leading-4 text-ink">
+          <li key={row.name} className="grid grid-cols-[minmax(0,1.1fr)_auto_auto] gap-2 rounded-lg bg-paper px-2 py-1 text-[0.65rem] leading-4 text-ink">
             <span className="truncate font-medium">{row.name}</span>
-            <span className="text-muted">{row.phone}</span>
-            <span className="truncate text-muted">{row.mail}</span>
+            <span className="truncate text-muted">{row.phone} · {row.mail}</span>
+            <span className="truncate text-muted">{row.contact}</span>
           </li>
         ))}
       </ul>
@@ -454,6 +425,11 @@ function ZeroHelp({
         {draft.city ? (
           <button type="button" className="rounded-full bg-foam px-2 py-0.5" onClick={() => onChange({ city: "" })}>
             Hela Sverige
+          </button>
+        ) : null}
+        {draft.bransch || draft.sni ? (
+          <button type="button" className="rounded-full bg-foam px-2 py-0.5" onClick={() => onChange({ bransch: "", sni: "", query: "" })}>
+            Ta bort branschen
           </button>
         ) : null}
       </div>

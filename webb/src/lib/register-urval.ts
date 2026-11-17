@@ -80,6 +80,9 @@ function idle(source: UrvalResult["source"], note: string): UrvalResult {
     phones: 0,
     signatoryPhones: 0,
     emails: 0,
+    withPhone: 0,
+    withEmail: 0,
+    withSignatory: 0,
     preview: [],
     note,
   };
@@ -93,8 +96,25 @@ function ready(
   emails: number,
   preview: UrvalPreview[],
   note: string,
+  coverage: { withPhone: number; withEmail: number; withSignatory: number } = {
+    withPhone: 0,
+    withEmail: 0,
+    withSignatory: 0,
+  },
 ): UrvalResult {
-  return { source, status: "ready", companies, phones, signatoryPhones, emails, preview, note };
+  return {
+    source,
+    status: "ready",
+    companies,
+    phones,
+    signatoryPhones,
+    emails,
+    withPhone: coverage.withPhone,
+    withEmail: coverage.withEmail,
+    withSignatory: coverage.withSignatory,
+    preview,
+    note,
+  };
 }
 
 function openDatabase(file: string): Database.Database {
@@ -212,6 +232,32 @@ function fromDatabase(selection: Selection): UrvalResult | null {
       )
       .get(built.args) as { n: number }
   ).n;
+  const withPhone = (
+    db
+      .prepare(
+        `SELECT COUNT(DISTINCT p.org_nr) AS n FROM phones p
+         WHERE p.removed_on IS NULL AND p.kind != 'signatory'
+           AND p.org_nr IN (SELECT c.org_nr ${base})`,
+      )
+      .get(built.args) as { n: number }
+  ).n;
+  const withSignatory = (
+    db
+      .prepare(
+        `SELECT COUNT(DISTINCT p.org_nr) AS n FROM phones p
+         WHERE p.removed_on IS NULL AND p.kind = 'signatory'
+           AND p.org_nr IN (SELECT c.org_nr ${base})`,
+      )
+      .get(built.args) as { n: number }
+  ).n;
+  const withEmail = (
+    db
+      .prepare(
+        `SELECT COUNT(DISTINCT e.org_nr) AS n FROM emails e
+         WHERE e.removed_on IS NULL AND e.org_nr IN (SELECT c.org_nr ${base})`,
+      )
+      .get(built.args) as { n: number }
+  ).n;
   const rows = db
     .prepare(
       `SELECT c.org_nr AS orgNr, c.name AS name, c.city AS city,
@@ -231,7 +277,11 @@ function fromDatabase(selection: Selection): UrvalResult | null {
     companies === 0
       ? "Inget säljbart bolag matchar. Ett bolag räknas när namn, gatuadress, ort och SNI finns, och det inte är avregistrerat eller reklamspärrat."
       : "Namnen kommer från det lokala registret. Filen innehåller hela urvalet, inte bara raderna som visas.";
-  return ready("register", companies, phones, signatoryPhones, emails, preview, note);
+  return ready("register", companies, phones, signatoryPhones, emails, preview, note, {
+    withPhone,
+    withEmail,
+    withSignatory,
+  });
 }
 
 function exampleUrval(selection: Selection): UrvalResult {
@@ -276,6 +326,11 @@ function exampleUrval(selection: Selection): UrvalResult {
       sni: row.sni,
     })),
     note,
+    {
+      withPhone: rows.filter((row) => row.phones.length > 0).length,
+      withEmail: rows.filter((row) => row.emails.length > 0).length,
+      withSignatory: rows.filter((row) => row.signatoryPhones.length > 0).length,
+    },
   );
 }
 

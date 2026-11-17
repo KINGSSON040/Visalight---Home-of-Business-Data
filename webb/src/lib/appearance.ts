@@ -5,27 +5,27 @@ export const THEMES = [
   {
     id: "norrsken",
     name: "Norrsken",
-    intent: "För mejlutskick. Blå header, grön siffra, norrsken i märket.",
+    intent: "Tänkt för säljsidan: blå header, gröna och violetta accenter.",
   },
   {
     id: "klardag",
     name: "Klar dag",
-    intent: "För den som jämför priser. Mycket vitt, blå text, gul knapp.",
+    intent: "Tänkt för luft och tydlighet: vit botten, stark blå text, gul knapp.",
   },
   {
     id: "natt",
     name: "Natthimmel",
-    intent: "För kvällsläsning. Mörkblå botten, cyan och grönt som lyser.",
+    intent: "Tänkt för kvällsläsning: mättat marinblått, ljus cyan och grön text.",
   },
   {
     id: "signal",
     name: "Signal",
-    intent: "För den som bara vill se antalet. Gröna siffror, rött bara som varning.",
+    intent: "Tänkt för siffrorna: stora gröna tal, gult och rött bara på pris och varning.",
   },
   {
-    id: "violett",
-    name: "Kvällsljus",
-    intent: "För en mjukare kampanj. Violett header, gul gnista, grön bekräftelse.",
+    id: "varm",
+    name: "Varm kväll",
+    intent: "Tänkt för en varm kväll: violett header och bärnstensgula tal.",
   },
 ] as const;
 
