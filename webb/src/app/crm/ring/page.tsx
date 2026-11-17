@@ -1,15 +1,16 @@
-import { Suspense } from "react";
+import type { Metadata } from "next";
 import { ColdCall } from "@/components/crm-call";
+
+export const metadata: Metadata = {
+  title: "Ringlistor — VisaLight CRM",
+  robots: { index: false, follow: false },
+};
 
 export default async function RingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ segment?: string }>;
+  searchParams: Promise<{ lista?: string }>;
 }) {
-  const { segment } = await searchParams;
-  return (
-    <Suspense fallback={<p className="text-sm text-muted">Hämtar kön.</p>}>
-      <ColdCall segmentId={segment ?? ""} />
-    </Suspense>
-  );
+  const { lista } = await searchParams;
+  return <ColdCall listId={lista ?? ""} />;
 }

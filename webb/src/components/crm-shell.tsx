@@ -19,6 +19,8 @@ function CrmFrameInner({ children }: { children: React.ReactNode }) {
   const params = useSearchParams();
   const view = params.get("vy");
   const stars = store.claims.filter((item) => item.userId === store.userId).length;
+  const tasks = store.openTasks(store.userId).length;
+  const running = store.callLists.filter((item) => !item.archived && item.orgNrs.some((org) => !item.results[org])).length;
   const active = path.startsWith("/crm/ring")
     ? "ring"
     : path.startsWith("/crm/bolag")
@@ -55,14 +57,14 @@ function CrmFrameInner({ children }: { children: React.ReactNode }) {
             Segment
           </ShellLink>
           <ShellLink href="/crm/ring" pressed={active === "ring"}>
-            Ring
+            Ringlistor{running ? ` · ${running}` : ""}
           </ShellLink>
           <ShellLink href="/crm?vy=aktivitet" pressed={active === "aktivitet"}>
-            Aktivitet
+            Aktivitet{tasks ? ` · ${tasks}` : ""}
           </ShellLink>
         </nav>
         <label className="mx-3 mb-4 block text-sm">
-          <span className="mb-1.5 block text-muted">Säljare</span>
+          <span className="mb-1.5 block font-medium">Du är inloggad som</span>
           <select
             value={store.userId}
             onChange={(event) => store.setUserId(event.target.value as StaffId)}
@@ -75,11 +77,11 @@ function CrmFrameInner({ children }: { children: React.ReactNode }) {
             ))}
           </select>
           <span className="mt-1.5 block text-xs leading-5 text-muted">
-            Exempelkonton. Byt säljare för att se någon annans stjärnor.
+            Exempelkonton tills riktig inloggning finns. Byt säljare för att se hur andra ser dina stjärnor.
           </span>
         </label>
         <p className="mt-auto hidden px-5 py-5 text-sm leading-6 text-muted lg:block">
-          Exempelbolag tills det riktiga registret är kopplat. Profiler kan strykas, inte raderas.
+          Exempelbolag tills det riktiga registret är kopplat. Personer, nummer, segment och listor stryks eller arkiveras, de raderas inte.
         </p>
       </aside>
       <main className="min-w-0 px-4 py-5 sm:px-6 sm:py-6">{children}</main>
