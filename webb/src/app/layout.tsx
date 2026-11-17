@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Bowlby_One, Figtree, Inter } from "next/font/google";
 import { SiteFrame } from "@/components/site-frame";
 import { registerDatabasePath } from "@/lib/register-path";
 import { registerStamp } from "@/lib/register-status";
@@ -9,6 +9,17 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const display = Bowlby_One({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-pop-display",
+});
+
+const body = Figtree({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-pop-body",
 });
 
 export const metadata: Metadata = {
@@ -33,7 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv">
-      <body className={`${inter.variable} ${inter.className} antialiased`}>
+      <body className={`${inter.variable} ${display.variable} ${body.variable} ${inter.className} antialiased`}>
         <SiteFrame registerReady={registerDatabasePath() !== null} updatedLabel={registerStamp().when} exampleData={registerStamp().example}>
           {children}
         </SiteFrame>

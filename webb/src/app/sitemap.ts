@@ -4,7 +4,7 @@ import { siteOrigin, TOPICS, topicPath } from "@/lib/topics";
 export default function sitemap(): MetadataRoute.Sitemap {
   const origin = siteOrigin();
   const now = new Date();
-  const fixed = ["", "/bransch", "/sni", "/ord", "/kassa", "/smakprov", "/foretag", "/kallor", "/gdpr", "/integritet", "/villkor", "/cookies", "/salj", "/ekonomi", "/utvecklare", "/demo"].map((path) => ({
+  const fixed = ["", "/bransch", "/sni", "/ord", "/kassa", "/smakprov", "/foretag", "/kallor", "/gdpr", "/integritet", "/villkor", "/cookies", "/salj", "/ekonomi", "/utvecklare", "/demo", "/statistik", "/nyheter"].map((path) => ({
     url: `${origin}${path || "/"}`,
     lastModified: now,
   }));

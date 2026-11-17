@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
 import { CustomerHome } from "@/components/customer-home";
-import { selectionFromRecord } from "@/lib/catalog";
+import { selectionFromRecord, selectionToQuery } from "@/lib/catalog";
+import { allNews } from "@/lib/news";
 import { PUBLIC_FAQ } from "@/lib/public-faq";
 import { loadUrval } from "@/lib/register-urval";
-import { registerDatabasePath } from "@/lib/register-path";
-import { registerStamp } from "@/lib/register-status";
+import { registerOverview } from "@/lib/register-stats";
+import { registerStamp, registerUpdatedIso } from "@/lib/register-status";
 import { siteOrigin } from "@/lib/topics";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
-  title: "VisaLight — Färsk företagsdata för svenska bolag",
+  title: "VisaLight — Alla Sveriges företag, se antal och pris direkt",
   description:
-    "Skapa ett utdrag av företagsregistret. Välj bransch, ort och SNI, se priset exklusive moms och betala utan abonnemang.",
+    "Alla Sveriges företag i ett utdrag. Välj bransch och ort, se antal och pris direkt. Ingen prenumeration, ingen bindningstid. Plus statistik och nyheter om näringslivet.",
 };
 
 export default async function Home({
@@ -22,6 +23,8 @@ export default async function Home({
   const stamp = registerStamp();
   const selection = selectionFromRecord(await searchParams);
   const initialUrval = loadUrval(selection);
+  const overview = registerOverview();
+  const news = allNews(overview, registerUpdatedIso());
   const origin = siteOrigin();
   const jsonLd = {
     "@context": "https://schema.org",
@@ -47,11 +50,13 @@ export default async function Home({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <CustomerHome
+        key={selectionToQuery(selection)}
         initial={selection}
         initialUrval={initialUrval}
         updatedLabel={stamp.when}
         exampleData={stamp.example}
-        registerReady={registerDatabasePath() !== null}
+        overview={overview}
+        news={news}
       />
     </>
   );
