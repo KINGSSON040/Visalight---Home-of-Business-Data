@@ -4,6 +4,7 @@ import { CheckoutForm } from "@/components/checkout-form";
 import { PricePanel } from "@/components/price-panel";
 import { describeSelection, selectionFromRecord, selectionToQuery } from "@/lib/catalog";
 import { loadUrval } from "@/lib/register-urval";
+import { Mark, SELLER } from "@/lib/seller";
 import { pricedCounts } from "@/lib/urval";
 
 export const metadata: Metadata = {
@@ -27,8 +28,13 @@ export default async function CheckoutPage({
       </Link>
       <h1 className="mt-3 font-serif text-5xl tracking-tight">Förhandsboka</h1>
       <p className="mt-3 max-w-xl text-muted">
-        Beställning öppnar snart. Ingen betalning dras och ingen fil skickas. {describeSelection(selection)}.{" "}
-        {companies.toLocaleString("sv-SE")} {urval.source === "register" ? "bolag" : "exempelbolag"} i urvalet.
+        Beställning öppnar snart. Ingen betalning dras och ingen fil skickas. Ni lämnar urvalet och en e-postadress.{" "}
+        {describeSelection(selection)}. {companies.toLocaleString("sv-SE")}{" "}
+        {urval.source === "register" ? "bolag" : "exempelbolag"} i urvalet.
+      </p>
+      <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
+        {SELLER.tradeName} är inte ett registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark>{" "}
+        · <Mark>{SELLER.vatNr}</Mark>
       </p>
       {companies === 0 ? (
         <div className="mt-8 rounded-3xl border border-dashed border-line bg-card px-6 py-12">
@@ -42,7 +48,7 @@ export default async function CheckoutPage({
         <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           <CheckoutForm selection={selection} />
           <div className="lg:sticky lg:top-28">
-            <PricePanel selection={selection} urval={urval} />
+            <PricePanel selection={selection} urval={urval} quoteOnly />
           </div>
         </div>
       )}

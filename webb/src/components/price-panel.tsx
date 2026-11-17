@@ -17,10 +17,13 @@ export function PricePanel({
   selection,
   urval,
   showAction = false,
+  quoteOnly = false,
 }: {
   selection: Selection;
   urval?: UrvalResult;
   showAction?: boolean;
+  /** Pris på urvalet. Ingen debitering. */
+  quoteOnly?: boolean;
 }) {
   const [live, setLive] = useState<UrvalResult | null>(urval ?? null);
   const key = selectionToQuery(selection);
@@ -79,7 +82,7 @@ export function PricePanel({
 
   return (
     <aside className="rounded-3xl bg-sea-deep p-5 text-white shadow-sm" aria-live="polite">
-      <p className="text-xs uppercase tracking-[0.16em] text-white/60">Att betala</p>
+      <p className="text-xs uppercase tracking-[0.16em] text-white/60">{quoteOnly ? "Pris på urvalet" : "Att betala"}</p>
       <p className="mt-2 font-serif text-5xl leading-none tracking-tight">
         {formatKronor(price.totalOre)}
         <span className="ml-2 text-2xl">kr</span>
@@ -111,14 +114,17 @@ export function PricePanel({
           );
         })}
       </ul>
-      <p className="mt-4 text-sm leading-6 text-white/70">Tomma fält kostar inget. Lägsta order är {formatKronor(MINIMUM_ORE)} kr.</p>
+      <p className="mt-4 text-sm leading-6 text-white/70">
+        Tomma fält kostar inget. Lägsta order är {formatKronor(MINIMUM_ORE)} kr.
+        {quoteOnly ? " Ingen betalning dras." : ""}
+      </p>
       {showAction ? (
         counts.companies > 0 ? (
           <Link
             href={href}
             className="btn-fade-amber mt-5 flex h-12 items-center justify-center rounded-full bg-amber font-medium text-ink"
           >
-            Till kassan
+            Förhandsboka
           </Link>
         ) : (
           <p className="mt-5 flex h-12 items-center justify-center rounded-full bg-white/10 text-sm text-white/70">

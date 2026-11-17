@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ORDER_STORAGE_KEY, type OrderDraft, type Selection } from "@/lib/catalog";
-import { SELLER } from "@/lib/seller";
+import { Mark, SELLER } from "@/lib/seller";
 
 export function CheckoutForm({ selection }: { selection: Selection }) {
   const router = useRouter();
@@ -23,6 +23,7 @@ export function CheckoutForm({ selection }: { selection: Selection }) {
       company: "",
       orgNr: "",
       contact: "",
+      // OrderDraft kräver fältet. Värdet är ingen dragning och visas inte som kort eller faktura.
       payment: "faktura",
       selection,
       createdAt: new Date().toISOString(),
@@ -35,8 +36,8 @@ export function CheckoutForm({ selection }: { selection: Selection }) {
     <form onSubmit={submit} noValidate className="rounded-3xl border border-line bg-card p-4 sm:p-6">
       <h2 className="font-serif text-2xl">Förhandsboka utdraget</h2>
       <p className="mt-2 text-sm leading-6 text-muted">
-        Beställning öppnar snart. {SELLER.tradeName} är inte ett registrerat bolag ännu, och den här sidan tar inte
-        betalt. Ingen fil skickas. Urvalet och e-posten sparas bara i den här webbläsaren.
+        Beställning öppnar snart. Ingen betalning dras och ingen fil skickas. {SELLER.tradeName} är inte ett
+        registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark> · <Mark>{SELLER.vatNr}</Mark>
       </p>
       <label className="mt-4 block text-sm">
         <span className="mb-1 block text-muted">E-post</span>
@@ -51,7 +52,7 @@ export function CheckoutForm({ selection }: { selection: Selection }) {
         />
         {error ? <span className="mt-1 block text-rust">{error}</span> : null}
       </label>
-      <button type="submit" className="btn-fade-sea mt-6 h-12 w-full rounded-full font-medium text-white">
+      <button type="submit" className="btn-fade-sea mt-6 h-12 w-full rounded-full bg-sea font-medium text-white">
         Förhandsboka
       </button>
     </form>
