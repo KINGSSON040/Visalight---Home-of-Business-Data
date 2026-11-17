@@ -94,7 +94,7 @@ export function TopicArticle({ kind, slug }: { kind: TopicKind; slug: string }) 
       </p>
       {topic.sni ? <p className="mt-4 font-mono text-sm text-sea">SNI {topic.sni}</p> : null}
       <Link href={topicBuilderHref(topic)} className="mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
-        Bygg ett urval
+        Se antal och pris i utdraget
       </Link>
       <h2 className="mt-12 font-serif text-3xl tracking-tight">Fler sidor</h2>
       <ul className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -182,7 +182,7 @@ function IndustryArticle({
         {older.length ? `, även om en äldre källa fortfarande skriver ${older.join(" eller ")}` : ""}.
       </p>
       <Link href={topicBuilderHref(topic)} className="mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
-        Se antal och pris för {industry.label.toLowerCase()}
+        Se antal och pris för {industry.label.toLowerCase()} i utdraget
       </Link>
 
       <section className="mt-10 grid gap-4 md:grid-cols-3">

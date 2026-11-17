@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AudienceCounter } from "@/components/audience-counter";
 
 const VALUES = [
   {
@@ -18,35 +17,34 @@ const VALUES = [
 
 const USES = [
   {
-    href: "/salj",
     title: "Sälj och marknad",
-    text: "Ring eller mejla bolag i en bransch och en ort. Numret följer med bara när det finns.",
+    text: "Välj bransch och ort, se hur många bolag som finns just nu och ring dem som har nummer.",
   },
   {
-    href: "/ekonomi",
     title: "Ekonomi",
-    text: "Namn, organisationsnummer, adress och SNI. Ingen kreditupplysning.",
+    text: "Namn, organisationsnummer, adress och SNI från den senaste uppdateringen. Ingen kreditupplysning.",
   },
   {
-    href: "/utvecklare",
     title: "Utvecklare",
-    text: "CSV och Excel med fasta kolumner. Ett API finns inte ännu.",
+    text: "CSV och Excel med fasta kolumner, tagna från samma färska utdrag.",
   },
 ];
 
 export function HomeMore({ updatedLabel }: { updatedLabel: string | null }) {
   return (
     <>
-      <AudienceCounter />
-
       <section id="kallor" className="band-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Källa</p>
-          <h2 className="mt-3 max-w-3xl text-3xl tracking-tight">Vi arbetar endast med aktuella uppgifter.</h2>
+          <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Så färsk är datan</p>
+          <h2 className="mt-3 max-w-3xl text-3xl tracking-tight">Ni får den senaste uppdateringen, inte förra årets fil.</h2>
           <p className="mt-3 text-lg font-medium text-ink">
             {updatedLabel
-              ? `Senast uppdaterat ${updatedLabel}.`
-              : "Senast uppdaterat visas här när registret är synkat på den här datorn."}
+              ? `Registret uppdaterades ${updatedLabel}.`
+              : "Utdraget tas från den senaste uppdateringen av företagsregistret."}
+          </p>
+          <p className="mt-3 max-w-2xl leading-7 text-muted">
+            Namn, adress, bransch och SNI kommer från SCB. När registret byts ut följer utdraget med. Avregistrerade
+            bolag, konkurs och reklamspärr ligger inte kvar. Det är inte en uppdatering varje minut.
           </p>
           <div className="mt-6 grid gap-3 md:grid-cols-3">
             <article className="rounded-2xl border border-line bg-foam/50 px-4 py-4">
@@ -70,6 +68,9 @@ export function HomeMore({ updatedLabel }: { updatedLabel: string | null }) {
               </p>
             </article>
           </div>
+          <Link href="/#urval" className="mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+            Skapa utdraget från den här uppdateringen
+          </Link>
           <p className="mt-4 flex flex-wrap gap-4 text-sm font-medium">
             <Link href="/kallor" className="text-sea">
               Källor och uppdatering
@@ -83,9 +84,9 @@ export function HomeMore({ updatedLabel }: { updatedLabel: string | null }) {
 
       <section className="band-mint">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <h2 className="text-3xl tracking-tight">Värdet</h2>
+          <h2 className="text-3xl tracking-tight">Tid ni inte behöver lägga på registret</h2>
           <p className="mt-3 max-w-2xl text-muted">
-            Ni sparar tiden det tar att hämta, uppdatera och rensa företagsinformationen själva.
+            Ni slipper hämta, uppdatera och rensa. Utdraget är redan avgränsat när ni öppnar det.
           </p>
           <ul className="mt-6 grid gap-3 lg:grid-cols-3">
             {VALUES.map((item) => (
@@ -95,29 +96,26 @@ export function HomeMore({ updatedLabel }: { updatedLabel: string | null }) {
               </li>
             ))}
           </ul>
+          <Link href="/#urval" className="mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+            Öppna utdraget
+          </Link>
         </div>
       </section>
 
       <section className="band-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <h2 className="text-3xl tracking-tight">Samma företagsdata, olika arbete</h2>
+          <h2 className="text-3xl tracking-tight">Samma färska utdrag, olika arbete</h2>
           <ul className="mt-6 grid gap-3 md:grid-cols-3">
             {USES.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="block h-full rounded-2xl border border-line bg-foam/40 px-4 py-4">
+              <li key={item.title}>
+                <Link href="/#urval" className="block h-full rounded-2xl border border-line bg-white px-4 py-4">
                   <h3 className="text-lg tracking-tight">{item.title}</h3>
                   <p className="mt-1.5 text-sm leading-6 text-muted">{item.text}</p>
+                  <span className="mt-3 inline-block text-sm font-medium text-sea">Skapa utdraget</span>
                 </Link>
               </li>
             ))}
           </ul>
-          <p className="mt-5 text-sm leading-6 text-muted">
-            Behöver utdraget in i ett system?{" "}
-            <Link href="/demo" className="font-medium text-sea">
-              Boka 15 minuter
-            </Link>
-            . Inget abonnemang.
-          </p>
         </div>
       </section>
     </>

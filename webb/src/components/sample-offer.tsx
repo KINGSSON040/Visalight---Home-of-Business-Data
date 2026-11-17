@@ -14,10 +14,10 @@ export function SampleOffer({ selection }: { selection: Selection }) {
       <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
         <div className="rounded-[1.75rem] border border-line bg-white px-5 py-6 shadow-[0_18px_40px_-28px_rgba(47,122,62,0.45)] sm:px-8">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Gratis smakprov</p>
-          <h2 className="mt-2 max-w-3xl text-3xl tracking-tight">Prova ert segment utan kostnad.</h2>
+          <h2 className="mt-2 max-w-3xl text-3xl tracking-tight">Se segmentet gratis. Köp utdraget när antalet stämmer.</h2>
           <p className="mt-3 max-w-2xl leading-7 text-muted">
-            Smakprovet är gratis och följer branschen, området och segmentet ni valt. Samma kolumner som utdraget.
-            Vi säljer inte enskilda företag.
+            Smakprovet följer branschen och området ni valt, och tas från samma uppdatering som utdraget. Vi säljer
+            inte enskilda företag.
           </p>
           {chosen ? (
             <p className="mt-4 text-sm font-medium leading-6">{segment}</p>
@@ -45,6 +45,12 @@ export function SampleOffer({ selection }: { selection: Selection }) {
             </p>
           ) : null}
           <div className="mt-5 flex flex-wrap gap-3">
+            <Link
+              href={href ? `/?${href}#urval` : "/#urval"}
+              className="inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white"
+            >
+              Öppna segmentet i utdraget
+            </Link>
             <a
               href={href ? `/smakprov/csv?${href}` : "/smakprov/csv"}
               className="inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink"
@@ -53,13 +59,10 @@ export function SampleOffer({ selection }: { selection: Selection }) {
             </a>
             <a
               href={href ? `/smakprov/xls?${href}` : "/smakprov/xls"}
-              className="inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white"
+              className="inline-flex h-12 items-center rounded-full border border-line bg-white px-5 font-medium"
             >
               Ladda ner Excel
             </a>
-            <Link href="/smakprov" className="inline-flex h-12 items-center text-sm font-medium text-sea">
-              Se kolumnerna
-            </Link>
           </div>
         </div>
       </div>

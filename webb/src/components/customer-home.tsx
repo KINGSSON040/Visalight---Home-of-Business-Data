@@ -8,7 +8,7 @@ import { SampleOffer } from "@/components/sample-offer";
 import { selectionForCount, selectionToQuery, type Selection } from "@/lib/catalog";
 import { BASE_ORE, EMAIL_ORE, formatKronor, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import type { UrvalResult } from "@/lib/urval";
-import { linkedIndustries, topicPath } from "@/lib/topics";
+import { linkedIndustries, topicBuilderHref } from "@/lib/topics";
 
 const LEFT_OUT = [
   {
@@ -51,7 +51,7 @@ const QUESTIONS = [
   },
   {
     q: "Hur aktuellt är utdraget?",
-    a: "Vi arbetar endast med aktuella uppgifter. Namn, adress, bransch och SNI kommer från SCB:s företagsregister, och utdraget tas alltid från den senaste uppdateringen. Äldre register används inte. Det är inte en direktuppdatering varje minut.",
+    a: "Utdraget tas från den senaste uppdateringen av företagsregistret. Vi säljer inte en fil från förra året. Avregistrerade bolag, konkurs och reklamspärr är redan borta. Det är inte en uppdatering varje minut.",
   },
   {
     q: "Måste jag skapa ett konto?",
@@ -136,17 +136,22 @@ export function CustomerHome({
     <main>
       <section className="mx-auto grid max-w-6xl items-start gap-8 px-4 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.92fr)_minmax(20rem,1fr)] lg:gap-12 lg:py-16">
         <article>
-          <p className="text-sm uppercase tracking-[0.18em] text-sea">Företagsdata</p>
+          <p className="text-sm uppercase tracking-[0.18em] text-sea">Färsk företagsdata</p>
           <h1 className="mt-3 max-w-xl text-4xl leading-[1.08] tracking-tight text-balance sm:text-5xl">
-            Skapa ert utdrag av företagsregistret.
+            Rätt bolag, från den senaste uppdateringen.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-            Välj bransch och ort. Ni får namn, organisationsnummer, adress, bransch och SNI, och slipper hämta,
-            rensa och uppdatera uppgifterna själva. Telefon, e-post och beslutsfattare läggs till där de finns.
+            Välj bransch och ort i utdraget. Ni ser antalet och priset direkt, och slipper hämta, rensa och uppdatera
+            uppgifterna själva.
           </p>
-          <p className="mt-3 max-w-xl text-base leading-7 text-muted">
-            Inget abonnemang och inget konto. Priset visas alltid innan ni köper. Lägsta order är 399 kr.
+          <p className="mt-3 max-w-xl text-base font-medium leading-7">
+            {updatedLabel
+              ? `Senast uppdaterat ${updatedLabel}. Äldre årgångar används inte.`
+              : "Utdraget tas alltid från den senaste uppdateringen. Äldre årgångar används inte."}
           </p>
+          <Link href="/#urval" className="mt-5 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+            Skapa ert utdrag
+          </Link>
           <dl id="pris" className="mt-8 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-3">
             <div className="rounded-2xl bg-foam px-3 py-3">
               <dt className="text-sm text-muted">Lägsta order</dt>
@@ -164,7 +169,7 @@ export function CustomerHome({
 
       <section id="sa-funkar-det" className="band-white">
         <div className="mx-auto max-w-6xl px-4 py-8 sm:py-10">
-          <h2 className="text-2xl tracking-tight">Tre steg</h2>
+          <h2 className="text-2xl tracking-tight">Tre steg till filen</h2>
           <ol className="mt-4 grid gap-3 md:grid-cols-3">
             {STEPS.map((step, index) => (
               <li key={step.title} className="flex items-start gap-3 rounded-2xl bg-foam px-4 py-3">
@@ -176,6 +181,9 @@ export function CustomerHome({
               </li>
             ))}
           </ol>
+          <Link href="/#urval" className="mt-5 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+            Börja med bransch och ort
+          </Link>
         </div>
       </section>
 
@@ -200,6 +208,9 @@ export function CustomerHome({
               </li>
             ))}
           </ul>
+          <Link href="/#urval" className="mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+            Se antalet i utdraget
+          </Link>
         </div>
       </section>
 
@@ -214,24 +225,30 @@ export function CustomerHome({
               </details>
             ))}
           </div>
+          <Link href="/#urval" className="mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+            Skapa ert utdrag
+          </Link>
         </div>
       </section>
 
-      <section className="band-lime">
+      <section id="branscher" className="band-lime">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-        <h2 className="text-3xl tracking-tight">Branscher och ord</h2>
+        <h2 className="text-3xl tracking-tight">Välj en bransch och se priset</h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Välj en bransch och öppna samma urval i utdraget.
+          Varje bransch öppnar utdraget med den SNI-koden ifylld. Antalet räknas direkt.
         </p>
         <ul className="mt-6 flex flex-wrap gap-2">
           {linkedIndustries().map((topic) => (
             <li key={topic.slug}>
-              <Link href={topicPath(topic)} className="inline-flex rounded-full border border-line bg-card px-3 py-2 text-sm">
+              <Link href={topicBuilderHref(topic)} className="inline-flex rounded-full border border-line bg-card px-3 py-2 text-sm">
                 {topic.nav}
               </Link>
             </li>
           ))}
         </ul>
+        <Link href="/#urval" className="mt-6 inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink">
+          Skapa ert utdrag
+        </Link>
         <p className="mt-4 flex flex-wrap gap-4 text-sm font-medium">
           <Link href="/bransch" className="text-sea">
             Alla branscher

@@ -9,6 +9,7 @@ export function SiteFooter() {
           <p>Företagsdata från svenska bolag. Lägsta order 399 kr, utan konto.</p>
         </div>
         <nav className="flex flex-wrap gap-x-4 gap-y-2">
+          <Link href="/#urval">Skapa utdrag</Link>
           <Link href="/smakprov">Smakprov</Link>
           <Link href="/kallor">Källor</Link>
           <Link href="/gdpr">Personuppgifter</Link>

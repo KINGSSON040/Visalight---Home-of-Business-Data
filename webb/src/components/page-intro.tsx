@@ -18,11 +18,8 @@ export function PageIntro({
       <p className="mt-4 text-lg leading-8 text-muted">{lead}</p>
       <div className="mt-8 space-y-8">{children}</div>
       <div className="mt-10 flex flex-wrap gap-3">
-        <Link href="/#urval" className="inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink">
-          Bygg en lista
-        </Link>
-        <Link href="/demo" className="inline-flex h-12 items-center rounded-full border border-line bg-white px-5 font-medium">
-          Boka 15 minuter
+        <Link href="/#urval" className="inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+          Skapa ert utdrag
         </Link>
       </div>
     </main>
