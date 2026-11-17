@@ -4,7 +4,8 @@ import { TopicIndex } from "@/components/topic-view";
 export const metadata: Metadata = {
   title: "Branscher — VisaLight",
   description:
-    "Företagsdata per bransch, från verifierade och uppdaterade register. Verktyget visar exempelbolag tills det riktiga registret är kopplat.",
+    "Företagsinformation per bransch. Varje sida hör till en bransch och dess SNI-kod, med innehåll, pris och länk till utdraget.",
+  alternates: { canonical: "/bransch" },
 };
 
 export default function IndustriesPage() {

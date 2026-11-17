@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { SiteFrame } from "@/components/site-frame";
 import { registerDatabasePath } from "@/lib/register-path";
+import { siteOrigin } from "@/lib/topics";
 import "./globals.css";
 
 const inter = Inter({
@@ -10,9 +11,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "VisaLight — Företagsdata utan abonnemang",
+  metadataBase: new URL(siteOrigin()),
+  title: "VisaLight — Företagsinformation och företagsdata",
   description:
-    "Skapa ett utdrag av företagsregistret. Välj bransch och ort, se priset och slippa hämta uppgifterna själva.",
+    "Företagsinformation från aktuellt företagsregister. Välj bransch eller SNI-kod, se antal och pris, och få utdraget utan abonnemang.",
 };
 
 export default function RootLayout({

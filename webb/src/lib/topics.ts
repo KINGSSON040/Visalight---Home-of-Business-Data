@@ -86,6 +86,63 @@ function ord(slug: string, nav: string, lead: string): Topic {
   };
 }
 
+function slugify(label: string): string {
+  return label
+    .toLowerCase()
+    .replace(/å/g, "a")
+    .replace(/ä/g, "a")
+    .replace(/ö/g, "o")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+for (const industry of INDUSTRIES) {
+  if (TOPICS.some((topic) => topic.kind === "bransch" && topic.sni === industry.sni)) continue;
+  TOPICS.push(
+    bransch(
+      slugify(industry.label),
+      industry.label,
+      industry.sni,
+      `${industry.label} har SNI ${dottedSni(industry.sni)}. Utdraget innehåller namn, organisationsnummer, adress och bransch, och telefon bara där numret finns.`,
+    ),
+  );
+}
+
+export function dottedSni(code: string): string {
+  const digits = code.replace(/\D/g, "");
+  return digits.length === 5 ? `${digits.slice(0, 2)}.${digits.slice(2)}` : digits;
+}
+
+export function topicForSni(raw: string): Topic | undefined {
+  const digits = raw.replace(/\D/g, "");
+  if (!digits) return undefined;
+  const industry = INDUSTRIES.find(
+    (item) => item.sni === digits || (item.legacy ?? []).some((code) => code.replace(/\D/g, "") === digits),
+  );
+  if (!industry) return undefined;
+  return TOPICS.find((topic) => topic.kind === "bransch" && topic.sni === industry.sni);
+}
+
+export function sniPaths(): { code: string; topic: Topic }[] {
+  const rows: { code: string; topic: Topic }[] = [];
+  for (const industry of INDUSTRIES) {
+    const topic = TOPICS.find((item) => item.kind === "bransch" && item.sni === industry.sni);
+    if (!topic) continue;
+    const codes = [industry.sni, industry.code, ...(industry.legacy ?? [])];
+    for (const code of codes) {
+      rows.push({ code: code.replace(/\D/g, ""), topic });
+      if (code.includes(".")) rows.push({ code, topic });
+      else rows.push({ code: dottedSni(code), topic });
+    }
+  }
+  const seen = new Set<string>();
+  return rows.filter((row) => {
+    if (seen.has(row.code)) return false;
+    seen.add(row.code);
+    return true;
+  });
+}
+
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const seen = new Set<string>();
 for (const topic of TOPICS) {

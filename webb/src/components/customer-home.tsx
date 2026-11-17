@@ -236,6 +236,9 @@ export function CustomerHome({
           <Link href="/bransch" className="text-sea">
             Alla branscher
           </Link>
+          <Link href="/sni" className="text-sea">
+            SNI-koder
+          </Link>
           <Link href="/ord" className="text-sea">
             Ord om företagsdata
           </Link>
