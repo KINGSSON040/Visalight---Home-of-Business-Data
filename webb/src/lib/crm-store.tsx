@@ -768,7 +768,7 @@ function useCrmState() {
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [audit, setAudit] = useState<AuditEntry[]>([]);
   const [opps, setOpps] = useState<Opportunity[]>([]);
-  const [staleDays, setStaleDaysState] = useState(7);
+  const [staleDays, setStaleDaysState] = useState(10);
   const [now, setNow] = useState(() => Date.now());
   const claimsRef = useRef<Claim[]>([]);
 
@@ -830,7 +830,6 @@ function useCrmState() {
   useSaved(DRAFTS_KEY, drafts, ready);
   useSaved(AUDIT_KEY, audit, ready);
   useSaved(OPPS_KEY, opps, ready);
-  useSaved(SETTINGS_KEY, String(staleDays), ready);
 
   const currentUser = STAFF.find((person) => person.id === userId) ?? STAFF[0];
   const isAdmin = currentUser.role === "admin";
@@ -1339,7 +1338,10 @@ function useCrmState() {
   }
 
   function setStaleDays(days: number) {
-    if (days >= 1 && days <= 60) setStaleDaysState(days);
+    if (days >= 1 && days <= 60) {
+      setStaleDaysState(days);
+      writeStored(SETTINGS_KEY, String(days));
+    }
   }
 
   function opportunityAlerts(forUser?: StaffId): { opp: Opportunity; flags: OppFlags }[] {
