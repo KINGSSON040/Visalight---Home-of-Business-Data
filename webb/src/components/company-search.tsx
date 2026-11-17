@@ -18,6 +18,7 @@ export function CompanySearch({
   onClear,
   split = false,
   hint,
+  queryPlaceholder = "Bransch, SNI, namn eller organisationsnummer",
   children,
 }: {
   draft: Selection;
@@ -26,6 +27,7 @@ export function CompanySearch({
   onClear: () => void;
   split?: boolean;
   hint?: string;
+  queryPlaceholder?: string;
   children?: ReactNode;
 }) {
   const forms = draft.forms ?? [];
@@ -58,7 +60,7 @@ export function CompanySearch({
       <SuggestField
         label="Sök"
         value={draft.query}
-        placeholder="Bransch, SNI, namn eller organisationsnummer"
+        placeholder={queryPlaceholder}
         suggestions={suggestQuery(draft.query)}
         onValue={(query) => onChange({ query })}
         onPick={applySuggestion}
@@ -215,7 +217,7 @@ function SuggestField({
             pick(suggestions[active]);
           }
         }}
-        className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base"
+        className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base placeholder:text-ink/40"
       />
       {open && visible.length > 0 ? (
         <ul id={listId} role="listbox" className="mt-1 max-h-56 overflow-y-auto rounded-xl border border-line bg-white">

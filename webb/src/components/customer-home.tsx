@@ -106,7 +106,7 @@ export function CustomerHome({ initial }: { initial: Selection }) {
               <StepNumber n="1" />
               <h3 className="mt-3 text-2xl tracking-tight">Fyll i listbyggaren</h3>
               <p className="mt-2 max-w-2xl leading-7 text-muted">
-                Skriv i sökfältet, komplettera med ort, bransch och bolagsform, och tryck Sök bolag.
+                Ange branschnamn eller SNI-kod i sökfältet, komplettera med ort och bolagsform, och tryck Sök bolag.
                 Förslagen under fälten kommer från det som finns i registret.
               </p>
             </li>

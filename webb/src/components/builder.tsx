@@ -26,7 +26,7 @@ export function ListBuilder({
       <div className="shrink-0">
         <h2 className="text-2xl tracking-tight sm:text-3xl">Listbyggare</h2>
         <p className="mt-1 text-sm leading-6 text-muted">
-          Skriv bransch, SNI, namn eller ort. Förslag visas under fältet. Tryck Sök bolag när valen är klara.
+          Ange branschnamn eller SNI-kod. Förslag visas under fältet. Tryck Sök bolag när valen är klara.
         </p>
       </div>
 
@@ -37,6 +37,7 @@ export function ListBuilder({
           onSearch={onSearch}
           onClear={() => onChange({ query: "", city: "", bransch: "", sni: "", forms: [] })}
           split
+          queryPlaceholder="Branschnamn eller SNI-kod"
           hint={hint}
         >
           <fieldset className="mt-4">
