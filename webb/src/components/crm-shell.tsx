@@ -33,14 +33,14 @@ function CrmFrameInner({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-dvh text-ink lg:grid lg:grid-cols-[16.5rem_minmax(0,1fr)]">
-      <aside className="theme-wash lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col">
+      <aside className="bg-sea-deep text-white lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col">
         <div className="flex items-center justify-between gap-3 px-5 py-4 lg:block">
           <div>
-            <p className="text-[0.68rem] uppercase tracking-[0.18em] text-ink/60">Internt</p>
+            <p className="text-[0.68rem] uppercase tracking-[0.18em] text-white/60">Internt</p>
             <p className="text-2xl tracking-tight">VisaLight</p>
-            <p className="text-sm text-ink/70">CRM</p>
+            <p className="text-sm text-white/70">CRM</p>
           </div>
-          <Link href="/" className="text-sm text-ink/70 lg:hidden">
+          <Link href="/" className="text-sm text-white/70 lg:hidden">
             Till butiken
           </Link>
         </div>
@@ -62,11 +62,11 @@ function CrmFrameInner({ children }: { children: React.ReactNode }) {
           </ShellLink>
         </nav>
         <label className="mx-3 mb-4 block text-sm">
-          <span className="mb-1.5 block text-ink/70">Säljare</span>
+          <span className="mb-1.5 block text-white/70">Säljare</span>
           <select
             value={store.userId}
             onChange={(event) => store.setUserId(event.target.value as StaffId)}
-            className="h-10 w-full rounded-xl border border-ink/15 bg-white/70 px-2 text-sm text-ink"
+            className="h-10 w-full rounded-xl border border-white/20 bg-white/10 px-2 text-sm text-white"
           >
             {STAFF.map((person) => (
               <option key={person.id} value={person.id} className="text-ink">
@@ -74,11 +74,11 @@ function CrmFrameInner({ children }: { children: React.ReactNode }) {
               </option>
             ))}
           </select>
-          <span className="mt-1.5 block text-xs leading-5 text-ink/70">
+          <span className="mt-1.5 block text-xs leading-5 text-white/70">
             Exempelkonton. Byt säljare för att se någon annans stjärnor.
           </span>
         </label>
-        <p className="mt-auto hidden px-5 py-5 text-sm leading-6 text-ink/70 lg:block">
+        <p className="mt-auto hidden px-5 py-5 text-sm leading-6 text-white/70 lg:block">
           Exempelbolag tills det riktiga registret är kopplat. Profiler kan strykas, inte raderas.
         </p>
       </aside>
@@ -93,7 +93,7 @@ function ShellLink({ href, pressed, children }: { href: string; pressed: boolean
       href={href}
       aria-current={pressed ? "page" : undefined}
       className={`whitespace-nowrap rounded-xl px-3 py-2 text-left text-sm font-medium ${
-        pressed ? "bg-sea text-white" : "bg-transparent text-ink/75 hover:bg-white/40"
+        pressed ? "bg-amber text-ink" : "bg-transparent text-white/80 hover:bg-white/10"
       }`}
     >
       {children}

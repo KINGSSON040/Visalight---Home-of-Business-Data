@@ -18,9 +18,11 @@ import {
 export function CrmCard({
   company,
   call,
+  embedded = false,
 }: {
   company: Company;
   call?: { index: number; total: number; segmentName: string; onDone: () => void };
+  embedded?: boolean;
 }) {
   const store = useCrmStore();
   const claim = store.claims.find((item) => item.orgNr === company.orgNr) ?? null;
@@ -35,12 +37,14 @@ export function CrmCard({
   }, [company.orgNr]);
 
   return (
-    <article className="mx-auto max-w-3xl">
-      <p className="text-sm">
-        <Link href="/crm" className="font-medium text-sea">
-          Tillbaka till sök
-        </Link>
-      </p>
+    <article className={embedded ? "" : "mx-auto max-w-3xl"}>
+      {embedded ? null : (
+        <p className="text-sm">
+          <Link href="/crm" className="font-medium text-sea">
+            Tillbaka till sök
+          </Link>
+        </p>
+      )}
       {call ? (
         <p className="mt-3 rounded-2xl bg-foam px-4 py-3 text-sm leading-6">
           Samtal {Math.min(call.index + 1, call.total)} av {call.total} i segmentet {call.segmentName}. Logga utfallet,

@@ -2,9 +2,9 @@
 
 import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CompanySearch } from "@/components/company-search";
-import { StarButton } from "@/components/crm-card";
+import { CrmCard, StarButton } from "@/components/crm-card";
 import {
   COMPANIES,
   defaultSelection,
@@ -34,6 +34,7 @@ export function CrmDesk() {
 
 function Desk() {
   const params = useSearchParams();
+  const router = useRouter();
   const view = params.get("vy");
   const store = useCrmStore();
   const [draft, setDraft] = useState<Selection>(blankSearch);
@@ -109,25 +110,59 @@ function Desk() {
       : `${rows.length.toLocaleString("sv-SE")} exempelbolag i urvalet.`;
 
   if (view === "mina") {
+    const chosen = params.get("bolag");
+    const selected = myCompanies.find((item) => item.company.orgNr === chosen) ?? myCompanies[0];
     return (
-      <section>
-        <h1 className="text-3xl tracking-tight">Mina företag</h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          Bolag du stjärnmärkt. Här samlas de så du kan bearbeta dem i den ordning du vill. En fylld stjärna som tillhör
-          en kollega kan inte tas över.
-        </p>
-        {myCompanies.length === 0 ? (
-          <p className="mt-4 rounded-3xl border border-dashed border-line bg-white px-4 py-8 text-sm leading-6 text-muted">
-            Inga stjärnor ännu. Sök fram ett bolag och tryck på stjärnan.
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_19rem]">
+        <section className="min-w-0 rounded-3xl border border-line bg-white p-4 sm:p-5">
+          {selected ? (
+            <CrmCard company={selected.company} embedded />
+          ) : (
+            <div>
+              <h1 className="text-3xl tracking-tight">Kundkort</h1>
+              <p className="mt-2 text-sm leading-6 text-muted">
+                Inga stjärnor ännu. Sök fram ett bolag och tryck på stjärnan, så öppnas kortet här.
+              </p>
+            </div>
+          )}
+        </section>
+        <aside className="lg:sticky lg:top-4">
+          <h1 className="text-xl tracking-tight">Mina företag</h1>
+          <p className="mt-1 text-sm leading-6 text-muted">
+            Bolag du stjärnmärkt. Välj ett, så visas kortet i mitten.
           </p>
-        ) : (
-          <ul className="mt-4 divide-y divide-line overflow-hidden rounded-3xl border border-line bg-white">
-            {myCompanies.map(({ claim, company }) => (
-              <CompanyRow key={company.orgNr} company={company} since={claim.at} />
-            ))}
-          </ul>
-        )}
-      </section>
+          {myCompanies.length === 0 ? (
+            <p className="mt-3 rounded-2xl border border-dashed border-line bg-white px-3 py-6 text-sm leading-6 text-muted">
+              Listan är tom.
+            </p>
+          ) : (
+            <ul className="mt-3 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-white">
+              {myCompanies.map(({ claim, company }) => (
+                <li key={company.orgNr}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = new URLSearchParams(params.toString());
+                      next.set("vy", "mina");
+                      next.set("bolag", company.orgNr);
+                      router.replace(`/crm?${next.toString()}`);
+                    }}
+                    className={`block w-full px-3 py-3 text-left ${
+                      selected?.company.orgNr === company.orgNr ? "bg-foam" : "bg-white"
+                    }`}
+                  >
+                    <span className="block font-medium">{company.name}</span>
+                    <span className="mt-0.5 block text-sm text-muted">
+                      {company.orgNr} · {company.city}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted">Sedan {formatStamp(claim.at)}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </aside>
+      </div>
     );
   }
 

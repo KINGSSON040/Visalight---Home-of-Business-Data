@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f4f8f2;
-  --ink: #1b2a22;
-  --muted: #4d6256;
-  --line: #d3e4d6;
+  --paper: #f4f7f5;
+  --ink: #102117;
+  --muted: #4e6256;
+  --line: #d7e2db;
   --card: #ffffff;
-  --green: #3c8f4e;
-  --green-soft: #e5f4e4;
-  --rust: #a33b32;
-  --sea: #2f7a3e;
-  --sea-deep: #1f5c30;
-  --amber: #d5e35a;
-  --amber-soft: #f1f6d4;
-  --foam: #e7f5e6;
+  --green: #16803c;
+  --green-soft: #e5f6ea;
+  --rust: #b42318;
+  --sea: #146b34;
+  --sea-deep: #0c3d22;
+  --amber: #c6e04a;
+  --amber-soft: #eef6c4;
+  --foam: #e7f5eb;
 }
 
 @theme inline {
@@ -36,16 +36,13 @@
 }
 
 body {
-  background-color: #f4f8f2;
-  background-image: linear-gradient(165deg, #eef6ea 0%, #f7faf4 46%, #f3f6df 100%);
-  background-attachment: fixed;
+  background: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans), sans-serif;
 }
 
 .theme-wash {
-  background-color: rgba(244, 248, 242, 0.92);
-  background-image: linear-gradient(180deg, rgba(238, 246, 234, 0.96) 0%, rgba(243, 246, 223, 0.94) 100%);
+  background: #ffffff;
   color: var(--ink);
 }
 
@@ -55,12 +52,12 @@ body {
 }
 
 .band-mint {
-  background: linear-gradient(180deg, #f3faf2 0%, #e7f5e4 100%);
+  background: #f3faf5;
   border-top: 1px solid var(--line);
 }
 
 .band-lime {
-  background: linear-gradient(180deg, #f8faef 0%, #f1f5dc 100%);
+  background: #f7fae8;
   border-top: 1px solid var(--line);
 }
 
@@ -69,8 +66,8 @@ body {
 }
 
 ::selection {
-  background: #d5e35a;
-  color: #1b2a22;
+  background: #c6e04a;
+  color: #102117;
 }
 
 :focus-visible {
