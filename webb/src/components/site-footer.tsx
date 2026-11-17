@@ -13,7 +13,7 @@ export function SiteFooter({
   exampleData?: boolean;
 }) {
   return (
-    <footer className="theme-wash px-4 py-8 text-sm text-ink/80">
+    <footer className="theme-wash border-t border-white/10 px-4 py-10 text-sm text-ink/80">
       <div className="mx-auto flex max-w-6xl flex-col gap-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <BrandLockup />
@@ -26,6 +26,8 @@ export function SiteFooter({
         </p>
         <nav className="flex flex-wrap gap-x-4 gap-y-2">
           <Link href="/#urval">Skapa utdrag</Link>
+          <Link href="/statistik">Statistik</Link>
+          <Link href="/nyheter">Nyheter</Link>
           <Link href="/smakprov">Smakprov</Link>
           <Link href="/kallor">Källor</Link>
           <Link href="/gdpr">Personuppgifter</Link>

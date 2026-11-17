@@ -1,6 +1,8 @@
+import fs from "node:fs";
 import Database from "better-sqlite3";
 import { COMPANIES, countyCode, selectionSniFilter, type Selection } from "@/lib/catalog";
 import { registerDatabasePath } from "@/lib/register-path";
+import { exampleEstimate } from "@/lib/naringsliv";
 import type { UrvalPreview, UrvalResult } from "@/lib/urval";
 
 /**
@@ -43,7 +45,7 @@ const NOT_A_COMPANY =
 const CITY_SQL =
   "lower(replace(replace(replace(replace(replace(replace(c.city, 'Ö', 'o'), 'ö', 'o'), 'Ä', 'a'), 'ä', 'a'), 'Å', 'a'), 'å', 'a'))";
 
-const SELLABLE = [
+export const SELLABLE = [
   "c.manual_exclude = 0",
   "(c.ended_on IS NULL OR trim(c.ended_on) = '')",
   "(c.status_code IS NULL OR c.status_code != 'avregistrerad')",
@@ -70,22 +72,6 @@ function formatOrg(orgNr: string): string {
   const digits = orgNr.replace(/\D/g, "");
   if (digits.length === 10) return `${digits.slice(0, 6)}-${digits.slice(6)}`;
   return orgNr;
-}
-
-function idle(source: UrvalResult["source"], note: string): UrvalResult {
-  return {
-    source,
-    status: "idle",
-    companies: 0,
-    phones: 0,
-    signatoryPhones: 0,
-    emails: 0,
-    withPhone: 0,
-    withEmail: 0,
-    withSignatory: 0,
-    preview: [],
-    note,
-  };
 }
 
 function ready(
@@ -189,9 +175,7 @@ function fromDatabase(selection: Selection): UrvalResult | null {
   const file = registerDatabasePath();
   if (!file) return null;
   const built = where(selection);
-  if (built.idle) {
-    return idle("register", "Välj bransch eller ort och tryck Sök bolag. Antal och pris räknas då här.");
-  }
+  if (built.idle) return wholeRegister(file);
   if (built.empty) {
     return ready(
       "register",
@@ -203,6 +187,23 @@ function fromDatabase(selection: Selection): UrvalResult | null {
       NOT_A_COMPANY,
     );
   }
+  return countWhere(file, built.sql, built.args, true);
+}
+
+let wholeCache: { key: string; result: UrvalResult } | null = null;
+
+/** Hela registret utan filter. Räknas en gång per registerfil. */
+function wholeRegister(file: string): UrvalResult {
+  const key = `${file}:${fs.statSync(file).mtimeMs}`;
+  if (wholeCache?.key === key) return wholeCache.result;
+  const result = countWhere(file, SELLABLE, {}, false);
+  result.note = "Hela registret, alla säljbara bolag i Sverige. Välj bransch eller ort för att smalna av.";
+  wholeCache = { key, result };
+  return result;
+}
+
+function countWhere(file: string, sql: string, args: Record<string, string>, withPreview: boolean): UrvalResult {
+  const built = { sql, args };
   const db = openDatabase(file);
   const base = `FROM companies c WHERE ${built.sql}`;
   const companies = (db.prepare(`SELECT COUNT(*) AS n ${base}`).get(built.args) as { n: number }).n;
@@ -258,7 +259,7 @@ function fromDatabase(selection: Selection): UrvalResult | null {
       )
       .get(built.args) as { n: number }
   ).n;
-  const rows = db
+  const rows = !withPreview ? [] : db
     .prepare(
       `SELECT c.org_nr AS orgNr, c.name AS name, c.city AS city,
          (SELECT i.sni FROM industries i WHERE i.org_nr = c.org_nr ORDER BY i.rank LIMIT 1) AS sni
@@ -292,10 +293,10 @@ function exampleUrval(selection: Selection): UrvalResult {
   const employees = (selection.employees ?? "").trim();
   const narrowed = Boolean(city || forms.length > 0 || county || employees);
   if (filter.kind === "any" && !narrowed) {
-    return idle(
-      "example",
-      "Registret är inte inkopplat i den här körningen, så bara exempelbolag kan visas. Välj bransch, område eller segment och tryck Sök bolag.",
-    );
+    return {
+      ...exampleEstimate(selection),
+      note: "Exempeldata: registret är inte inkopplat, så hela registrets antal är ett exempelvärde.",
+    };
   }
   if (filter.kind === "none") {
     return ready("example", 0, 0, 0, 0, [], NOT_A_COMPANY);
@@ -309,29 +310,10 @@ function exampleUrval(selection: Selection): UrvalResult {
     if (filter.kind === "prefix" && !company.sni.startsWith(filter.prefix)) return false;
     return true;
   });
-  const note =
-    rows.length === 0
-      ? "Registret är inte inkopplat. Inget exempelbolag matchar de här filtren."
-      : "Registret är inte inkopplat. Antalet gäller exempelbolag.";
-  return ready(
-    "example",
-    rows.length,
-    rows.reduce((sum, row) => sum + row.phones.length, 0),
-    rows.reduce((sum, row) => sum + row.signatoryPhones.length, 0),
-    rows.reduce((sum, row) => sum + row.emails.length, 0),
-    rows.slice(0, 8).map((row) => ({
-      orgNr: row.orgNr,
-      name: row.name,
-      city: row.city,
-      sni: row.sni,
-    })),
-    note,
-    {
-      withPhone: rows.filter((row) => row.phones.length > 0).length,
-      withEmail: rows.filter((row) => row.emails.length > 0).length,
-      withSignatory: rows.filter((row) => row.signatoryPhones.length > 0).length,
-    },
-  );
+  return {
+    ...exampleEstimate(selection),
+    preview: rows.slice(0, 8).map((row) => ({ orgNr: row.orgNr, name: row.name, city: row.city, sni: row.sni })),
+  };
 }
 
 export function loadUrval(selection: Selection): UrvalResult {
