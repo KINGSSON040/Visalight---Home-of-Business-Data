@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Field, Panel, telHref } from "@/components/crm-ui";
-import { formatStamp, useCrmStore, type Contact } from "@/lib/crm-store";
+import { digitsOf, formatStamp, useCrmStore, type Contact } from "@/lib/crm-store";
 
 export function Contacts({ orgNr }: { orgNr: string }) {
   const store = useCrmStore();
@@ -63,9 +64,17 @@ function PersonRow({ person }: { person: Contact }) {
       <div className="flex items-start justify-between gap-3">
         <div className={person.struck ? "text-muted line-through" : ""}>
           <p className="font-medium">
-            {person.firstName} {person.lastName}
+            <Link href={`/crm/person/${person.id}`} className="text-sea hover:underline">
+              {person.firstName} {person.lastName}
+            </Link>
           </p>
           <p className="text-sm">{person.role || "Ingen rolltitel"}</p>
+          {person.createdAt ? (
+            <p className="text-xs text-muted no-underline">
+              Tillagd {formatStamp(person.createdAt)}
+              {person.createdBy ? ` av ${person.createdBy}` : ""}
+            </p>
+          ) : null}
         </div>
         {person.struck ? (
           <div className="text-right text-xs text-muted">
@@ -73,9 +82,13 @@ function PersonRow({ person }: { person: Contact }) {
               Struken {person.struckAt ? formatStamp(person.struckAt) : ""}
               {person.struckBy ? ` av ${person.struckBy}` : ""}
             </p>
-            <button type="button" className="mt-1 text-sm font-medium text-sea" onClick={() => store.reactivateContact(person.id)}>
-              Återaktivera
-            </button>
+            {store.isAdmin ? (
+              <button type="button" className="mt-1 text-sm font-medium text-sea" onClick={() => store.reactivateContact(person.id)}>
+                Återaktivera
+              </button>
+            ) : (
+              <p className="mt-1">Bara admin kan återaktivera.</p>
+            )}
           </div>
         ) : confirming ? (
           <div className="flex items-center gap-2 text-sm">
@@ -112,7 +125,7 @@ function PersonRow({ person }: { person: Contact }) {
                   {item.value}
                 </a>
               )}
-              {person.struck ? null : (
+              {person.struck || (item.struck && !store.isAdmin) ? null : (
                 <button
                   type="button"
                   className="text-xs text-muted underline"
@@ -135,7 +148,7 @@ function PersonRow({ person }: { person: Contact }) {
                   {item.value}
                 </a>
               )}
-              {person.struck ? null : (
+              {person.struck || (item.struck && !store.isAdmin) ? null : (
                 <button
                   type="button"
                   className="text-xs text-muted underline"
@@ -197,6 +210,20 @@ function NewPerson({ orgNr, onDone }: { orgNr: string; onDone: () => void }) {
   const [phones, setPhones] = useState<string[]>([""]);
   const [emails, setEmails] = useState<string[]>([""]);
   const [error, setError] = useState("");
+  const [force, setForce] = useState(false);
+
+  const fullName = `${firstName} ${lastName}`.trim().toLowerCase();
+  const phoneDigits = phones.map(digitsOf).filter((value) => value.length >= 6);
+  const mailValues = emails.map((value) => value.trim().toLowerCase()).filter(Boolean);
+  const duplicates = store.contacts.flatMap((item) => {
+    const why: string[] = [];
+    if (fullName.length > 3 && item.orgNr === orgNr && `${item.firstName} ${item.lastName}`.trim().toLowerCase() === fullName) {
+      why.push("samma namn på det här bolaget");
+    }
+    if (item.phones.some((phone) => phoneDigits.includes(digitsOf(phone.value)))) why.push("samma telefonnummer");
+    if (item.emails.some((mail) => mailValues.includes(mail.value.trim().toLowerCase()))) why.push("samma e-postadress");
+    return why.length ? [{ item, why }] : [];
+  });
 
   function setAt(list: string[], setList: (next: string[]) => void, index: number, value: string) {
     setList(list.map((item, at) => (at === index ? value : item)));
@@ -205,6 +232,10 @@ function NewPerson({ orgNr, onDone }: { orgNr: string; onDone: () => void }) {
   function save() {
     if (!firstName.trim() || !lastName.trim()) {
       setError("Ange förnamn och efternamn.");
+      return;
+    }
+    if (duplicates.length && !force) {
+      setError("Det finns redan en liknande person. Kontrollera och bocka i att du vill lägga till ändå.");
       return;
     }
     setError("");
@@ -264,6 +295,25 @@ function NewPerson({ orgNr, onDone }: { orgNr: string; onDone: () => void }) {
         </div>
       </div>
 
+      {duplicates.length ? (
+        <div className="rounded-2xl border-2 border-amber bg-amber-soft px-3 py-2 text-sm sm:col-span-3" role="alert">
+          <p className="font-semibold">Möjlig dublett</p>
+          <ul className="mt-1 space-y-0.5">
+            {duplicates.map(({ item, why }) => (
+              <li key={item.id}>
+                <Link href={`/crm/person/${item.id}`} className="font-medium text-sea underline">
+                  {item.firstName} {item.lastName}
+                </Link>{" "}
+                ({why.join(", ")}){item.struck ? ", struken" : ""}
+              </li>
+            ))}
+          </ul>
+          <label className="mt-2 flex items-center gap-2">
+            <input type="checkbox" checked={force} onChange={(event) => setForce(event.target.checked)} className="h-4 w-4 accent-[var(--sea)]" />
+            Lägg till ändå
+          </label>
+        </div>
+      ) : null}
       {error ? <p className="text-sm text-rust sm:col-span-3">{error}</p> : null}
       <button type="submit" className="btn-fade-green h-12 rounded-full bg-green font-medium text-white sm:col-span-3">
         Lägg till kontaktperson

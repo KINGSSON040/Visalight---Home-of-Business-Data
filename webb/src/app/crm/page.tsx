@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { CrmDesk } from "@/components/crm-desk";
+import { TodayView } from "@/components/crm-today";
 
 export const metadata: Metadata = {
-  title: "CRM — VisaLight",
-  description: "Internt CRM för kundkort, stjärnmärkta bolag, segment och kallringning.",
+  title: "Idag — VisaLight CRM",
   robots: { index: false, follow: false },
 };
 
-export default function CrmPage() {
-  return <CrmDesk />;
+export default function Page() {
+  return <TodayView />;
 }
