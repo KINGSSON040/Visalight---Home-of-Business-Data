@@ -251,7 +251,7 @@ function SuggestField({
       ) : null}
       {showList && value.trim() && visible.length === 0 ? (
         <p className="mt-1 rounded-xl border border-line bg-white px-3 py-2 text-sm text-muted">
-          Inget i exempelregistret matchar.
+          Inget förslag matchar.
         </p>
       ) : null}
     </label>

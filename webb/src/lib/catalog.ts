@@ -52,12 +52,14 @@ export type Industry = {
   code: string;
   label: string;
   words: string[];
+  /** SNI 2007-koder som motsvarar samma bransch i registret. */
+  legacy?: string[];
   note?: string;
 };
 
 /** SNI 2025. words är det folk skriver, label är SCB:s namn. */
 export const INDUSTRIES: Industry[] = [
-  { sni: "56110", code: "56.110", label: "Restaurangverksamhet", words: ["restaurang", "restauranger"] },
+  { sni: "56110", code: "56.110", label: "Restaurangverksamhet", words: ["restaurang", "restauranger"], legacy: ["56101"] },
   { sni: "41200", code: "41.200", label: "Byggande av hus", words: ["bygg", "byggföretag"] },
   { sni: "62010", code: "62.010", label: "Datakonsulter", words: ["data", "programmering"] },
   { sni: "47112", code: "47.112", label: "Livsmedelshandel", words: ["livsmedel", "mataffär"] },
@@ -68,6 +70,7 @@ export const INDUSTRIES: Industry[] = [
     code: "96.210",
     label: "Frisörer och barberare",
     words: ["frisör", "frisörsalong", "frisörsalonger", "hårvård", "barberare"],
+    legacy: ["96021"],
     note: "frisörsalonger",
   },
   {
@@ -75,6 +78,7 @@ export const INDUSTRIES: Industry[] = [
     code: "96.220",
     label: "Skönhetsvård",
     words: ["skönhet", "skönhetssalong", "skönhetssalonger", "skönhetsbehandling"],
+    legacy: ["96022"],
     note: "skönhetssalonger, inte frisörer",
   },
   {
@@ -338,6 +342,44 @@ function industrySuggestion(item: Industry, fillQuery: boolean): Suggestion {
 }
 
 /** Bara branscher. Används i butikens sökfält. */
+export type SniFilter =
+  | { kind: "any" }
+  | { kind: "none" }
+  | { kind: "codes"; codes: string[] }
+  | { kind: "prefix"; prefix: string };
+
+function sniSpellings(code: string): string[] {
+  const digits = code.replace(/\D/g, "");
+  if (!digits) return [];
+  const dotted = digits.length === 5 ? `${digits.slice(0, 2)}.${digits.slice(2)}` : "";
+  return [...new Set([digits, dotted].filter(Boolean))];
+}
+
+function spellingsFor(digits: string): string[] {
+  const industry = INDUSTRIES.find(
+    (item) => item.sni === digits || (item.legacy ?? []).some((code) => code.replace(/\D/g, "") === digits),
+  );
+  return [...new Set([digits, industry?.sni ?? "", ...(industry?.legacy ?? [])].flatMap(sniSpellings))];
+}
+
+/** Vilka SNI-koder ett kundurval ska träffa, inklusive SNI 2007 om registret fortfarande har den. */
+export function selectionSniFilter(selection: { sni?: string; bransch?: string; query?: string }): SniFilter {
+  const chosen = (selection.sni ?? "").replace(/\D/g, "");
+  if (chosen) return { kind: "codes", codes: spellingsFor(chosen) };
+  const text = [selection.bransch ?? "", selection.query ?? ""].join(" ").trim();
+  if (!text) return { kind: "any" };
+  const needle = fold(text);
+  const digits = text.replace(/\D/g, "");
+  const hits = INDUSTRIES.filter((item) => industryMatches(item, needle, digits));
+  if (hits.length > 0) {
+    const codes = hits.flatMap((item) => [item.sni, ...(item.legacy ?? [])].flatMap(sniSpellings));
+    return { kind: "codes", codes: [...new Set(codes)] };
+  }
+  if (digits.length >= 5) return { kind: "codes", codes: spellingsFor(digits) };
+  if (digits.length >= 2) return { kind: "prefix", prefix: digits };
+  return { kind: "none" };
+}
+
 export function suggestBranscher(text: string): Suggestion[] {
   const needle = fold(text.trim());
   const digits = text.replace(/\D/g, "");

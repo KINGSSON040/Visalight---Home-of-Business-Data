@@ -6,10 +6,8 @@ import { ListBuilder } from "@/components/builder";
 import { HomeMore } from "@/components/home-more";
 import {
   describeSelection,
-  hasCompleteBasics,
   sameSearch,
   selectionToQuery,
-  summarize,
   type Selection,
 } from "@/lib/catalog";
 import {
@@ -20,6 +18,7 @@ import {
   PHONE_ORE,
   SIGNATORY_ORE,
 } from "@/lib/pricing";
+import { priceForUrval, pricedCounts, type UrvalResult } from "@/lib/urval";
 import { linkedIndustries, topicPath } from "@/lib/topics";
 
 const EXAMPLE_FIGURES = [
@@ -29,9 +28,11 @@ const EXAMPLE_FIGURES = [
   { value: "2", label: "bolag med näringsförbud som lämnats utanför filen" },
 ];
 
-export function CustomerHome({ initial }: { initial: Selection }) {
+export function CustomerHome({ initial, initialUrval }: { initial: Selection; initialUrval: UrvalResult }) {
   const [draft, setDraft] = useState(initial);
   const [applied, setApplied] = useState(initial);
+  const [urval, setUrval] = useState(initialUrval);
+  const [loading, setLoading] = useState(false);
   const priced: Selection = {
     ...applied,
     phones: draft.phones,
@@ -40,6 +41,25 @@ export function CustomerHome({ initial }: { initial: Selection }) {
   };
   const share = selectionToQuery(priced);
   const dirty = !sameSearch(draft, applied);
+  const searchKey = selectionToQuery({ ...applied, phones: false, emails: false, signatory: false });
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    fetch(`/api/urval?${searchKey}`, { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error("Kunde inte räkna urvalet.");
+        return response.json() as Promise<UrvalResult>;
+      })
+      .then((next) => setUrval(next))
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [searchKey]);
 
   useEffect(() => {
     window.history.replaceState(null, "", share ? `/?${share}` : "/");
@@ -82,7 +102,8 @@ export function CustomerHome({ initial }: { initial: Selection }) {
           onChange={patch}
           onSearch={() => setApplied(draft)}
           dirty={dirty}
-          matchCount={summarize(priced).counts.companies}
+          urval={urval}
+          loading={loading}
         />
       </section>
 
@@ -104,7 +125,7 @@ export function CustomerHome({ initial }: { initial: Selection }) {
             <li className="rounded-3xl border border-line bg-card p-5 sm:p-6">
               <StepNumber n="2" />
               <h3 className="mt-3 text-2xl tracking-tight">Se resultatet</h3>
-              <Result selection={priced} dirty={dirty} />
+              <Result selection={priced} dirty={dirty} urval={urval} />
             </li>
             <li className="rounded-3xl border border-line bg-card p-5 sm:p-6">
               <StepNumber n="3" />
@@ -194,68 +215,58 @@ function PriceUnit({ label, ore, detail }: { label: string; ore: number; detail:
   );
 }
 
-function Result({ selection, dirty }: { selection: Selection; dirty: boolean }) {
-  const summary = summarize(selection);
-  const rows = summary.rows;
-  const complete = rows.filter(hasCompleteBasics).length;
-  const withPhone = rows.filter((row) => row.phones.length > 0).length;
-  const withEmail = rows.filter((row) => row.emails.length > 0).length;
-  const withSignatory = rows.filter((row) => row.signatoryPhones.length > 0).length;
+function Result({ selection, dirty, urval }: { selection: Selection; dirty: boolean; urval: UrvalResult }) {
+  const counts = pricedCounts(urval, selection);
+  const price = priceForUrval(urval, selection);
   const href = `/kassa?${selectionToQuery(selection)}`;
-  const { counts, price, gaps } = summary;
+  const noun = urval.source === "register" ? "bolag" : "exempelbolag";
 
   return (
     <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1fr)_17rem]" aria-live="polite">
       <div>
-        <p className="text-sm font-medium uppercase tracking-[0.14em] text-sea">Exempelbolag</p>
+        <p className="text-sm font-medium uppercase tracking-[0.14em] text-sea">
+          {urval.source === "register" ? "Registret" : "Exempelbolag"}
+        </p>
         <p className="mt-2 text-4xl tracking-tight">
-          {counts.companies.toLocaleString("sv-SE")}{" "}
-          <span className="text-xl text-muted">exempelbolag</span>
+          {urval.status === "ready" ? counts.companies.toLocaleString("sv-SE") : "—"}{" "}
+          <span className="text-xl text-muted">{noun}</span>
         </p>
         <p className="mt-2 text-sm leading-6 text-muted">{describeSelection(selection)}</p>
         <p className="mt-2 text-sm leading-6 text-muted">
-          {dirty
-            ? "Filtren är ändrade. Tryck Sök bolag för att räkna om det här resultatet."
-            : "Samma urval som senaste Sök bolag. Raderna är exempel tills det riktiga registret är kopplat."}
+          {dirty ? "Filtren är ändrade. Tryck Sök bolag för att räkna om det här resultatet." : urval.note}
         </p>
 
         <dl className="mt-5 space-y-4">
           <div>
             <dt className="font-medium">Kompletta rader med grunduppgifter</dt>
             <dd className="mt-1 text-sm leading-6 text-muted">
-              {complete.toLocaleString("sv-SE")} har en komplett rad, {BASE_ORE} öre styck (
+              {counts.companies.toLocaleString("sv-SE")} har en komplett rad, {BASE_ORE} öre styck (
               {formatKronor(BASE_ORE)} kr). {counts.companies.toLocaleString("sv-SE")} ×{" "}
               {formatKronor(BASE_ORE)} kr = {formatKronor(counts.companies * BASE_ORE)} kr.
             </dd>
           </div>
           {selection.phones ? (
-            <ContactLine
-              title="Telefonnummer"
-              companies={withPhone}
-              values={counts.phones}
-              valueLabel="nummer"
-              ore={PHONE_ORE}
-            />
+            <ContactLine title="Telefonnummer" values={counts.phones} valueLabel="nummer" ore={PHONE_ORE} />
           ) : null}
           {selection.emails ? (
-            <ContactLine
-              title="E-post"
-              companies={withEmail}
-              values={counts.emails}
-              valueLabel="adresser"
-              ore={EMAIL_ORE}
-            />
+            <ContactLine title="E-post" values={counts.emails} valueLabel="adresser" ore={EMAIL_ORE} />
           ) : null}
           {selection.signatory ? (
-            <ContactLine
-              title="Beslutsfattarnummer"
-              companies={withSignatory}
-              values={counts.signatoryPhones}
-              valueLabel="nummer"
-              ore={SIGNATORY_ORE}
-            />
+            <ContactLine title="Beslutsfattarnummer" values={counts.signatoryPhones} valueLabel="nummer" ore={SIGNATORY_ORE} />
           ) : null}
         </dl>
+        {urval.preview.length > 0 ? (
+          <>
+            <h4 className="mt-6 font-medium">Bolagsnamn</h4>
+            <ul className="mt-2 space-y-1 text-sm leading-6">
+              {urval.preview.map((company) => (
+                <li key={company.orgNr}>
+                  {company.name} · {company.city} · {company.orgNr}
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : null}
 
         <h4 className="mt-6 font-medium">Specifikation</h4>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-6 text-muted">
@@ -264,10 +275,7 @@ function Result({ selection, dirty }: { selection: Selection; dirty: boolean }) 
           {selection.emails ? <li>E-post där källan har en adress.</li> : null}
           {selection.signatory ? <li>Beslutsfattarnummer där källan har ett nummer.</li> : null}
         </ul>
-        <p className="mt-3 text-sm leading-6">
-          Tomma fält kostar inget.
-          {gaps.length > 0 ? ` ${gaps.join(", ")}.` : ""}
-        </p>
+        <p className="mt-3 text-sm leading-6">Tomma fält kostar inget.</p>
       </div>
 
       <div className="flex h-fit flex-col rounded-2xl bg-sea-deep p-5 text-white">
@@ -301,13 +309,11 @@ function Result({ selection, dirty }: { selection: Selection; dirty: boolean }) 
 
 function ContactLine({
   title,
-  companies,
   values,
   valueLabel,
   ore,
 }: {
   title: string;
-  companies: number;
   values: number;
   valueLabel: string;
   ore: number;
@@ -316,8 +322,8 @@ function ContactLine({
     <div>
       <dt className="font-medium">{title}</dt>
       <dd className="mt-1 text-sm leading-6 text-muted">
-        {companies.toLocaleString("sv-SE")} bolag har det. {values.toLocaleString("sv-SE")} {valueLabel} ×{" "}
-        {formatKronor(ore)} kr ({ore} öre) = {formatKronor(values * ore)} kr.
+        {values.toLocaleString("sv-SE")} {valueLabel} × {formatKronor(ore)} kr ({ore} öre) ={" "}
+        {formatKronor(values * ore)} kr.
       </dd>
     </div>
   );

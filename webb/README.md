@@ -1,6 +1,6 @@
 # Visalight, hemsidan
 
-Kundsidan där ett urval byggs och priset räknas. Exemplen är påhittade bolag. Kassan drar inga pengar.
+Kundsidan där ett urval byggs och priset räknas. Om `register/data/visalight.sqlite` finns efter synken läser sidan de riktiga bolagen. Annars visas exempelbolag. Kassan drar inga pengar.
 
 ```bash
 npm install

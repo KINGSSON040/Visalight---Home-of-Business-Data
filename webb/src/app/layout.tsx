@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { SiteFrame } from "@/components/site-frame";
+import { registerDatabasePath } from "@/lib/register-path";
 import "./globals.css";
 
 const inter = Inter({
@@ -22,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <body className={`${inter.variable} ${inter.className} antialiased`}>
-        <SiteFrame>{children}</SiteFrame>
+        <SiteFrame registerReady={registerDatabasePath() !== null}>{children}</SiteFrame>
       </body>
     </html>
   );

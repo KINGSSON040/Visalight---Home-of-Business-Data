@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckoutForm } from "@/components/checkout-form";
 import { PricePanel } from "@/components/price-panel";
-import { describeSelection, selectionFromRecord, selectionToQuery, summarize } from "@/lib/catalog";
+import { describeSelection, selectionFromRecord, selectionToQuery } from "@/lib/catalog";
+import { loadUrval } from "@/lib/register-urval";
+import { pricedCounts } from "@/lib/urval";
 
 export const metadata: Metadata = {
   title: "Kassa — VisaLight",
@@ -14,7 +16,8 @@ export default async function CheckoutPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const selection = selectionFromRecord(await searchParams);
-  const summary = summarize(selection);
+  const urval = loadUrval(selection);
+  const companies = pricedCounts(urval, selection).companies;
   const back = `/?${selectionToQuery(selection)}`;
 
   return (
@@ -25,9 +28,9 @@ export default async function CheckoutPage({
       <h1 className="mt-3 font-serif text-5xl tracking-tight">Kassa</h1>
       <p className="mt-3 max-w-xl text-muted">
         Du betalar som gäst. Inget konto krävs, och filen skickas till e-postadressen. {describeSelection(selection)}.{" "}
-        {summary.counts.companies.toLocaleString("sv-SE")} exempelbolag i den här förhandsvisningen.
+        {companies.toLocaleString("sv-SE")} {urval.source === "register" ? "bolag" : "exempelbolag"} i urvalet.
       </p>
-      {summary.counts.companies === 0 ? (
+      {companies === 0 ? (
         <div className="mt-8 rounded-3xl border border-dashed border-line bg-card px-6 py-12">
           <p className="font-serif text-3xl">Urvalet är tomt</p>
           <p className="mt-2 text-muted">Gå tillbaka och välj minst ett bolag.</p>
@@ -39,7 +42,7 @@ export default async function CheckoutPage({
         <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           <CheckoutForm selection={selection} />
           <div className="lg:sticky lg:top-28">
-            <PricePanel selection={selection} />
+            <PricePanel selection={selection} urval={urval} />
           </div>
         </div>
       )}

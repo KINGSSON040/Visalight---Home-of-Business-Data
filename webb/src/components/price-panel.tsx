@@ -1,21 +1,50 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { summarize, selectionToQuery, type Selection } from "@/lib/catalog";
+import { selectionToQuery, type Selection } from "@/lib/catalog";
 import {
   BASE_ORE,
   EMAIL_ORE,
+  MINIMUM_ORE,
   PHONE_ORE,
   SIGNATORY_ORE,
   formatKronor,
 } from "@/lib/pricing";
+import { priceForUrval, pricedCounts, type UrvalResult } from "@/lib/urval";
 
 export function PricePanel({
   selection,
+  urval,
   showAction = false,
 }: {
   selection: Selection;
+  urval?: UrvalResult;
   showAction?: boolean;
 }) {
-  const { counts, price, gaps } = summarize(selection);
+  const [live, setLive] = useState<UrvalResult | null>(urval ?? null);
+  const key = selectionToQuery(selection);
+
+  useEffect(() => {
+    if (urval) return;
+    const controller = new AbortController();
+    fetch(`/api/urval?${key}`, { signal: controller.signal })
+      .then((response) => response.json() as Promise<UrvalResult>)
+      .then((next) => setLive(next))
+      .catch(() => {});
+    return () => controller.abort();
+  }, [key, urval]);
+
+  const data = urval ?? live;
+  if (!data) {
+    return (
+      <aside className="rounded-3xl bg-sea-deep p-5 text-white shadow-sm">
+        <p className="text-sm text-white/70">Räknar priset.</p>
+      </aside>
+    );
+  }
+  const counts = pricedCounts(data, selection);
+  const price = priceForUrval(data, selection);
   const href = `/kassa?${selectionToQuery(selection)}`;
   const lines = [
     {
@@ -82,11 +111,7 @@ export function PricePanel({
           );
         })}
       </ul>
-      {gaps.length > 0 ? (
-        <p className="mt-4 text-sm leading-6 text-white/70">
-          {gaps.join(", ")}. Tomma fält kostar inget.
-        </p>
-      ) : null}
+      <p className="mt-4 text-sm leading-6 text-white/70">Tomma fält kostar inget. Lägsta order är {formatKronor(MINIMUM_ORE)} kr.</p>
       {showAction ? (
         counts.companies > 0 ? (
           <Link

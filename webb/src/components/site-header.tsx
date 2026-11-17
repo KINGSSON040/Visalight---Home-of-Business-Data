@@ -1,10 +1,12 @@
 import Link from "next/link";
 
-export function SiteHeader() {
+export function SiteHeader({ registerReady }: { registerReady: boolean }) {
   return (
     <div className="sticky top-0 z-40 border-b border-sea-deep bg-sea text-white">
       <p className="bg-amber px-4 py-2 text-center text-sm font-medium text-ink">
-        Förhandsvisning med exempelbolag. Priserna är de riktiga. Bolagen som syns är exempel tills det riktiga registret är kopplat.
+        {registerReady
+          ? "Registret på den här datorn är inkopplat. Listan visar säljbara bolag från den senaste synken."
+          : "Registret är inte inkopplat i den här körningen. Bolagen som syns är exempel tills register/data/visalight.sqlite finns."}
       </p>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="min-w-0">
