@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { SiteFrame } from "@/components/site-frame";
 import "./globals.css";
 
 const inter = Inter({
@@ -23,9 +22,7 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <body className={`${inter.variable} ${inter.className} antialiased`}>
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        <SiteFrame>{children}</SiteFrame>
       </body>
     </html>
   );

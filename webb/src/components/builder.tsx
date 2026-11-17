@@ -1,98 +1,72 @@
 "use client";
 
-import { CITIES, INDUSTRIES, type Selection } from "@/lib/catalog";
+import { CompanySearch } from "@/components/company-search";
 import { BASE_ORE, EMAIL_ORE, formatKronor, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
+import type { Selection } from "@/lib/catalog";
 
 export function ListBuilder({
-  selection,
+  draft,
   onChange,
+  onSearch,
+  dirty,
   matchCount,
 }: {
-  selection: Selection;
+  draft: Selection;
   onChange: (patch: Partial<Selection>) => void;
+  onSearch: () => void;
+  dirty: boolean;
   matchCount: number;
 }) {
+  const hint = dirty
+    ? "Filtren är ändrade. Tryck Sök bolag för att räkna om urvalet."
+    : `${matchCount.toLocaleString("sv-SE")} exempelbolag i det senaste urvalet. Antal och pris står i steg 2.`;
+
   return (
-    <div id="urval" className="flex h-full flex-col bg-white px-5 py-6 text-ink sm:px-7 lg:px-8 lg:py-7">
-      <div>
-        <h2 className="font-serif text-2xl tracking-tight sm:text-3xl">Listbyggare</h2>
+    <div id="urval" className="flex h-full min-h-0 flex-col bg-white px-5 py-5 text-ink sm:px-7 lg:px-8 lg:py-5">
+      <div className="shrink-0">
+        <h2 className="text-2xl tracking-tight sm:text-3xl">Listbyggare</h2>
         <p className="mt-1 text-sm leading-6 text-muted">
-          Sökfält och filter. Antal och pris räknas i steg 2, på samma urval.
+          Skriv bransch, SNI, namn eller ort. Förslag visas under fältet. Tryck Sök bolag när valen är klara.
         </p>
       </div>
 
-      <div className="mt-4 grid gap-3">
-        <label className="block">
-          <span className="mb-1.5 block text-sm font-medium">Sök</span>
-          <input
-            value={selection.query}
-            onChange={(event) => onChange({ query: event.target.value })}
-            placeholder="Namn eller organisationsnummer"
-            className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base"
-          />
-        </label>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="block">
-            <span className="mb-1.5 block text-sm font-medium">Ort</span>
-            <select
-              value={selection.city}
-              onChange={(event) => onChange({ city: event.target.value })}
-              className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base"
-            >
-              <option value="">Alla orter</option>
-              {CITIES.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="block">
-            <span className="mb-1.5 block text-sm font-medium">Bransch</span>
-            <select
-              value={selection.sni}
-              onChange={(event) => onChange({ sni: event.target.value })}
-              className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base"
-            >
-              <option value="">Alla branscher</option>
-              {INDUSTRIES.map((item) => (
-                <option key={item.sni} value={item.sni}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+      <div className="mt-3 flex min-h-0 flex-1 flex-col">
+        <CompanySearch
+          draft={draft}
+          onChange={onChange}
+          onSearch={onSearch}
+          onClear={() => onChange({ query: "", city: "", bransch: "", sni: "", forms: [] })}
+          split
+          hint={hint}
+        >
+          <fieldset className="mt-4">
+            <legend className="text-sm font-medium">Kontaktfält i filen</legend>
+            <div className="mt-2 grid gap-2">
+              <Toggle
+                pressed={draft.phones}
+                onClick={() => onChange({ phones: !draft.phones })}
+                label="Telefon"
+                price={`${formatKronor(PHONE_ORE)} kr/nummer`}
+              />
+              <Toggle
+                pressed={draft.emails}
+                onClick={() => onChange({ emails: !draft.emails })}
+                label="E-post"
+                price={`${formatKronor(EMAIL_ORE)} kr/adress`}
+              />
+              <Toggle
+                pressed={draft.signatory}
+                onClick={() => onChange({ signatory: !draft.signatory })}
+                label="Beslutsfattare"
+                price={`${formatKronor(SIGNATORY_ORE)} kr/nummer`}
+              />
+            </div>
+          </fieldset>
+          <p className="mt-3 text-sm leading-6 text-muted">
+            Grunduppgifter ingår alltid, {BASE_ORE} öre per komplett rad. Tomma fält kostar inget.
+          </p>
+        </CompanySearch>
       </div>
-
-      <fieldset className="mt-4 lg:mt-auto">
-        <legend className="text-sm font-medium">Kontaktfält i filen</legend>
-        <div className="mt-2 grid gap-2">
-          <Toggle
-            pressed={selection.phones}
-            onClick={() => onChange({ phones: !selection.phones })}
-            label="Telefon"
-            price={`${formatKronor(PHONE_ORE)} kr/nummer`}
-          />
-          <Toggle
-            pressed={selection.emails}
-            onClick={() => onChange({ emails: !selection.emails })}
-            label="E-post"
-            price={`${formatKronor(EMAIL_ORE)} kr/adress`}
-          />
-          <Toggle
-            pressed={selection.signatory}
-            onClick={() => onChange({ signatory: !selection.signatory })}
-            label="Beslutsfattare"
-            price={`${formatKronor(SIGNATORY_ORE)} kr/nummer`}
-          />
-        </div>
-      </fieldset>
-
-      <p className="mt-3 text-sm leading-6 text-muted">
-        Grunduppgifter ingår alltid, {BASE_ORE} öre per komplett rad.{" "}
-        {matchCount.toLocaleString("sv-SE")} exempelbolag med det här filtret.
-      </p>
     </div>
   );
 }

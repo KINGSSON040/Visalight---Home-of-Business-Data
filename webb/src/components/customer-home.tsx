@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ListBuilder } from "@/components/builder";
 import {
+  describeSelection,
   hasCompleteBasics,
+  sameSearch,
   selectionToQuery,
   summarize,
   type Selection,
@@ -27,23 +29,29 @@ const EXAMPLE_FIGURES = [
 ];
 
 export function CustomerHome({ initial }: { initial: Selection }) {
-  const [selection, setSelection] = useState(initial);
+  const [draft, setDraft] = useState(initial);
+  const [applied, setApplied] = useState(initial);
+  const priced: Selection = {
+    ...applied,
+    phones: draft.phones,
+    emails: draft.emails,
+    signatory: draft.signatory,
+  };
+  const share = selectionToQuery(priced);
+  const dirty = !sameSearch(draft, applied);
 
   useEffect(() => {
-    const query = selectionToQuery(selection);
-    window.history.replaceState(null, "", query ? `/?${query}` : "/");
-  }, [selection]);
+    window.history.replaceState(null, "", share ? `/?${share}` : "/");
+  }, [share]);
 
   function patch(next: Partial<Selection>) {
-    setSelection((current) => ({ ...current, ...next }));
+    setDraft((current) => ({ ...current, ...next }));
   }
-
-  const summary = summarize(selection);
 
   return (
     <main>
-      <section className="lg:grid lg:min-h-[calc(100dvh-7rem)] lg:grid-cols-2 lg:grid-rows-[minmax(50dvh,auto)_minmax(9rem,1fr)]">
-        <article className="flex flex-col justify-center bg-sea-deep px-5 py-10 text-white sm:px-8 lg:h-full lg:px-10 lg:py-8">
+      <section className="lg:grid lg:h-[calc(100dvh-7rem)] lg:grid-cols-2 lg:grid-rows-2">
+        <article className="flex flex-col justify-center overflow-y-auto bg-sea-deep px-5 py-10 text-white sm:px-8 lg:h-full lg:min-h-0 lg:px-10 lg:py-8">
           <p className="text-sm uppercase tracking-[0.18em] text-amber">Officiella register</p>
           <h1 className="mt-3 max-w-xl text-4xl leading-[1.08] tracking-tight text-balance xl:text-5xl">
             Verifierad, uppdaterad och färsk företagsdata.
@@ -58,9 +66,15 @@ export function CustomerHome({ initial }: { initial: Selection }) {
           </p>
         </article>
 
-        <ListBuilder selection={selection} onChange={patch} matchCount={summary.counts.companies} />
+        <ListBuilder
+          draft={draft}
+          onChange={patch}
+          onSearch={() => setApplied(draft)}
+          dirty={dirty}
+          matchCount={summarize(priced).counts.companies}
+        />
 
-        <aside className="flex flex-col justify-center bg-amber-soft px-5 py-8 text-ink sm:px-8 lg:h-full lg:px-10">
+        <aside className="flex flex-col justify-center overflow-y-auto bg-amber-soft px-5 py-8 text-ink sm:px-8 lg:h-full lg:min-h-0 lg:px-10">
           <p className="text-sm uppercase tracking-[0.16em] text-ink/60">Lägsta order</p>
           <p className="mt-2 text-5xl tracking-tight">
             {(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr
@@ -70,7 +84,7 @@ export function CustomerHome({ initial }: { initial: Selection }) {
           </p>
         </aside>
 
-        <aside id="pris" className="flex flex-col justify-center bg-foam px-5 py-8 sm:px-8 lg:h-full lg:px-10">
+        <aside id="pris" className="flex flex-col justify-center overflow-y-auto bg-foam px-5 py-8 sm:px-8 lg:h-full lg:min-h-0 lg:px-10">
           <p className="text-sm uppercase tracking-[0.16em] text-sea">Pris per uppgift</p>
           <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4">
             <PriceUnit label="Grunduppgifter" ore={BASE_ORE} detail="per komplett rad" />
@@ -92,14 +106,14 @@ export function CustomerHome({ initial }: { initial: Selection }) {
               <StepNumber n="1" />
               <h3 className="mt-3 text-2xl tracking-tight">Fyll i listbyggaren</h3>
               <p className="mt-2 max-w-2xl leading-7 text-muted">
-                Fyll i sökfält och filter i listbyggaren. Ort, bransch och vilka kontaktfält som ska med
-                styr både exemplet och priset.
+                Skriv i sökfältet, komplettera med ort, bransch och bolagsform, och tryck Sök bolag.
+                Förslagen under fälten kommer från det som finns i registret.
               </p>
             </li>
             <li className="rounded-3xl border border-line bg-card p-5 sm:p-6">
               <StepNumber n="2" />
               <h3 className="mt-3 text-2xl tracking-tight">Se resultatet</h3>
-              <Result selection={selection} />
+              <Result selection={priced} dirty={dirty} />
             </li>
             <li className="rounded-3xl border border-line bg-card p-5 sm:p-6">
               <StepNumber n="3" />
@@ -187,7 +201,7 @@ function PriceUnit({ label, ore, detail }: { label: string; ore: number; detail:
   );
 }
 
-function Result({ selection }: { selection: Selection }) {
+function Result({ selection, dirty }: { selection: Selection; dirty: boolean }) {
   const summary = summarize(selection);
   const rows = summary.rows;
   const complete = rows.filter(hasCompleteBasics).length;
@@ -205,8 +219,11 @@ function Result({ selection }: { selection: Selection }) {
           {counts.companies.toLocaleString("sv-SE")}{" "}
           <span className="text-xl text-muted">exempelbolag</span>
         </p>
+        <p className="mt-2 text-sm leading-6 text-muted">{describeSelection(selection)}</p>
         <p className="mt-2 text-sm leading-6 text-muted">
-          Samma filter som i listbyggaren. Raderna är exempel tills det riktiga registret är kopplat.
+          {dirty
+            ? "Filtren i listbyggaren är ändrade. Tryck Sök bolag för att räkna om det här resultatet."
+            : "Samma urval som senaste Sök bolag. Raderna är exempel tills det riktiga registret är kopplat."}
         </p>
 
         <dl className="mt-5 space-y-4">
