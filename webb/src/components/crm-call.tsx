@@ -178,7 +178,7 @@ export function NewCallListForm({
         {queue.length.toLocaleString("sv-SE")} av {base.length.toLocaleString("sv-SE")} bolag hamnar i listan.
       </p>
       {error ? <p className="text-sm font-medium text-rust">{error}</p> : null}
-      <button type="submit" className="h-12 rounded-full bg-green font-semibold text-white">
+      <button type="submit" className="btn-fade-green h-12 rounded-full bg-green font-semibold text-white">
         Skapa ringlista och börja ringa
       </button>
     </form>
@@ -257,10 +257,10 @@ function ListCard({ list }: { list: CallList }) {
         </span>
       </div>
       <div className="mt-3 h-2 overflow-hidden rounded-full bg-foam" aria-hidden="true">
-        <div className="h-full rounded-full bg-green" style={{ width: `${percent}%` }} />
+        <div className="btn-fade-green h-full rounded-full bg-green" style={{ width: `${percent}%` }} />
       </div>
       <div className="mt-3 flex items-center gap-4 text-sm">
-        <Link href={`/crm/ring?lista=${list.id}`} className="inline-flex h-10 items-center rounded-full bg-green px-4 font-semibold text-white">
+        <Link href={`/crm/ring?lista=${list.id}`} className="btn-fade-green inline-flex h-10 items-center rounded-full bg-green px-4 font-semibold text-white">
           {done === 0 ? "Börja ringa" : done >= list.orgNrs.length ? "Öppna" : "Fortsätt ringa"}
         </Link>
         <button type="button" className="text-muted underline" onClick={() => store.setCallListArchived(list.id, !list.archived)}>
@@ -334,13 +334,13 @@ function ListRun({ list }: { list: CallList }) {
             {skipped.length ? (
               <button
                 type="button"
-                className="h-12 rounded-full bg-amber px-5 font-semibold text-ink"
+                className="btn-fade-amber h-12 rounded-full bg-amber px-5 font-semibold text-ink"
                 onClick={() => store.reopenSkipped(list.id)}
               >
                 Ring de {skipped.length} som hoppades över
               </button>
             ) : null}
-            <button type="button" className="h-12 rounded-full bg-sea px-5 font-semibold text-white" onClick={() => store.restartCallList(list.id)}>
+            <button type="button" className="btn-fade-sea h-12 rounded-full bg-sea px-5 font-semibold text-white" onClick={() => store.restartCallList(list.id)}>
               Börja om från första bolaget
             </button>
             <Link href="/crm?vy=aktivitet" className="inline-flex h-12 items-center rounded-full border border-line px-5 text-sm font-medium">

@@ -47,19 +47,19 @@ export function SampleOffer({ selection }: { selection: Selection }) {
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href={href ? `/?${href}#urval` : "/#urval"}
-              className="inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white"
+              className="btn-fade-sea inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white"
             >
               Öppna segmentet i utdraget
             </Link>
             <a
               href={href ? `/smakprov/csv?${href}` : "/smakprov/csv"}
-              className="inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink"
+              className="btn-fade-amber inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink"
             >
               {chosen ? "Ladda ner smakprovet" : "Ladda ner CSV"}
             </a>
             <a
               href={href ? `/smakprov/xls?${href}` : "/smakprov/xls"}
-              className="inline-flex h-12 items-center rounded-full border border-line bg-white px-5 font-medium"
+              className="btn-fade-white inline-flex h-12 items-center rounded-full border border-line bg-white px-5 font-medium"
             >
               Ladda ner Excel
             </a>

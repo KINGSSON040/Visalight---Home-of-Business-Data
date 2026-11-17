@@ -20,10 +20,10 @@ export default function SamplePage() {
         betalning.
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
-        <a href="/smakprov/csv" className="inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink">
+        <a href="/smakprov/csv" className="btn-fade-amber inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink">
           Ladda ner CSV
         </a>
-        <a href="/smakprov/xls" className="inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+        <a href="/smakprov/xls" className="btn-fade-sea inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
           Ladda ner Excel
         </a>
       </div>

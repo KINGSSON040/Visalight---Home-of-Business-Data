@@ -38,7 +38,7 @@ export function SiteHeader({
           <Link href="/crm" className="text-ink/70 hover:text-ink">
             Logga in
           </Link>
-          <Link href="/#urval" className="rounded-full bg-sea px-3.5 py-2 font-medium text-white">
+          <Link href="/#urval" className="btn-fade-sea rounded-full bg-sea px-3.5 py-2 font-medium text-white">
             Skapa utdrag
           </Link>
         </nav>

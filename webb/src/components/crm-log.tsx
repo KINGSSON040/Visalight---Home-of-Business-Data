@@ -19,10 +19,10 @@ import {
 } from "@/lib/crm-store";
 
 const TONE_ON: Record<OutcomeTone, string> = {
-  good: "border-green bg-green text-white",
-  warm: "border-amber bg-amber text-ink",
-  neutral: "border-sea bg-sea text-white",
-  bad: "border-rust bg-rust text-white",
+  good: "btn-fade-green border-green bg-green text-white",
+  warm: "btn-fade-amber border-amber bg-amber text-ink",
+  neutral: "btn-fade-sea border-sea bg-sea text-white",
+  bad: "btn-fade-rust border-rust bg-rust text-white",
 };
 
 const TONE_OFF: Record<OutcomeTone, string> = {
@@ -224,7 +224,7 @@ export function LogPanel({
 
         {error ? <p className="text-sm font-medium text-rust">{error}</p> : null}
         <div className="flex flex-col gap-2 sm:flex-row">
-          <button type="submit" className="h-12 flex-1 rounded-full bg-amber font-semibold text-ink">
+          <button type="submit" className="btn-fade-amber h-12 flex-1 rounded-full bg-amber font-semibold text-ink">
             {focus ? "Spara och nästa bolag" : "Spara i loggen"}
           </button>
           {focus ? (

@@ -86,7 +86,7 @@ function MineView({ selected }: { selected: string }) {
           <p className="mt-2 text-sm leading-6 text-muted">
             Inga stjärnor ännu. Sök fram ett bolag och tryck på stjärnan, så hamnar det i Mina företag och öppnas här.
           </p>
-          <Link href="/crm" className="mt-4 inline-flex h-12 items-center rounded-full bg-amber px-5 font-semibold text-ink">
+          <Link href="/crm" className="btn-fade-amber mt-4 inline-flex h-12 items-center rounded-full bg-amber px-5 font-semibold text-ink">
             Sök bolag
           </Link>
         </div>
@@ -251,7 +251,7 @@ function SearchView() {
             <span className="font-semibold">Sökning:</span> {describeSelection(applied)}
             <span className="ml-2 text-muted">{matches.rows.length.toLocaleString("sv-SE")} bolag</span>
           </p>
-          <button type="button" onClick={() => setEditing(true)} className="h-10 rounded-full bg-amber px-4 text-sm font-semibold text-ink">
+          <button type="button" onClick={() => setEditing(true)} className="btn-fade-amber h-10 rounded-full bg-amber px-4 text-sm font-semibold text-ink">
             Ändra sökning
           </button>
           <button
@@ -315,13 +315,13 @@ function SearchView() {
                   className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base"
                 />
               </label>
-              <button type="submit" className="h-12 rounded-full bg-sea px-5 text-sm font-semibold text-white">
+              <button type="submit" className="btn-fade-sea h-12 rounded-full bg-sea px-5 text-sm font-semibold text-white">
                 Spara segment
               </button>
               <button
                 type="button"
                 onClick={() => setCalling((current) => !current)}
-                className="h-12 rounded-full bg-green px-5 text-sm font-semibold text-white"
+                className="btn-fade-green h-12 rounded-full bg-green px-5 text-sm font-semibold text-white"
               >
                 {calling ? "Stäng ringlista" : "Gör ringlista av urvalet"}
               </button>
@@ -477,14 +477,14 @@ function SegmentView() {
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center gap-3 text-sm">
-                    <Link href={`/crm?${selectionToQuery(selectionFromSegment(segment))}`} className="inline-flex h-10 items-center rounded-full bg-sea px-4 font-semibold text-white">
+                    <Link href={`/crm?${selectionToQuery(selectionFromSegment(segment))}`} className="btn-fade-sea inline-flex h-10 items-center rounded-full bg-sea px-4 font-semibold text-white">
                       Öppna urval
                     </Link>
                     {segment.archived ? null : (
                       <button
                         type="button"
                         onClick={() => setOpen(open === segment.id ? "" : segment.id)}
-                        className="h-10 rounded-full bg-green px-4 font-semibold text-white"
+                        className="btn-fade-green h-10 rounded-full bg-green px-4 font-semibold text-white"
                       >
                         Ringlista
                       </button>

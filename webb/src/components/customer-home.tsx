@@ -8,6 +8,7 @@ import { SampleOffer } from "@/components/sample-offer";
 import { selectionForCount, selectionToQuery, type Selection } from "@/lib/catalog";
 import { BASE_ORE, EMAIL_ORE, formatKronor, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import type { UrvalResult } from "@/lib/urval";
+import { PUBLIC_FAQ } from "@/lib/public-faq";
 import { linkedIndustries, topicBuilderHref } from "@/lib/topics";
 
 const LEFT_OUT = [
@@ -40,26 +41,7 @@ const STEPS = [
   },
   {
     title: "Få filen",
-    text: "Betala som gäst. Filen skickas till er e-post, utan konto och utan abonnemang.",
-  },
-];
-
-const QUESTIONS = [
-  {
-    q: "Vad kostar utdraget?",
-    a: "Grunduppgifter kostar 10 öre per bolag. Telefon kostar 30 öre per nummer, e-post 40 öre per adress och beslutsfattare 40 öre per nummer. Ni betalar bara när uppgiften finns. Lägsta order är 399 kr, och priset visas alltid innan ni köper.",
-  },
-  {
-    q: "Hur aktuellt är utdraget?",
-    a: "Utdraget tas från den senaste uppdateringen av företagsregistret. Vi säljer inte en fil från förra året. Avregistrerade bolag, konkurs och reklamspärr är redan borta. Det är inte en uppdatering varje minut.",
-  },
-  {
-    q: "Måste jag skapa ett konto?",
-    a: "Nej. Ni betalar som gäst med kort eller faktura. Filen skickas till e-postadressen ni anger.",
-  },
-  {
-    q: "Vilket format får jag?",
-    a: "CSV och Excel med fasta kolumner: företagsnamn, organisationsnummer, adress, ort, bransch och SNI, plus de tillval ni har kryssat i. Ett smakprov med påhittade rader kan laddas ner innan köp.",
+    text: "Förhandsboka med e-post. Beställning öppnar snart. Ingen betalning dras.",
   },
 ];
 
@@ -134,8 +116,8 @@ export function CustomerHome({
 
   return (
     <main>
-      <section className="mx-auto grid max-w-6xl items-start gap-8 px-4 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.92fr)_minmax(20rem,1fr)] lg:gap-12 lg:py-16">
-        <article>
+      <section className="mx-auto grid max-w-6xl items-start gap-6 px-4 py-3 sm:py-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(20rem,1fr)] lg:gap-8 lg:py-4">
+        <article className="min-w-0">
           <p className="text-sm uppercase tracking-[0.18em] text-sea">Färsk företagsdata</p>
           <h1 className="mt-3 max-w-xl text-4xl leading-[1.08] tracking-tight text-balance sm:text-5xl">
             Rätt bolag, från den senaste uppdateringen.
@@ -149,22 +131,23 @@ export function CustomerHome({
               ? `Senast uppdaterat ${updatedLabel}. Äldre årgångar används inte.`
               : "Utdraget tas alltid från den senaste uppdateringen. Äldre årgångar används inte."}
           </p>
-          <Link href="/#urval" className="mt-5 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+          <Link href="/#urval" className="btn-fade-sea mt-5 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
             Skapa ert utdrag
           </Link>
-          <dl id="pris" className="mt-8 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl bg-foam px-3 py-3">
+          <dl id="pris" className="mt-6 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="wash-sea rounded-2xl px-3 py-3">
               <dt className="text-sm text-muted">Lägsta order</dt>
               <dd className="mt-1 text-2xl tracking-tight text-sea">{(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr</dd>
             </div>
             <PriceUnit label="Grunduppgifter" ore={BASE_ORE} detail="per komplett rad" tone="green" />
-            <PriceUnit label="Telefon" ore={PHONE_ORE} detail="per nummer" tone="blue" />
-            <PriceUnit label="E-post" ore={EMAIL_ORE} detail="per adress" tone="green" />
+            <PriceUnit label="Kontaktnummer" ore={PHONE_ORE} detail="per nummer" tone="blue" />
+            <PriceUnit label="E-postkontakt" ore={EMAIL_ORE} detail="per adress" tone="green" />
             <PriceUnit label="Beslutsfattare" ore={SIGNATORY_ORE} detail="per nummer" tone="yellow" />
           </dl>
+          <p className="mt-2 text-xs text-muted">Priser exklusive moms. Lägsta order 399 kr.</p>
         </article>
 
-        <ListBuilder draft={draft} onChange={patch} urval={urval} loading={loading} />
+        <ListBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} />
       </section>
 
       <section id="sa-funkar-det" className="band-white">
@@ -181,7 +164,7 @@ export function CustomerHome({
               </li>
             ))}
           </ol>
-          <Link href="/#urval" className="mt-5 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+          <Link href="/#urval" className="btn-fade-sea mt-5 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
             Börja med bransch och ort
           </Link>
         </div>
@@ -202,13 +185,18 @@ export function CustomerHome({
           </p>
           <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             {LEFT_OUT.map((item) => (
-              <li key={item.title} className="rounded-2xl border border-line bg-white/80 px-4 py-4">
+              <li
+                key={item.title}
+                className={`rounded-2xl border px-4 py-4 ${
+                  item.title === "Konkurs och näringsförbud" ? "wash-rust border-rust/25" : "border-line bg-white/80"
+                }`}
+              >
                 <h3 className={`text-lg tracking-tight ${item.title === "Konkurs och näringsförbud" ? "text-rust" : ""}`}>{item.title}</h3>
                 <p className="mt-1.5 text-sm leading-6 text-muted">{item.text}</p>
               </li>
             ))}
           </ul>
-          <Link href="/#urval" className="mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+          <Link href="/#urval" className="btn-fade-sea mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
             Se antalet i utdraget
           </Link>
         </div>
@@ -218,14 +206,14 @@ export function CustomerHome({
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <h2 id="fragor" className="text-4xl tracking-tight">Vanliga frågor</h2>
           <div className="mt-6 max-w-3xl divide-y divide-line rounded-3xl border border-line bg-white">
-            {QUESTIONS.map((item) => (
+            {PUBLIC_FAQ.map((item) => (
               <details key={item.q} className="px-5 py-4">
                 <summary className="cursor-pointer text-lg tracking-tight">{item.q}</summary>
                 <p className="mt-2 text-sm leading-6 text-muted">{item.a}</p>
               </details>
             ))}
           </div>
-          <Link href="/#urval" className="mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+          <Link href="/#urval" className="btn-fade-sea mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
             Skapa ert utdrag
           </Link>
         </div>
@@ -246,7 +234,7 @@ export function CustomerHome({
             </li>
           ))}
         </ul>
-        <Link href="/#urval" className="mt-6 inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink">
+        <Link href="/#urval" className="btn-fade-amber mt-6 inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink">
           Skapa ert utdrag
         </Link>
         <p className="mt-4 flex flex-wrap gap-4 text-sm font-medium">
@@ -285,7 +273,7 @@ function PriceUnit({
   detail: string;
   tone: "blue" | "green" | "yellow";
 }) {
-  const wash = tone === "green" ? "bg-green-soft" : tone === "yellow" ? "bg-amber-soft" : "bg-foam";
+  const wash = tone === "green" ? "wash-green" : tone === "yellow" ? "wash-amber" : "wash-sea";
   const number = tone === "green" ? "text-green" : tone === "yellow" ? "text-ink" : "text-sea";
   return (
     <div className={`rounded-2xl px-3 py-3 ${wash}`}>

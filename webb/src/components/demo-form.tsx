@@ -66,7 +66,7 @@ export function DemoForm() {
           />
         </label>
       </div>
-      <button type="submit" className="mt-4 h-12 rounded-full bg-amber px-5 font-medium text-ink">
+      <button type="submit" className="btn-fade-amber mt-4 h-12 rounded-full bg-amber px-5 font-medium text-ink">
         Boka 15 minuter
       </button>
     </form>

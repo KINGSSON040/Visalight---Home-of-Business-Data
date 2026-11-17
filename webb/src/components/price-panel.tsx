@@ -55,7 +55,7 @@ export function PricePanel({
       empty: "Inget bolag i urvalet",
     },
     {
-      label: "Telefonnummer",
+      label: "Kontaktnummer",
       count: counts.phones,
       unit: PHONE_ORE,
       included: selection.phones,
@@ -69,7 +69,7 @@ export function PricePanel({
       empty: "Inget beslutsfattarnummer i urvalet",
     },
     {
-      label: "E-post",
+      label: "E-postkontakt",
       count: counts.emails,
       unit: EMAIL_ORE,
       included: selection.emails,
@@ -116,7 +116,7 @@ export function PricePanel({
         counts.companies > 0 ? (
           <Link
             href={href}
-            className="mt-5 flex h-12 items-center justify-center rounded-full bg-amber font-medium text-ink"
+            className="btn-fade-amber mt-5 flex h-12 items-center justify-center rounded-full bg-amber font-medium text-ink"
           >
             Till kassan
           </Link>

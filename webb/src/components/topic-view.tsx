@@ -93,7 +93,7 @@ export function TopicArticle({ kind, slug }: { kind: TopicKind; slug: string }) 
         Utdraget tas från den senaste uppdateringen av företagsregistret. Ett telefonnummer eller en e-postadress som inte finns lämnas tom och kostar inget.
       </p>
       {topic.sni ? <p className="mt-4 font-mono text-sm text-sea">SNI {topic.sni}</p> : null}
-      <Link href={topicBuilderHref(topic)} className="mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
+      <Link href={topicBuilderHref(topic)} className="btn-fade-sea mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
         Se antal och pris i utdraget
       </Link>
       <h2 className="mt-12 font-serif text-3xl tracking-tight">Fler sidor</h2>
@@ -181,7 +181,7 @@ function IndustryArticle({
         Utdraget avgränsas med SNI {code}
         {older.length ? `, även om en äldre källa fortfarande skriver ${older.join(" eller ")}` : ""}.
       </p>
-      <Link href={topicBuilderHref(topic)} className="mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
+      <Link href={topicBuilderHref(topic)} className="btn-fade-sea mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
         Se antal och pris för {industry.label.toLowerCase()} i utdraget
       </Link>
 

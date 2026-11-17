@@ -106,7 +106,7 @@ export function MyCompaniesRail({
                     {last ? `${outcomeLabel(last.outcome)} · ${formatStamp(last.at)}` : `Stjärna ${formatStamp(claim.at)}`}
                   </span>
                   {due ? (
-                    <span className="mt-1 inline-block rounded-full bg-amber px-2 py-0.5 text-xs font-semibold text-ink">
+                    <span className="btn-fade-amber mt-1 inline-block rounded-full bg-amber px-2 py-0.5 text-xs font-semibold text-ink">
                       Ring {formatStamp(due.nextAt)}
                     </span>
                   ) : null}

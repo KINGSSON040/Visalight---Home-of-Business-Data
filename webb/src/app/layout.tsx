@@ -15,7 +15,15 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin()),
   title: "VisaLight — Företagsinformation och företagsdata",
   description:
-    "Företagsinformation från aktuellt företagsregister. Välj bransch eller SNI-kod, se antal och pris, och få utdraget utan abonnemang.",
+    "Färsk företagsdata för svenska bolag. Välj bransch eller SNI, se antal och pris exklusive moms, och få utdraget utan abonnemang.",
+  openGraph: {
+    locale: "sv_SE",
+    type: "website",
+    siteName: "VisaLight",
+    title: "VisaLight — Färsk företagsdata för svenska bolag",
+    description:
+      "Välj bransch och ort. Se antalet och priset direkt. Utdraget tas från den senaste uppdateringen av företagsregistret.",
+  },
 };
 
 export default function RootLayout({

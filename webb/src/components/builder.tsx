@@ -11,30 +11,26 @@ export function ListBuilder({
   onChange,
   urval,
   loading,
+  updatedLabel,
 }: {
   draft: Selection;
   onChange: (patch: Partial<Selection>) => void;
   urval: UrvalResult;
   loading: boolean;
+  updatedLabel: string | null;
 }) {
   const waitingForWord = draft.query.trim().length > 0 && !resolveQuery(draft.query) && !selectionForCount({ ...draft, query: "" });
-  const hint = waitingForWord
-    ? "Förslagen kommer direkt. Antalet räknas när ordet är färdigt, eller när ni valt ett filter."
-    : loading
-      ? "Räknar bolag i registret."
-      : urval.note;
+  const hint = waitingForWord ? "Förslagen kommer direkt." : loading ? "Räknar bolag i registret." : "";
+  const fresh = updatedLabel
+    ? `Uppdaterat ${updatedLabel}. Äldre årgångar används inte.`
+    : "Uppdaterat från senaste registret. Äldre årgångar används inte.";
 
   return (
-    <div id="urval" className="rounded-[1.75rem] border border-line bg-white px-5 py-5 text-ink shadow-[0_24px_50px_-28px_rgba(47,107,255,0.35)] sm:px-6">
-      <div>
-        <h2 className="text-2xl tracking-tight">Skapa ert utdrag</h2>
-        <p className="mt-1 text-sm leading-6 text-muted">
-          Skriv en bransch, till exempel frisör, restaurang eller revisionsbyrå. Förslag visas från första tecknet.
-          Antalet räknas så fort ett filter eller ett färdigt sökord är valt.
-        </p>
-      </div>
+    <div id="urval" className="builder-card rounded-[1.35rem] px-4 py-3 text-ink sm:px-5">
+      <h2 className="text-lg tracking-tight">Skapa ert utdrag</h2>
+      <p className="mt-0.5 text-xs leading-4 text-muted">{fresh}</p>
 
-      <div className="mt-4">
+      <div className="mt-2">
         <CompanySearch
           draft={draft}
           onChange={onChange}
@@ -44,34 +40,32 @@ export function ListBuilder({
           queryPlaceholder="Bransch, ort, län eller storlek"
           querySuggestions={suggestSegment}
           hint={hint}
+          beforeForms={
+            <fieldset className="mt-1.5">
+              <legend className="text-xs font-medium">Tillval</legend>
+              <div className="mt-1 grid grid-cols-3 gap-1.5">
+                <CheckOption
+                  checked={draft.phones}
+                  onChange={() => onChange({ phones: !draft.phones })}
+                  label="Kontaktnummer"
+                  price={`${formatKronor(PHONE_ORE)} kr/nummer`}
+                />
+                <CheckOption
+                  checked={draft.emails}
+                  onChange={() => onChange({ emails: !draft.emails })}
+                  label="E-postkontakt"
+                  price={`${formatKronor(EMAIL_ORE)} kr/adress`}
+                />
+                <CheckOption
+                  checked={draft.signatory}
+                  onChange={() => onChange({ signatory: !draft.signatory })}
+                  label="Beslutsfattare"
+                  price={`${formatKronor(SIGNATORY_ORE)} kr/nummer`}
+                />
+              </div>
+            </fieldset>
+          }
         >
-          <fieldset className="mt-4">
-            <legend className="text-sm font-medium">Tillval</legend>
-            <p className="mt-1 text-sm leading-6 text-muted">
-              Grunduppgifter ingår alltid, {formatKronor(BASE_ORE)} kr per komplett rad. Kryssa i tillvalen som ska
-              med i filen. Tomma fält kostar inget.
-            </p>
-            <div className="mt-2 grid gap-2">
-              <CheckOption
-                checked={draft.phones}
-                onChange={() => onChange({ phones: !draft.phones })}
-                label="Telefon"
-                price={`${formatKronor(PHONE_ORE)} kr/nummer`}
-              />
-              <CheckOption
-                checked={draft.emails}
-                onChange={() => onChange({ emails: !draft.emails })}
-                label="E-post"
-                price={`${formatKronor(EMAIL_ORE)} kr/adress`}
-              />
-              <CheckOption
-                checked={draft.signatory}
-                onChange={() => onChange({ signatory: !draft.signatory })}
-                label="Beslutsfattare"
-                price={`${formatKronor(SIGNATORY_ORE)} kr/nummer`}
-              />
-            </div>
-          </fieldset>
           <LivePrice draft={draft} urval={urval} loading={loading} />
         </CompanySearch>
       </div>
@@ -91,15 +85,16 @@ function CheckOption({
   price: string;
 }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-line bg-paper px-3 py-3">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-        className="h-5 w-5 shrink-0 accent-sea"
-      />
-      <span className="min-w-0 flex-1 font-medium">{label}</span>
-      <span className="text-sm text-muted">{price}</span>
+    <label
+      className={`flex min-w-0 cursor-pointer flex-col rounded-xl border px-1.5 py-1 ${
+        checked ? "check-on border-transparent" : "border-line bg-white"
+      }`}
+    >
+      <span className="flex items-center gap-1">
+        <input type="checkbox" checked={checked} onChange={onChange} className="h-3.5 w-3.5 shrink-0 accent-sea" />
+        <span className="min-w-0 text-[0.7rem] font-medium leading-4">{label}</span>
+      </span>
+      <span className="mt-0.5 pl-[1.15rem] text-[0.65rem] leading-3 font-medium text-green">{price}</span>
     </label>
   );
 }
@@ -118,73 +113,54 @@ function LivePrice({
   const href = `/kassa?${selectionToQuery(draft)}`;
   const lines = [
     { label: "Grunduppgifter", count: counts.companies, unit: BASE_ORE, on: true },
-    { label: "Telefon", count: counts.phones, unit: PHONE_ORE, on: draft.phones },
-    { label: "E-post", count: counts.emails, unit: EMAIL_ORE, on: draft.emails },
+    { label: "Kontaktnummer", count: counts.phones, unit: PHONE_ORE, on: draft.phones },
+    { label: "E-postkontakt", count: counts.emails, unit: EMAIL_ORE, on: draft.emails },
     { label: "Beslutsfattare", count: counts.signatoryPhones, unit: SIGNATORY_ORE, on: draft.signatory },
   ];
 
+  if (urval.status === "idle") {
+    return (
+      <p className="mt-1.5 text-xs leading-4 text-muted" aria-live="polite">
+        {loading ? "Räknar bolag i registret." : "Välj bransch eller ort så visas antal och pris."}
+      </p>
+    );
+  }
+
   return (
-    <div className="mt-4 rounded-2xl border border-line bg-paper px-3 py-3" aria-live="polite">
-      <p className="text-sm font-medium">Antal och pris</p>
-      {urval.status === "idle" ? (
-        <p className="mt-2 text-sm leading-6 text-muted">{loading ? "Räknar bolag i registret." : urval.note}</p>
-      ) : (
-        <>
-          <p className="mt-2 text-3xl tracking-tight text-sea">
-            {counts.companies.toLocaleString("sv-SE")}{" "}
-            <span className="text-base font-normal text-muted">{urval.source === "register" ? "bolag" : "exempelbolag"}</span>
-          </p>
-          <ul className="mt-3 space-y-2 text-sm">
-            {lines.map((line) => {
-              const sum = line.on ? line.count * line.unit : 0;
-              return (
-                <li key={line.label} className="flex items-start justify-between gap-3">
-                  <span>
-                    <span className="block">{line.label}</span>
-                    <span className="block text-muted">
-                      {line.on
-                        ? `${line.count.toLocaleString("sv-SE")} × ${formatKronor(line.unit)} kr`
-                        : "Tillvalet är inte ikryssat"}
-                    </span>
-                  </span>
-                  <span>{formatKronor(sum)} kr</span>
-                </li>
-              );
-            })}
-          </ul>
-          <p className="mt-3 flex items-baseline justify-between gap-3 border-t border-line pt-3">
-            <span className="text-sm font-medium">Att betala</span>
-            <span className="text-2xl tracking-tight text-green">{formatKronor(price.totalOre)} kr</span>
-          </p>
-          {counts.companies > 0 && price.minimumApplied ? (
-            <p className="mt-1 text-sm leading-6 text-muted">
-              Beräknat {formatKronor(price.rawOre)} kr. Lägsta order är {formatKronor(MINIMUM_ORE)} kr.
-            </p>
-          ) : null}
-          {urval.preview.length > 0 ? (
-            <ul className="mt-3 space-y-1 border-t border-line pt-3 text-sm">
-              {urval.preview.map((company) => (
-                <li key={company.orgNr}>
-                  <span className="font-medium">{company.name}</span>
-                  <span className="text-muted">
-                    {" "}
-                    · {company.city} · {company.orgNr}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-          <p className="mt-2 text-sm leading-6 text-muted">{urval.note}</p>
-          {counts.companies > 0 ? (
-            <Link
-              href={href}
-              className="mt-3 flex h-11 items-center justify-center rounded-full bg-sea text-sm font-medium text-white"
-            >
-              Till kassan
-            </Link>
-          ) : null}
-        </>
-      )}
+    <div className="mt-1.5 rounded-xl border border-line bg-white px-2.5 py-1.5" aria-live="polite">
+      <ul className="space-y-0.5">
+        {lines.map((line) => {
+          const sum = line.on ? line.count * line.unit : 0;
+          return (
+            <li key={line.label} className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-baseline gap-x-2 text-xs leading-4">
+              <span className="truncate">{line.label}</span>
+              <span className="whitespace-nowrap text-muted tabular-nums">
+                {line.on ? `${line.count.toLocaleString("sv-SE")} × ${formatKronor(line.unit)} kr` : "inte med"}
+              </span>
+              <span className="whitespace-nowrap text-right tabular-nums">{formatKronor(sum)} kr</span>
+            </li>
+          );
+        })}
+      </ul>
+      <p className="mt-1 flex items-center justify-between gap-2 border-t border-line pt-1">
+        <span className="text-xs font-medium">Att betala, exkl. moms</span>
+        <span className="btn-fade-green rounded-lg px-2 py-0.5 text-sm font-medium tracking-tight text-white tabular-nums">
+          {formatKronor(price.totalOre)} kr
+        </span>
+      </p>
+      {counts.companies > 0 && price.minimumApplied ? (
+        <p className="mt-1 text-[0.68rem] leading-4 text-muted">
+          Lägsta order {formatKronor(MINIMUM_ORE)} kr. Beräknat {formatKronor(price.rawOre)} kr.
+        </p>
+      ) : null}
+      {counts.companies > 0 ? (
+        <Link
+          href={href}
+          className="btn-fade-sea mt-1.5 flex h-8 items-center justify-center rounded-full text-sm font-medium text-white"
+        >
+          Förhandsboka
+        </Link>
+      ) : null}
     </div>
   );
 }

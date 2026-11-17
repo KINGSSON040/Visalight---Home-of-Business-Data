@@ -54,12 +54,12 @@ export function CrmCard({
       )}
 
       {focus ? (
-        <div className="mt-1 rounded-2xl bg-sea px-4 py-3 text-white">
+        <div className="btn-fade-sea mt-1 rounded-2xl bg-sea px-4 py-3 text-white">
           <p className="text-sm font-semibold">
             Bolag {Math.min(focus.index + 1, focus.total)} av {focus.total} · {focus.listName}
           </p>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/30" aria-hidden="true">
-            <div className="h-full rounded-full bg-amber" style={{ width: `${(focus.index / Math.max(1, focus.total)) * 100}%` }} />
+            <div className="btn-fade-amber h-full rounded-full bg-amber" style={{ width: `${(focus.index / Math.max(1, focus.total)) * 100}%` }} />
           </div>
         </div>
       ) : null}
@@ -145,7 +145,7 @@ function Numbers({ company, big }: { company: Company; big: boolean }) {
                       ) : (
                         <a
                           href={telHref(number)}
-                          className={`inline-flex items-center rounded-full bg-green font-semibold text-white ${
+                          className={`btn-fade-green inline-flex items-center rounded-full bg-green font-semibold text-white ${
                             big ? "h-12 px-5 text-lg" : "h-10 px-4 text-sm"
                           }`}
                         >

@@ -20,7 +20,7 @@ export function Contacts({ orgNr }: { orgNr: string }) {
         <button
           type="button"
           onClick={() => setShowForm((current) => !current)}
-          className="h-10 shrink-0 rounded-full bg-sea px-4 text-sm font-medium text-white"
+          className="btn-fade-sea h-10 shrink-0 rounded-full bg-sea px-4 text-sm font-medium text-white"
         >
           {showForm ? "Stäng" : "Ny person"}
         </button>
@@ -81,7 +81,7 @@ function PersonRow({ person }: { person: Contact }) {
           <div className="flex items-center gap-2 text-sm">
             <button
               type="button"
-              className="rounded-full bg-rust px-3 py-1.5 font-medium text-white"
+              className="btn-fade-rust rounded-full bg-rust px-3 py-1.5 font-medium text-white"
               onClick={() => {
                 store.strikeContact(person.id);
                 setConfirming(false);
@@ -169,7 +169,7 @@ function PersonRow({ person }: { person: Contact }) {
             />
             <button
               type="button"
-              className="h-10 rounded-full bg-sea px-3 text-sm font-medium text-white"
+              className="btn-fade-sea h-10 rounded-full bg-sea px-3 text-sm font-medium text-white"
               onClick={() => {
                 if (extra.phone.trim()) store.addContactPhone(person.id, extra.phone.trim());
                 if (extra.email.trim()) store.addContactEmail(person.id, extra.email.trim());
@@ -265,7 +265,7 @@ function NewPerson({ orgNr, onDone }: { orgNr: string; onDone: () => void }) {
       </div>
 
       {error ? <p className="text-sm text-rust sm:col-span-3">{error}</p> : null}
-      <button type="submit" className="h-12 rounded-full bg-green font-medium text-white sm:col-span-3">
+      <button type="submit" className="btn-fade-green h-12 rounded-full bg-green font-medium text-white sm:col-span-3">
         Lägg till kontaktperson
       </button>
     </form>

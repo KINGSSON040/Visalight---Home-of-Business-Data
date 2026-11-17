@@ -63,7 +63,7 @@ export function AudienceCounter() {
                 : ". Inget beslutsfattarnummer finns i källan för det här urvalet."}{" "}
               Exempelregistret tills det riktiga uttaget från SCB är kopplat till sidan.
             </p>
-            <Link href="/#urval" className="mt-5 inline-flex h-11 items-center rounded-full bg-amber px-4 font-medium text-ink">
+            <Link href="/#urval" className="btn-fade-amber mt-5 inline-flex h-11 items-center rounded-full bg-amber px-4 font-medium text-ink">
               Skapa utdraget och se priset
             </Link>
           </div>

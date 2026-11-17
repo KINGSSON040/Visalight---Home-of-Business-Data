@@ -21,6 +21,7 @@ export function CompanySearch({
   split = false,
   hint,
   live = false,
+  beforeForms,
   queryPlaceholder = "Bransch, SNI, namn eller organisationsnummer",
   querySuggestions = suggestQuery,
   children,
@@ -32,6 +33,7 @@ export function CompanySearch({
   split?: boolean;
   hint?: string;
   live?: boolean;
+  beforeForms?: ReactNode;
   queryPlaceholder?: string;
   querySuggestions?: (text: string) => Suggestion[];
   children?: ReactNode;
@@ -55,14 +57,14 @@ export function CompanySearch({
 
   return (
     <form
-      className={split ? "flex min-h-0 flex-1 flex-col" : undefined}
+      className={split ? "flex min-h-0 flex-1 flex-col" : "min-w-0"}
       onSubmit={(event) => {
         event.preventDefault();
         if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
         onSearch();
       }}
     >
-      <div className={split ? "min-h-0 flex-1 overflow-y-auto pb-3" : undefined}>
+      <div className={split ? "min-h-0 flex-1 overflow-y-auto pb-3" : "min-w-0"}>
       <SuggestField
         label="Sök"
         value={draft.query}
@@ -70,9 +72,10 @@ export function CompanySearch({
         suggestions={querySuggestions(draft.query)}
         onValue={(query) => onChange({ query })}
         onPick={applySuggestion}
+        dense={live}
       />
 
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+      <div className={`grid sm:grid-cols-2 ${live ? "mt-1.5 gap-2" : "mt-3 gap-3"}`}>
         <SuggestField
           label="Ort"
           value={draft.city}
@@ -80,6 +83,7 @@ export function CompanySearch({
           suggestions={suggestCities(draft.city)}
           onValue={(city) => onChange({ city })}
           onPick={applySuggestion}
+          dense={live}
         />
         <SuggestField
           label="Bransch"
@@ -88,13 +92,18 @@ export function CompanySearch({
           suggestions={suggestIndustries(draft.bransch ?? "")}
           onValue={(bransch) => onChange({ bransch, sni: "" })}
           onPick={applySuggestion}
+          dense={live}
         />
       </div>
 
-      <fieldset className="mt-3">
-        <legend className="text-sm font-medium">Bolagsform</legend>
-        <p className="mt-1 text-xs leading-5 text-muted">Inget val betyder alla bolagsformer som förekommer i Sverige.</p>
-        <div className="mt-2 flex flex-wrap gap-1.5">
+      {beforeForms}
+
+      <fieldset className={live ? "mt-1.5 min-w-0" : "mt-3"}>
+        <legend className={live ? "text-xs font-medium" : "text-sm font-medium"}>Bolagsform</legend>
+        <p className={live ? "sr-only" : "mt-1 text-xs leading-5 text-muted"}>
+          Inget val betyder alla bolagsformer som förekommer i Sverige.
+        </p>
+        <div className={live ? "mt-1 flex min-w-0 max-w-full gap-1.5 overflow-x-auto" : "mt-2 flex flex-wrap gap-1.5"}>
           {LEGAL_FORMS.map((form) => {
             const pressed = forms.includes(form.code);
             return (
@@ -103,8 +112,8 @@ export function CompanySearch({
                 type="button"
                 aria-pressed={pressed}
                 onClick={() => toggleForm(form.code)}
-                className={`rounded-full border px-2.5 py-1 text-xs font-medium ${
-                  pressed ? "border-sea bg-sea text-white" : "border-line bg-white text-ink"
+                className={`rounded-full border px-2.5 py-1 text-xs font-medium ${live ? "shrink-0" : ""} ${
+                  pressed ? "btn-fade-sea border-transparent text-white" : "border-line bg-white text-ink"
                 }`}
               >
                 {form.label}
@@ -114,13 +123,13 @@ export function CompanySearch({
         </div>
       </fieldset>
 
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+      <div className={`grid sm:grid-cols-2 ${live ? "mt-1.5 gap-2" : "mt-3 gap-3"}`}>
         <label className="block text-sm">
-          <span className="mb-1.5 block font-medium">Län</span>
+          <span className={`block font-medium ${live ? "mb-0.5 text-xs leading-4" : "mb-1.5"}`}>Län</span>
           <select
             value={draft.county ?? ""}
             onChange={(event) => onChange({ county: event.target.value })}
-            className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base"
+            className={`w-full rounded-xl border border-line bg-paper px-3 ${live ? "h-10 text-sm" : "h-12 text-base"}`}
           >
             <option value="">Alla län</option>
             {COUNTIES.map((item) => (
@@ -131,11 +140,11 @@ export function CompanySearch({
           </select>
         </label>
         <label className="block text-sm">
-          <span className="mb-1.5 block font-medium">Anställda</span>
+          <span className={`block font-medium ${live ? "mb-0.5 text-xs leading-4" : "mb-1.5"}`}>Anställda</span>
           <select
             value={draft.employees ?? ""}
             onChange={(event) => onChange({ employees: event.target.value })}
-            className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base"
+            className={`w-full rounded-xl border border-line bg-paper px-3 ${live ? "h-10 text-sm" : "h-12 text-base"}`}
           >
             <option value="">Alla storlekar</option>
             {EMPLOYEE_BANDS.map((item) => (
@@ -149,13 +158,13 @@ export function CompanySearch({
         {children}
       </div>
 
-      <div className={split ? "shrink-0 border-t border-line bg-white pt-3" : "mt-3"}>
-        <div className="flex flex-col gap-2 sm:flex-row">
+      <div className={split ? "shrink-0 border-t border-line bg-white pt-3" : live ? "mt-1.5" : "mt-3"}>
+        <div className={`flex gap-2 ${live ? "items-center" : "flex-col sm:flex-row"}`}>
           {live ? null : (
             <button
               type="submit"
               onMouseDown={(event) => event.preventDefault()}
-              className="h-12 flex-1 rounded-full bg-amber font-medium text-ink"
+              className="btn-fade-sea h-12 flex-1 rounded-full bg-sea font-medium text-white"
             >
               Sök bolag
             </button>
@@ -164,12 +173,17 @@ export function CompanySearch({
             type="button"
             onMouseDown={(event) => event.preventDefault()}
             onClick={onClear}
-            className={`h-12 rounded-full border border-line bg-white px-4 text-sm font-medium ${live ? "flex-1" : ""}`}
+            className={`btn-fade-white rounded-full border border-line font-medium ${live ? "h-8 px-3 text-xs" : "h-12 px-4 text-sm"}`}
           >
             Rensa
           </button>
+          {live && hint ? (
+            <p className="min-w-0 flex-1 text-xs leading-5 text-muted" aria-live="polite">
+              {hint}
+            </p>
+          ) : null}
         </div>
-        {hint ? (
+        {!live && hint ? (
           <p className="mt-2 text-sm leading-6 text-muted" aria-live="polite">
             {hint}
           </p>
@@ -186,6 +200,7 @@ function SuggestField({
   suggestions,
   onValue,
   onPick,
+  dense = false,
 }: {
   label: string;
   value: string;
@@ -193,6 +208,7 @@ function SuggestField({
   suggestions: Suggestion[];
   onValue: (value: string) => void;
   onPick: (suggestion: Suggestion) => void;
+  dense?: boolean;
 }) {
   const id = useId();
   const listId = `${id}-list`;
@@ -213,8 +229,8 @@ function SuggestField({
   }
 
   return (
-    <label className="block text-sm" htmlFor={id}>
-      <span className="mb-1.5 block font-medium">{label}</span>
+    <label className={`relative block text-sm ${open ? "z-20" : ""}`} htmlFor={id}>
+      <span className={`block font-medium ${dense ? "mb-0.5 text-xs leading-4" : "mb-1.5"}`}>{label}</span>
       <input
         id={id}
         value={value}
@@ -258,10 +274,10 @@ function SuggestField({
             pick(suggestions[active]);
           }
         }}
-        className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base placeholder:text-ink/40"
+        className={`w-full rounded-xl border border-line bg-paper px-3 placeholder:text-ink/40 ${dense ? "h-10 text-sm" : "h-12 text-base"}`}
       />
       {open && visible.length > 0 ? (
-        <ul id={listId} role="listbox" className="mt-1 max-h-56 overflow-y-auto rounded-xl border border-line bg-white">
+        <ul id={listId} role="listbox" className="absolute z-30 mt-1 max-h-48 w-full overflow-y-auto rounded-xl border border-line bg-white shadow-lg">
           {visible.map((suggestion, index) => {
             const previous = visible[index - 1];
             const showKind = !previous || previous.kind !== suggestion.kind;
