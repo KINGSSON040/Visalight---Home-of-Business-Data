@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #d9eef3;
-  --ink: #102a36;
-  --muted: #3e5a66;
-  --line: #b7d4de;
+  --paper: #f4f8e6;
+  --ink: #173016;
+  --muted: #3e5a3c;
+  --line: #d5e6b4;
   --card: #ffffff;
-  --green: #0c6b60;
-  --green-soft: #d2f5ef;
+  --green: #6fe044;
+  --green-soft: #e8fcd4;
   --rust: #c2412d;
-  --sea: #0e6678;
-  --sea-deep: #14324a;
-  --amber: #f2b427;
-  --amber-soft: #fff3d1;
-  --foam: #b9dce7;
+  --sea: #1c8a34;
+  --sea-deep: #125c24;
+  --amber: #efe85a;
+  --amber-soft: #f8ffc4;
+  --foam: #e7f8c8;
 }
 
 @theme inline {
@@ -36,9 +36,16 @@
 }
 
 body {
-  background: var(--paper);
+  background-color: #f7fbe8;
+  background-image: linear-gradient(115deg, #b6f56a 0%, #e4fb78 34%, #fff48a 68%, #fffde4 100%);
+  background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-sans), sans-serif;
+}
+
+.theme-wash {
+  background-image: linear-gradient(105deg, #8eef4e 0%, #dff25f 48%, #ffe86a 100%);
+  color: var(--ink);
 }
 
 .font-mono {
@@ -46,8 +53,8 @@ body {
 }
 
 ::selection {
-  background: #f2b427;
-  color: #102a36;
+  background: #efe85a;
+  color: #173016;
 }
 
 :focus-visible {
