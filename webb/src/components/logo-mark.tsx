@@ -1,36 +1,12 @@
-/** Norrsken: vit platta, tre täta band och en gnista. Läsbar vid 24–32 px på vitt och på blå header. */
+/** Norrsken utan blått: grönt, korall och magenta, med en gul gnista. */
 export function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
-      <rect x="1" y="1" width="30" height="30" rx="8" fill="#ffffff" stroke="#0036d6" strokeWidth="1.75" />
-      <path
-        d="M4.8 15.6C10.6 15.1 14.4 12.4 18.2 11.2 20.6 10.4 21.6 9.9 22.2 9.4"
-        fill="none"
-        stroke="#5a2de0"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4.2 21C10.8 20.3 14.8 16.6 19.2 15.2 22.4 14.2 24.8 13.6 27.2 12.2"
-        fill="none"
-        stroke="#008fc4"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5.8 26.2C11.6 24.8 15.2 21.2 19.6 19.4 22.8 18.2 25.2 17.6 27.6 16.2"
-        fill="none"
-        stroke="#008f52"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <path
-        fill="#ffbf00"
-        stroke="#152033"
-        strokeWidth="0.65"
-        strokeLinejoin="round"
-        d="M26.8 3.5 27.55 5.35 29.3 6 27.55 6.65 26.8 8.5 26.05 6.65 24.3 6 26.05 5.35Z"
-      />
+      <rect x="1" y="1" width="30" height="30" rx="10" fill="#fff7f2" stroke="#ff2d95" strokeWidth="1.6" />
+      <path d="M5 16.2c5.4-.4 8.6-2.6 12.2-3.8 2.2-.7 3.2-1.2 3.8-1.6" fill="none" stroke="#ff2d95" strokeWidth="2.7" strokeLinecap="round" />
+      <path d="M4.4 21.4c6.2-.6 9.8-3.8 13.8-5.2 2.8-.9 5-1.5 7.2-2.8" fill="none" stroke="#ff6b4a" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M6 26.2c5.4-1.3 8.8-4.4 12.8-6.1 2.8-1.1 5-1.7 7.2-3" fill="none" stroke="#00a86b" strokeWidth="2.45" strokeLinecap="round" />
+      <path fill="#ffc107" d="M26.6 4.2 27.3 6.1 29.2 6.8 27.3 7.5 26.6 9.4 25.9 7.5 24 6.8 25.9 6.1Z" />
     </svg>
   );
 }
@@ -49,15 +25,11 @@ export function BrandLockup({
     <span className="inline-flex min-w-0 items-center gap-2">
       <LogoMark className={`shrink-0 ${compact ? "h-7 w-7 sm:h-8 sm:w-8" : "h-8 w-8"}`} />
       <span className="min-w-0">
-        <span
-          className={`block truncate leading-none tracking-tight ${compact ? "text-lg sm:text-2xl" : "text-2xl"} ${light ? "text-white" : "text-ink"}`}
-        >
+        <span className={`block truncate leading-none tracking-tight ${compact ? "text-lg sm:text-2xl" : "text-2xl"} ${light ? "text-white" : "text-ink"}`}>
           VisaLight
         </span>
         {subtitle ? (
-          <span
-            className={`mt-0.5 block truncate text-[0.62rem] uppercase tracking-[0.14em] sm:text-[0.68rem] sm:tracking-[0.16em] ${light ? "text-white/90" : "text-ink/70"}`}
-          >
+          <span className={`mt-0.5 block truncate text-[0.62rem] uppercase tracking-[0.14em] sm:text-[0.68rem] sm:tracking-[0.16em] ${light ? "text-white/90" : "text-ink/70"}`}>
             {subtitle}
           </span>
         ) : null}

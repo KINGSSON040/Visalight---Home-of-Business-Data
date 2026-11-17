@@ -29,6 +29,7 @@ export function CompanySearch({
   segmentOnly = false,
   part = "all",
   questions = false,
+  advanced = true,
   children,
 }: {
   draft: Selection;
@@ -47,6 +48,8 @@ export function CompanySearch({
   part?: "all" | "query" | "place" | "trade" | "form" | "size";
   /** Frågeformuleringar och lodrät bolagsform, utan chip-rad. */
   questions?: boolean;
+  /** När false döljs bolagsform, län och storlek. */
+  advanced?: boolean;
   children?: ReactNode;
 }) {
   const forms = draft.forms ?? [];
@@ -58,9 +61,9 @@ export function CompanySearch({
   const showQuery = part === "all" || part === "query";
   const showCity = part === "all" || part === "place";
   const showBransch = part === "all" || part === "trade";
-  const showForms = part === "all" || part === "form";
-  const showCounty = part === "all" || part === "place";
-  const showEmployees = part === "all" || part === "size";
+  const showForms = advanced && (part === "all" || part === "form");
+  const showCounty = advanced && (part === "all" || part === "place");
+  const showEmployees = advanced && (part === "all" || part === "size");
   const showBefore = part === "all";
   const showFooter = part === "all";
   const queryLabel = questions ? "Vad ska utdraget handla om?" : "Sök";

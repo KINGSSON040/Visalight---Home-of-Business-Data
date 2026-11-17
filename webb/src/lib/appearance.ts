@@ -5,17 +5,17 @@ export const THEMES = [
   {
     id: "norrsken",
     name: "Norrsken",
-    intent: "Tänkt för säljsidan: blå header, gröna och violetta accenter.",
+    intent: "Tänkt för säljsidan: grönt, korall och magenta. Inget blått.",
   },
   {
     id: "klardag",
     name: "Klar dag",
-    intent: "Tänkt för luft och tydlighet: vit botten, stark blå text, gul knapp.",
+    intent: "Tänkt för luft: vit botten, magenta text, gul knapp.",
   },
   {
     id: "natt",
     name: "Natthimmel",
-    intent: "Tänkt för kvällsläsning: mättat marinblått, ljus cyan och grön text.",
+    intent: "Tänkt för kvällsläsning: mörk plommon och skogsgrönt.",
   },
   {
     id: "signal",
@@ -25,7 +25,7 @@ export const THEMES = [
   {
     id: "varm",
     name: "Varm kväll",
-    intent: "Tänkt för en varm kväll: violett header och bärnstensgula tal.",
+    intent: "Tänkt för en varm kväll: magenta header och orangea tal.",
   },
 ] as const;
 

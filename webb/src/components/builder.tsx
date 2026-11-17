@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAppearance } from "@/components/appearance";
 import { CompanySearch } from "@/components/company-search";
@@ -14,7 +14,7 @@ import {
   suggestSegment,
   type Selection,
 } from "@/lib/catalog";
-import { FILTERS, type FilterId } from "@/lib/appearance";
+import { type FilterId } from "@/lib/appearance";
 import { BASE_ORE, EMAIL_ORE, formatKronor, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import { priceForUrval, pricedCounts, type UrvalResult } from "@/lib/urval";
 
@@ -24,35 +24,29 @@ export function ListBuilder({
   urval,
   loading,
   updatedLabel,
+  exampleData = false,
 }: {
   draft: Selection;
   onChange: (patch: Partial<Selection>) => void;
   urval: UrvalResult;
   loading: boolean;
   updatedLabel: string | null;
+  exampleData?: boolean;
 }) {
   const { filter } = useAppearance();
   const waitingForWord = draft.query.trim().length > 0 && !resolveQuery(draft.query) && !selectionForCount({ ...draft, query: "" });
   const hint = waitingForWord ? "Förslagen kommer direkt." : "";
-  const layoutName = FILTERS.find((item) => item.id === filter)?.name ?? "Kompakt kort";
-  const fresh = updatedLabel
-    ? `Uppdaterat ${updatedLabel}. Äldre årgångar används inte.`
-    : "Uppdaterat från senaste registret. Äldre årgångar används inte.";
+  const when = updatedLabel ?? "12 mars 2026 kl. 09.00";
+  const stamp = `Registret senast uppdaterat: ${when}${exampleData || !updatedLabel ? " (exempeldata)" : ""}. Urvalet och priset gäller den datan.`;
 
-  const sida = filter === "sida";
   return (
-    <div id="urval" data-layout={filter} className="builder-card rounded-[1.35rem] px-3 py-2.5 text-ink sm:px-4">
-      <div className="flex items-baseline justify-between gap-2">
-        <h2 className="text-base tracking-tight sm:text-lg">Skapa ert utdrag</h2>
-        <p className="truncate text-[0.68rem] text-muted">{layoutName}</p>
-      </div>
-      <p className="mt-0.5 truncate text-[0.7rem] leading-4 text-muted">{fresh}</p>
-      <div className={sida ? "sida-split mt-2" : "mt-2"}>
-        <div className={sida ? "sida-result" : ""}>
-          <ResultHero draft={draft} urval={urval} loading={loading} onChange={onChange} />
-        </div>
+    <div id="urval" data-layout={filter} className="builder-card rounded-[1.6rem] px-3 py-2.5 text-ink sm:px-4">
+      <h2 className="text-base tracking-tight sm:text-lg">Fyll i utdraget</h2>
+      <div className="mt-2">
         <FilterBody filter={filter} draft={draft} onChange={onChange} hint={hint} />
+        <ResultHero draft={draft} urval={urval} loading={loading} onChange={onChange} />
       </div>
+      <p className="mt-2 text-[0.68rem] leading-4 text-muted">{stamp}</p>
     </div>
   );
 }
@@ -77,21 +71,30 @@ function FilterBody({
   onChange: (patch: Partial<Selection>) => void;
   hint: string;
 }) {
+  const [more, setMore] = useState(filter !== "kompakt");
   if (filter === "steg") return <StepFilter draft={draft} onChange={onChange} hint={hint} />;
   if (filter === "fraga") return <QuestionFilter draft={draft} onChange={onChange} hint={hint} />;
   return (
-    <CompanySearch
-      draft={draft}
-      onChange={onChange}
-      onSearch={() => undefined}
-      live
-      segmentOnly
-      onClear={() => onChange({ query: "", city: "", county: "", bransch: "", sni: "", forms: [], employees: "" })}
-      queryPlaceholder="Bransch, ort, län eller storlek"
-      querySuggestions={suggestSegment}
-      hint={hint}
-      beforeForms={<Tillval draft={draft} onChange={onChange} />}
-    />
+    <div>
+      <CompanySearch
+        draft={draft}
+        onChange={onChange}
+        onSearch={() => undefined}
+        live
+        segmentOnly
+        advanced={filter !== "kompakt" || more}
+        onClear={() => onChange({ query: "", city: "", county: "", bransch: "", sni: "", forms: [], employees: "" })}
+        queryPlaceholder="Bransch, ort eller län"
+        querySuggestions={suggestSegment}
+        hint={hint}
+        beforeForms={<Tillval draft={draft} onChange={onChange} />}
+      />
+      {filter === "kompakt" ? (
+        <button type="button" className="mt-1 text-xs font-medium text-sea" onClick={() => setMore((value) => !value)}>
+          {more ? "Dölj fler filter" : "Fler filter"}
+        </button>
+      ) : null}
+    </div>
   );
 }
 
@@ -227,6 +230,13 @@ function ResultHero({
   const ready = urval.status === "ready";
   const counts = pricedCounts(urval, draft);
   const price = priceForUrval(urval, draft);
+  const [tick, setTick] = useState(false);
+  useEffect(() => {
+    if (!ready) return;
+    setTick(true);
+    const timer = window.setTimeout(() => setTick(false), 450);
+    return () => window.clearTimeout(timer);
+  }, [ready, urval.companies]);
   const href = `/kassa?${selectionToQuery(draft)}`;
   const chips = chosenChips(draft);
   const figure = ready ? urval.companies.toLocaleString("sv-SE") : loading ? "…" : "–";
@@ -243,7 +253,7 @@ function ResultHero({
         <p className="flex items-baseline gap-2">
           <span
             data-urval-count={ready ? String(urval.companies) : ""}
-            className={`result-count text-[2.75rem] leading-none font-semibold tracking-tight tabular-nums sm:text-5xl ${loading && ready ? "opacity-70" : ""}`}
+            className={`result-count text-[2.75rem] leading-none font-semibold tracking-tight tabular-nums sm:text-5xl ${tick ? "count-tick" : ""} ${loading && ready ? "opacity-70" : ""}`}
           >
             {figure}
           </span>

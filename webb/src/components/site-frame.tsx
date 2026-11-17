@@ -10,10 +10,12 @@ export function SiteFrame({
   children,
   registerReady = false,
   updatedLabel,
+  exampleData = false,
 }: {
   children: React.ReactNode;
   registerReady?: boolean;
   updatedLabel: string | null;
+  exampleData?: boolean;
 }) {
   const path = usePathname();
   if (path.startsWith("/crm")) return <CrmFrame>{children}</CrmFrame>;
@@ -21,7 +23,7 @@ export function SiteFrame({
     <AppearanceProvider>
       <SiteHeader />
       {children}
-      <SiteFooter updatedLabel={updatedLabel} registerReady={registerReady} />
+      <SiteFooter updatedLabel={updatedLabel} registerReady={registerReady} exampleData={exampleData} />
     </AppearanceProvider>
   );
 }

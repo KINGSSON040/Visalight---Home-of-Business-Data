@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { SiteFrame } from "@/components/site-frame";
 import { registerDatabasePath } from "@/lib/register-path";
-import { registerUpdatedLabel } from "@/lib/register-status";
+import { registerStamp } from "@/lib/register-status";
 import { siteOrigin } from "@/lib/topics";
 import "./globals.css";
 
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <body className={`${inter.variable} ${inter.className} antialiased`}>
-        <SiteFrame registerReady={registerDatabasePath() !== null} updatedLabel={registerUpdatedLabel()}>
+        <SiteFrame registerReady={registerDatabasePath() !== null} updatedLabel={registerStamp().when} exampleData={registerStamp().example}>
           {children}
         </SiteFrame>
       </body>

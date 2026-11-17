@@ -1,6 +1,16 @@
 import Database from "better-sqlite3";
 import { registerDatabasePath } from "@/lib/register-path";
 
+/** Exempelvärde när registret inte är inkopplat. Ska aldrig se ut som en riktig import. */
+export const EXAMPLE_REGISTER_WHEN = "12 mars 2026 kl. 09.00";
+
+/** En tidpunkt för kundsidan. example är true när siffran inte kommer från registret. */
+export function registerStamp(): { when: string; example: boolean } {
+  const when = registerUpdatedLabel();
+  if (when) return { when, example: false };
+  return { when: EXAMPLE_REGISTER_WHEN, example: true };
+}
+
 /** Tidpunkt för senaste lyckade synk, formaterad på svenska. Null om registret saknas. */
 export function registerUpdatedLabel(): string | null {
   const file = registerDatabasePath();

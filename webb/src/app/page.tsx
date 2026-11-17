@@ -4,7 +4,7 @@ import { selectionFromRecord } from "@/lib/catalog";
 import { PUBLIC_FAQ } from "@/lib/public-faq";
 import { loadUrval } from "@/lib/register-urval";
 import { registerDatabasePath } from "@/lib/register-path";
-import { registerUpdatedLabel } from "@/lib/register-status";
+import { registerStamp } from "@/lib/register-status";
 import { siteOrigin } from "@/lib/topics";
 
 export const metadata: Metadata = {
@@ -19,6 +19,7 @@ export default async function Home({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  const stamp = registerStamp();
   const selection = selectionFromRecord(await searchParams);
   const initialUrval = loadUrval(selection);
   const origin = siteOrigin();
@@ -48,7 +49,8 @@ export default async function Home({
       <CustomerHome
         initial={selection}
         initialUrval={initialUrval}
-        updatedLabel={registerUpdatedLabel()}
+        updatedLabel={stamp.when}
+        exampleData={stamp.example}
         registerReady={registerDatabasePath() !== null}
       />
     </>

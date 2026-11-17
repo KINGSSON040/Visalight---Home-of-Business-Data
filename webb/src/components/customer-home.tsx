@@ -52,11 +52,13 @@ export function CustomerHome({
   initialUrval,
   updatedLabel,
   registerReady = false,
+  exampleData = false,
 }: {
   initial: Selection;
   initialUrval: UrvalResult;
   updatedLabel: string | null;
   registerReady?: boolean;
+  exampleData?: boolean;
 }) {
   const [draft, setDraft] = useState(initial);
   const [urval, setUrval] = useState(initialUrval);
@@ -129,16 +131,20 @@ export function CustomerHome({
     <main>
       <section className="home-hero mx-auto grid max-w-6xl items-start gap-6 px-4 py-3 sm:py-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(20rem,1fr)] lg:gap-8 lg:py-4">
         <article className="min-w-0">
-          <p className="text-sm uppercase tracking-[0.18em] text-sea">Färsk företagsdata</p>
+          <p className="text-sm uppercase tracking-[0.18em] text-sea">Utan prenumeration</p>
           <h1 className="mt-3 max-w-xl text-4xl leading-[1.08] tracking-tight text-balance sm:text-5xl">
-            Rätt bolag, från den senaste uppdateringen.
+            Fyll i utdraget. Se antal kunder och pris direkt.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-            Välj bransch och ort i utdraget. Ni ser antalet och priset direkt, och slipper hämta, rensa och uppdatera
-            uppgifterna själva.
+            Ingen prenumeration och ingen bindningstid. Ni ser hur många bolag som matchar, och vad filen kostar, innan ni går vidare.
           </p>
+          <ul className="mt-4 flex flex-wrap gap-2 text-sm">
+            <li className="promise bg-foam px-3 py-1 font-medium">Fyll i utdraget</li>
+            <li className="promise bg-green-soft px-3 py-1 font-medium text-green">Se antal och pris direkt</li>
+            <li className="promise bg-amber-soft px-3 py-1 font-medium">Ingen bindningstid</li>
+          </ul>
           <div className="mt-4">
-            <StatusChip updatedLabel={updatedLabel} registerReady={registerReady} />
+            <StatusChip updatedLabel={updatedLabel} registerReady={registerReady} exampleData={exampleData} />
           </div>
           <Link href="/#urval" className="btn-fade-sea mt-5 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
             Skapa ert utdrag
@@ -157,7 +163,7 @@ export function CustomerHome({
         </article>
 
         <div className="builder-slot min-w-0">
-          <ListBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} />
+          <ListBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} exampleData={exampleData} />
         </div>
       </section>
 

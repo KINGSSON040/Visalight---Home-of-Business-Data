@@ -1,15 +1,17 @@
 export function StatusChip({
   updatedLabel,
   registerReady = false,
+  exampleData = false,
 }: {
   updatedLabel: string | null;
   registerReady?: boolean;
+  exampleData?: boolean;
 }) {
-  const fresh = updatedLabel
-    ? `Senast uppdaterat ${updatedLabel}. Äldre årgångar används inte.`
-    : registerReady
-      ? "Utdraget tas från den senaste uppdateringen. Äldre årgångar används inte."
-      : "Utdraget tas alltid från den senaste uppdateringen. Äldre årgångar används inte.";
+  const when = updatedLabel ?? "12 mars 2026 kl. 09.00";
+  const example = exampleData || !updatedLabel;
+  const fresh = `Registret senast uppdaterat: ${when}${example ? " (exempeldata)" : ""}. ${
+    registerReady && !example ? "Urvalet gäller den datan." : "Urvalet gäller exempeldata, inte ett inkopplat register."
+  }`;
 
   return (
     <p className="flex max-w-xl flex-wrap gap-2">
