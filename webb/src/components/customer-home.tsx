@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ListBuilder } from "@/components/builder";
 import { HomeMore } from "@/components/home-more";
 import { SampleOffer } from "@/components/sample-offer";
-import { sameSearch, selectionToQuery, type Selection } from "@/lib/catalog";
+import { selectionForCount, selectionToQuery, type Selection } from "@/lib/catalog";
 import { BASE_ORE, EMAIL_ORE, formatKronor, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import type { UrvalResult } from "@/lib/urval";
 import { linkedIndustries, topicPath } from "@/lib/topics";
@@ -73,35 +73,42 @@ export function CustomerHome({
   updatedLabel: string | null;
 }) {
   const [draft, setDraft] = useState(initial);
-  const [applied, setApplied] = useState(initial);
   const [urval, setUrval] = useState(initialUrval);
   const [loading, setLoading] = useState(false);
+  const counted = selectionForCount(draft);
   const priced: Selection = {
-    ...applied,
+    ...(counted ?? draft),
+    query: draft.query,
     phones: draft.phones,
     emails: draft.emails,
     signatory: draft.signatory,
   };
   const share = selectionToQuery(priced);
-  const dirty = !sameSearch(draft, applied);
-  const searchKey = selectionToQuery({ ...applied, phones: false, emails: false, signatory: false });
+  const searchKey = counted
+    ? selectionToQuery({ ...counted, phones: false, emails: false, signatory: false })
+    : "";
 
   useEffect(() => {
     const controller = new AbortController();
-    setLoading(true);
-    fetch(`/api/urval?${searchKey}`, { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error("Kunde inte räkna urvalet.");
-        return response.json() as Promise<UrvalResult>;
-      })
-      .then((next) => setUrval(next))
-      .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
+    const timer = window.setTimeout(() => {
+      setLoading(true);
+      fetch(`/api/urval?${searchKey}`, { signal: controller.signal })
+        .then((response) => {
+          if (!response.ok) throw new Error("Kunde inte räkna urvalet.");
+          return response.json() as Promise<UrvalResult>;
+        })
+        .then((next) => setUrval(next))
+        .catch((error: unknown) => {
+          if (error instanceof DOMException && error.name === "AbortError") return;
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setLoading(false);
+        });
+    }, 200);
+    return () => {
+      window.clearTimeout(timer);
+      controller.abort();
+    };
   }, [searchKey]);
 
   useEffect(() => {
@@ -109,7 +116,20 @@ export function CustomerHome({
   }, [share]);
 
   function patch(next: Partial<Selection>) {
-    setDraft((current) => ({ ...current, ...next }));
+    setDraft((current) => {
+      const merged = { ...current, ...next };
+      const typing =
+        typeof next.query === "string" &&
+        next.sni === undefined &&
+        next.bransch === undefined &&
+        next.query !== current.query &&
+        next.query.trim().length > 0;
+      if (typing) {
+        merged.sni = "";
+        merged.bransch = "";
+      }
+      return merged;
+    });
   }
 
   return (
@@ -139,14 +159,7 @@ export function CustomerHome({
           </dl>
         </article>
 
-        <ListBuilder
-          draft={draft}
-          onChange={patch}
-          onSearch={() => setApplied(draft)}
-          dirty={dirty}
-          urval={urval}
-          loading={loading}
-        />
+        <ListBuilder draft={draft} onChange={patch} urval={urval} loading={loading} />
       </section>
 
       <section id="sa-funkar-det" className="band-white">
@@ -166,7 +179,7 @@ export function CustomerHome({
         </div>
       </section>
 
-      <SampleOffer selection={draft} />
+      <SampleOffer selection={counted ?? draft} />
 
       <HomeMore updatedLabel={updatedLabel} />
 

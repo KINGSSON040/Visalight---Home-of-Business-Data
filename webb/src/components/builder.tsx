@@ -2,27 +2,24 @@
 
 import Link from "next/link";
 import { CompanySearch } from "@/components/company-search";
-import { selectionToQuery, suggestSegment, type Selection } from "@/lib/catalog";
+import { resolveQuery, selectionForCount, selectionToQuery, suggestSegment, type Selection } from "@/lib/catalog";
 import { BASE_ORE, EMAIL_ORE, formatKronor, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import { priceForUrval, pricedCounts, type UrvalResult } from "@/lib/urval";
 
 export function ListBuilder({
   draft,
   onChange,
-  onSearch,
-  dirty,
   urval,
   loading,
 }: {
   draft: Selection;
   onChange: (patch: Partial<Selection>) => void;
-  onSearch: () => void;
-  dirty: boolean;
   urval: UrvalResult;
   loading: boolean;
 }) {
-  const hint = dirty
-    ? "Filtren är ändrade. Tryck Sök bolag för att räkna om antal och pris."
+  const waitingForWord = draft.query.trim().length > 0 && !resolveQuery(draft.query) && !selectionForCount({ ...draft, query: "" });
+  const hint = waitingForWord
+    ? "Förslagen kommer direkt. Antalet räknas när ordet är färdigt, eller när ni valt ett filter."
     : loading
       ? "Räknar bolag i registret."
       : urval.note;
@@ -32,8 +29,8 @@ export function ListBuilder({
       <div>
         <h2 className="text-2xl tracking-tight">Skapa ert utdrag</h2>
         <p className="mt-1 text-sm leading-6 text-muted">
-          Skriv en bransch, till exempel frisör, restaurang eller revisionsbyrå. Samma fält tar också ort, län,
-          bolagsform och storlek. Förslagen är segment, inte enskilda företag.
+          Skriv en bransch, till exempel frisör, restaurang eller revisionsbyrå. Förslag visas från första tecknet.
+          Antalet räknas så fort ett filter eller ett färdigt sökord är valt.
         </p>
       </div>
 
@@ -41,7 +38,8 @@ export function ListBuilder({
         <CompanySearch
           draft={draft}
           onChange={onChange}
-          onSearch={onSearch}
+          onSearch={() => undefined}
+          live
           onClear={() => onChange({ query: "", city: "", county: "", bransch: "", sni: "", forms: [], employees: "" })}
           queryPlaceholder="Bransch, ort, län eller storlek"
           querySuggestions={suggestSegment}
@@ -74,7 +72,7 @@ export function ListBuilder({
               />
             </div>
           </fieldset>
-          <LivePrice draft={draft} urval={urval} dirty={dirty} loading={loading} />
+          <LivePrice draft={draft} urval={urval} loading={loading} />
         </CompanySearch>
       </div>
     </div>
@@ -109,12 +107,10 @@ function CheckOption({
 function LivePrice({
   draft,
   urval,
-  dirty,
   loading,
 }: {
   draft: Selection;
   urval: UrvalResult;
-  dirty: boolean;
   loading: boolean;
 }) {
   const counts = pricedCounts(urval, draft);
@@ -189,7 +185,6 @@ function LivePrice({
           ) : null}
         </>
       )}
-      {dirty ? <p className="mt-2 text-sm leading-6 text-muted">Siffrorna gäller senaste sökningen.</p> : null}
     </div>
   );
 }

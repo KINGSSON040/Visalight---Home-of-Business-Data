@@ -337,6 +337,50 @@ function countWhere(predicate: (company: Company) => boolean): number {
 }
 
 
+function industrySuggestMatch(item: Industry, needle: string, digits: string): boolean {
+  if (digits.length >= 1 && (item.sni.startsWith(digits) || item.code.replace(/\D/g, "").startsWith(digits))) {
+    return true;
+  }
+  if (needle.length < 1) return false;
+  return [item.label, item.code, ...item.words].some((part) => fold(part).includes(needle));
+}
+
+/** Ett färdigt sökord: hela branschen, orten, länet, bolagsformen, storleken eller SNI-koden. */
+export function resolveQuery(text: string): (Partial<Selection> & { form?: string }) | null {
+  const trimmed = text.trim();
+  if (!trimmed) return null;
+  const needle = fold(trimmed);
+  const digits = trimmed.replace(/\D/g, "");
+  const industry = INDUSTRIES.find((item) => {
+    const codes = [item.sni, item.code, ...(item.legacy ?? [])].map((code) => code.replace(/\D/g, ""));
+    if (digits.length >= 2 && codes.includes(digits)) return true;
+    return fold(item.label) === needle || item.words.some((word) => fold(word) === needle);
+  });
+  if (industry) return { bransch: industry.label, sni: industry.sni };
+  const city = CITIES.find((item) => fold(item) === needle);
+  if (city) return { city };
+  const county = COUNTIES.find((item) => fold(item.label) === needle || fold(item.label.replace(/ län$/, "")) === needle);
+  if (county) return { county: county.label };
+  const form = LEGAL_FORMS.find((item) => fold(item.label) === needle);
+  if (form) return { form: form.code };
+  const band = EMPLOYEE_BANDS.find((item) => fold(item) === needle);
+  if (band) return { employees: band };
+  return null;
+}
+
+/** Urvalet som ska räknas. Ett halvfärdigt ord räknas inte, valda filter gör det. */
+export function selectionForCount(selection: Selection): Selection | null {
+  const resolved = resolveQuery(selection.query);
+  const next: Selection = { ...selection, forms: [...(selection.forms ?? [])], query: "" };
+  if (resolved?.bransch) next.bransch = resolved.bransch;
+  if (resolved?.sni) next.sni = resolved.sni;
+  if (resolved?.city) next.city = resolved.city;
+  if (resolved?.county) next.county = resolved.county;
+  if (resolved?.employees) next.employees = resolved.employees;
+  if (resolved?.form && !next.forms.includes(resolved.form)) next.forms = [...next.forms, resolved.form];
+  return hasSegment(next) ? next : null;
+}
+
 function industryMatches(item: Industry, needle: string, digits: string): boolean {
   if (digits.length >= 2 && (item.sni.startsWith(digits) || item.code.replace(/\D/g, "").startsWith(digits))) {
     return true;
@@ -415,11 +459,11 @@ export function suggestBranscher(text: string): Suggestion[] {
 export function suggestSegment(text: string): Suggestion[] {
   const needle = fold(text.trim());
   const digits = text.replace(/\D/g, "");
-  if (needle.length < 2 && digits.length < 2) return [];
+  if (needle.length < 1 && digits.length < 1) return [];
   const found: Suggestion[] = [];
 
   for (const item of INDUSTRIES) {
-    if (!industryMatches(item, needle, digits)) continue;
+    if (!industrySuggestMatch(item, needle, digits)) continue;
     found.push(industrySuggestion(item, true));
   }
   for (const city of CITIES) {

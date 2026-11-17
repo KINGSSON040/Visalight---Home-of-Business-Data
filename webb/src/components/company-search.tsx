@@ -20,6 +20,7 @@ export function CompanySearch({
   onClear,
   split = false,
   hint,
+  live = false,
   queryPlaceholder = "Bransch, SNI, namn eller organisationsnummer",
   querySuggestions = suggestQuery,
   children,
@@ -30,6 +31,7 @@ export function CompanySearch({
   onClear: () => void;
   split?: boolean;
   hint?: string;
+  live?: boolean;
   queryPlaceholder?: string;
   querySuggestions?: (text: string) => Suggestion[];
   children?: ReactNode;
@@ -149,18 +151,20 @@ export function CompanySearch({
 
       <div className={split ? "shrink-0 border-t border-line bg-white pt-3" : "mt-3"}>
         <div className="flex flex-col gap-2 sm:flex-row">
-          <button
-            type="submit"
-            onMouseDown={(event) => event.preventDefault()}
-            className="h-12 flex-1 rounded-full bg-amber font-medium text-ink"
-          >
-            Sök bolag
-          </button>
+          {live ? null : (
+            <button
+              type="submit"
+              onMouseDown={(event) => event.preventDefault()}
+              className="h-12 flex-1 rounded-full bg-amber font-medium text-ink"
+            >
+              Sök bolag
+            </button>
+          )}
           <button
             type="button"
             onMouseDown={(event) => event.preventDefault()}
             onClick={onClear}
-            className="h-12 rounded-full border border-line bg-white px-4 text-sm font-medium"
+            className={`h-12 rounded-full border border-line bg-white px-4 text-sm font-medium ${live ? "flex-1" : ""}`}
           >
             Rensa
           </button>
