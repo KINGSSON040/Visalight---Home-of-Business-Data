@@ -148,12 +148,15 @@ export type CompanyRow = {
   fetched_at: string;
 };
 
-export function companyIsSellable(company: Pick<CompanyRow, "reklam_block" | "ended_on" | "manual_exclude" | "status_code">): boolean {
-  if (company.reklam_block) return false;
+export function companyIsSellable(company: {
+  name?: string | null;
+  street?: string | null;
+  city?: string | null;
+  sni?: string | null;
+  manual_exclude?: number | null;
+}): boolean {
   if (company.manual_exclude) return false;
-  if (company.ended_on) return false;
-  if (company.status_code === "avregistrerad") return false;
-  return true;
+  return Boolean(company.name?.trim() && company.street?.trim() && company.city?.trim() && company.sni?.trim());
 }
 
 function seed(connection: Database.Database) {

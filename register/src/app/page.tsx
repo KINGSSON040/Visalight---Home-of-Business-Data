@@ -9,7 +9,7 @@ export default function HomePage() {
       <p className="text-sm text-[var(--muted)]">Register</p>
       <h1 className="mt-1 text-3xl font-semibold tracking-tight">Vad som går att sälja just nu</h1>
       <p className="mt-3 max-w-2xl text-[var(--muted)]">
-        Tomma telefon- och e-postfält betyder att källan inte hade uppgiften. Spärrade och avregistrerade bolag ligger kvar så att nästa uppdatering kan ta bort dem ur filen, och de ingår inte i priset.
+        Ett bolag räknas som säljbart när organisationsnummer, företagsnamn, gatuadress, ort och SNI-kod finns. Saknas något av det hålls raden utanför filen. Tom telefon eller e-post betyder att källan inte hade uppgiften, och det kostar inget.
       </p>
       <div className="mt-6 grid gap-3 sm:grid-cols-4">
         <Stat label="Säljbara bolag" value={stats.sellable} />

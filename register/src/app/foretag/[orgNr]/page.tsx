@@ -22,8 +22,10 @@ export default async function CompanyPage({
   const orgNr = compactOrgNr((await params).orgNr);
   const company = getCompany(orgNr);
   if (!company) notFound();
-  const sellable = companyIsSellable(company);
-  const reason = suppressionReason(company);
+  const industries = companyIndustries(orgNr);
+  const withSni = { ...company, sni: industries[0]?.sni ?? null };
+  const sellable = companyIsSellable(withSni);
+  const reason = suppressionReason(withSni);
   const error = (await searchParams).fel;
   return (
     <Shell>
@@ -44,7 +46,7 @@ export default async function CompanyPage({
             <dt className="text-[var(--muted)]">Adress</dt>
             <dd>{[company.street, company.postal_code, company.city].filter(Boolean).join(", ") || "—"}</dd>
             <dt className="text-[var(--muted)]">SNI</dt>
-            <dd>{companyIndustries(orgNr).map((item) => item.sni).join(", ") || "—"}</dd>
+            <dd>{industries.map((item) => item.sni).join(", ") || "—"}</dd>
             <dt className="text-[var(--muted)]">Form</dt>
             <dd>{company.legal_form || "—"}</dd>
             <dt className="text-[var(--muted)]">Anställda</dt>

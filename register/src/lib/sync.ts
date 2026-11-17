@@ -168,9 +168,9 @@ function upsertBatch(companies: ScbCompany[]) {
         employee_class: company.anstKl ?? null,
         turnover_class: company.omsKl ?? null,
         workplace_count: company.aeAnt ?? null,
-        reklam_block: company.reklamSparrTyp ? 1 : 0,
-        phone_block: company.telefonSparrTyp ? 1 : 0,
-        email_block: company.epostSparrTyp ? 1 : 0,
+        reklam_block: scbCode(company.reklamSparrTyp) === 4 ? 1 : 0,
+        phone_block: [2, 3].includes(scbCode(company.telefonSparrTyp) ?? -1) ? 1 : 0,
+        email_block: scbCode(company.epostSparrTyp) === 2 ? 1 : 0,
         started_on: company.startDat ? company.startDat.slice(0, 10) : null,
         ended_on: ended,
         registered_on: company.regDat ? company.regDat.slice(0, 10) : null,
@@ -198,6 +198,12 @@ function upsertBatch(companies: ScbCompany[]) {
     }
   });
   tx(companies);
+}
+
+function scbCode(value: unknown): number | null {
+  if (value == null || value === "") return null;
+  const code = Number(value);
+  return Number.isFinite(code) ? code : null;
 }
 
 function sleep(ms: number) {

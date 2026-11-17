@@ -31,7 +31,7 @@ export function FilterForm({ filters, action }: { filters: Filters; action: stri
       </label>
       <label className="flex items-center gap-2 text-sm">
         <input className="w-auto" type="checkbox" name="alla" value="1" defaultChecked={filters.includeSuppressed} />
-        Visa även spärrade
+        Visa även ofullständiga
       </label>
       <button type="submit">Visa urval</button>
     </form>

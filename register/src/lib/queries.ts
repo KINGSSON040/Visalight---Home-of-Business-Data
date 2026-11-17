@@ -39,11 +39,18 @@ export function filtersToSearch(filters: Filters): string {
   return params.toString();
 }
 
+/** Bolag med organisationsnummer, namn, gatuadress, ort och SNI. Organisationsnummer finns på varje rad. */
+export const SELLABLE_SQL = `c.manual_exclude = 0
+  AND trim(c.name) != ''
+  AND c.street IS NOT NULL AND trim(c.street) != ''
+  AND c.city IS NOT NULL AND trim(c.city) != ''
+  AND EXISTS (SELECT 1 FROM industries i WHERE i.org_nr = c.org_nr AND trim(i.sni) != '')`;
+
 function where(filters: Filters, sellableOnly: boolean) {
   const clauses = ["1=1"];
   const args: Record<string, string | number> = {};
   if (sellableOnly || !filters.includeSuppressed) {
-    clauses.push("c.reklam_block = 0 AND c.manual_exclude = 0 AND c.ended_on IS NULL AND c.status_code != 'avregistrerad'");
+    clauses.push(SELLABLE_SQL);
   }
   if (filters.q) {
     clauses.push("(c.name LIKE @q OR c.org_nr LIKE @qDigits)");
@@ -65,13 +72,13 @@ function where(filters: Filters, sellableOnly: boolean) {
   if (filters.hasPhone) {
     clauses.push(`EXISTS (
       SELECT 1 FROM phones p
-      WHERE p.org_nr = c.org_nr AND p.removed_on IS NULL AND p.kind != 'signatory' AND c.phone_block = 0
+      WHERE p.org_nr = c.org_nr AND p.removed_on IS NULL AND p.kind != 'signatory'
     )`);
   }
   if (filters.hasEmail) {
     clauses.push(`EXISTS (
       SELECT 1 FROM emails e
-      WHERE e.org_nr = c.org_nr AND e.removed_on IS NULL AND c.email_block = 0
+      WHERE e.org_nr = c.org_nr AND e.removed_on IS NULL
     )`);
   }
   return { sql: clauses.join(" AND "), args };
@@ -114,7 +121,7 @@ export function priceFor(filters: Filters): { counts: PriceCounts; quote: PriceQ
         `SELECT COUNT(*) AS n FROM phones p
          JOIN companies c ON c.org_nr = p.org_nr
          WHERE ${filter.sql}
-           AND p.removed_on IS NULL AND p.kind != 'signatory' AND c.phone_block = 0`,
+           AND p.removed_on IS NULL AND p.kind != 'signatory'`,
       )
       .get(filter.args) as { n: number }
   ).n;
@@ -124,7 +131,7 @@ export function priceFor(filters: Filters): { counts: PriceCounts; quote: PriceQ
         `SELECT COUNT(*) AS n FROM phones p
          JOIN companies c ON c.org_nr = p.org_nr
          WHERE ${filter.sql}
-           AND p.removed_on IS NULL AND p.kind = 'signatory' AND c.phone_block = 0`,
+           AND p.removed_on IS NULL AND p.kind = 'signatory'`,
       )
       .get(filter.args) as { n: number }
   ).n;
@@ -134,7 +141,7 @@ export function priceFor(filters: Filters): { counts: PriceCounts; quote: PriceQ
         `SELECT COUNT(*) AS n FROM emails e
          JOIN companies c ON c.org_nr = e.org_nr
          WHERE ${filter.sql}
-           AND e.removed_on IS NULL AND c.email_block = 0`,
+           AND e.removed_on IS NULL`,
       )
       .get(filter.args) as { n: number }
   ).n;
@@ -193,14 +200,13 @@ export function companyFlags(orgNr: string) {
 
 export function overview() {
   const connection = db();
-  const companies = connection.prepare("SELECT * FROM companies").all() as CompanyRow[];
-  const sellable = companies.filter(companyIsSellable).length;
+  const total = (connection.prepare("SELECT COUNT(*) AS n FROM companies").get() as { n: number }).n;
+  const sellable = (connection.prepare(`SELECT COUNT(*) AS n FROM companies c WHERE ${SELLABLE_SQL}`).get() as { n: number }).n;
   const phones = (
     connection
       .prepare(
         `SELECT COUNT(*) AS n FROM phones p JOIN companies c ON c.org_nr = p.org_nr
-         WHERE p.removed_on IS NULL AND c.reklam_block = 0 AND c.manual_exclude = 0
-           AND c.ended_on IS NULL AND c.status_code != 'avregistrerad' AND c.phone_block = 0`,
+         WHERE p.removed_on IS NULL AND p.kind != 'signatory' AND ${SELLABLE_SQL}`,
       )
       .get() as { n: number }
   ).n;
@@ -208,21 +214,20 @@ export function overview() {
     connection
       .prepare(
         `SELECT COUNT(*) AS n FROM emails e JOIN companies c ON c.org_nr = e.org_nr
-         WHERE e.removed_on IS NULL AND c.reklam_block = 0 AND c.manual_exclude = 0
-           AND c.ended_on IS NULL AND c.status_code != 'avregistrerad' AND c.email_block = 0`,
+         WHERE e.removed_on IS NULL AND ${SELLABLE_SQL}`,
       )
       .get() as { n: number }
   ).n;
-  const examples = companies.filter((company) => company.source === "exempel").length;
+  const examples = (connection.prepare("SELECT COUNT(*) AS n FROM companies WHERE source = 'exempel'").get() as { n: number }).n;
   const lastSync = connection
     .prepare("SELECT * FROM sync_runs ORDER BY id DESC LIMIT 1")
     .get() as
     | { id: number; started_at: string; finished_at: string | null; status: string; pages: number; rows: number; message: string }
     | undefined;
   return {
-    total: companies.length,
+    total,
     sellable,
-    held: companies.length - sellable,
+    held: total - sellable,
     phones,
     emails,
     examples,
@@ -236,11 +241,13 @@ export function savedSegments() {
     .all() as { id: number; name: string; filters_json: string; created_at: string }[];
 }
 
-export function suppressionReason(company: CompanyRow): string | null {
+export function suppressionReason(company: CompanyRow & { sni?: string | null }): string | null {
   if (companyIsSellable(company)) return null;
   const reasons = [];
-  if (company.reklam_block) reasons.push("reklamspärr");
-  if (company.ended_on || company.status_code === "avregistrerad") reasons.push("avregistrerat");
+  if (!company.name?.trim()) reasons.push("saknar namn");
+  if (!company.street?.trim()) reasons.push("saknar gatuadress");
+  if (!company.city?.trim()) reasons.push("saknar ort");
+  if (!company.sni?.trim()) reasons.push("saknar SNI-kod");
   if (company.manual_exclude) reasons.push("manuellt utesluten");
-  return reasons.join(", ");
+  return reasons.join(", ") || "ofullständig";
 }

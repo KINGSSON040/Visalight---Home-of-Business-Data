@@ -18,7 +18,7 @@ export default async function SegmentPage({
     <Shell>
       <h1 className="text-3xl font-semibold tracking-tight">Segment</h1>
       <p className="mt-2 mb-5 max-w-2xl text-sm text-[var(--muted)]">
-        Priset räknas på säljbara bolag i urvalet. Reklamspärrade, avregistrerade och manuellt uteslutna ingår inte. Tomma kontaktfält kostar inget.
+        Priset räknas på bolag som har organisationsnummer, namn, gatuadress, ort och SNI-kod. Tomma kontaktfält kostar inget.
       </p>
       <FilterForm filters={filters} action="/segment" />
       <div className="mt-4 grid gap-3 sm:grid-cols-4">
