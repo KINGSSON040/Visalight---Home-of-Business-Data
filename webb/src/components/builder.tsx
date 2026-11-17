@@ -22,21 +22,20 @@ export function ListBuilder({
     : `${matchCount.toLocaleString("sv-SE")} exempelbolag i det senaste urvalet. Antal och pris står i steg 2.`;
 
   return (
-    <div id="urval" className="flex h-full min-h-0 flex-col bg-white px-5 py-5 text-ink sm:px-7 lg:px-8 lg:py-5">
-      <div className="shrink-0">
-        <h2 className="text-2xl tracking-tight sm:text-3xl">Listbyggare</h2>
+    <div id="urval" className="rounded-[1.75rem] border border-line bg-white px-5 py-5 text-ink shadow-[0_24px_60px_-32px_rgba(16,42,54,0.45)] sm:px-6">
+      <div>
+        <h2 className="text-2xl tracking-tight">Skapa företagslista</h2>
         <p className="mt-1 text-sm leading-6 text-muted">
           Ange branschnamn eller SNI-kod. Förslag visas under fältet. Tryck Sök bolag när valen är klara.
         </p>
       </div>
 
-      <div className="mt-3 flex min-h-0 flex-1 flex-col">
+      <div className="mt-4">
         <CompanySearch
           draft={draft}
           onChange={onChange}
           onSearch={onSearch}
           onClear={() => onChange({ query: "", city: "", bransch: "", sni: "", forms: [] })}
-          split
           queryPlaceholder="Branschnamn eller SNI-kod"
           hint={hint}
         >

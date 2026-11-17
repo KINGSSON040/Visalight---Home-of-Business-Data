@@ -51,20 +51,30 @@ export function CustomerHome({ initial }: { initial: Selection }) {
 
   return (
     <main>
-      <section className="lg:grid lg:h-[calc(100dvh-7rem)] lg:grid-cols-2 lg:grid-rows-2">
-        <article className="flex flex-col justify-center overflow-y-auto bg-sea-deep px-5 py-10 text-white sm:px-8 lg:h-full lg:min-h-0 lg:px-10 lg:py-8">
-          <p className="text-sm uppercase tracking-[0.18em] text-amber">Officiella register</p>
-          <h1 className="mt-3 max-w-xl text-4xl leading-[1.08] tracking-tight text-balance xl:text-5xl">
+      <section className="mx-auto grid max-w-6xl items-start gap-8 px-4 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.92fr)_minmax(20rem,1fr)] lg:gap-12 lg:py-16">
+        <article>
+          <p className="text-sm uppercase tracking-[0.18em] text-sea">Officiella register</p>
+          <h1 className="mt-3 max-w-xl text-4xl leading-[1.08] tracking-tight text-balance sm:text-5xl">
             Verifierad, uppdaterad och färsk företagsdata.
           </h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-white/88">
+          <p className="mt-4 max-w-xl text-base leading-7 text-muted">
             VisaLight arbetar med verifierad, uppdaterad och färsk företagsdata från SCB:s allmänna företagsregister.
             Vid varje synk kommer nya bolag med, och konkurs, inaktiva bolag och bolag med näringsförbud
             lämnas utanför filen du köper.
           </p>
-          <p className="mt-3 max-w-xl text-base leading-7 text-white/75">
+          <p className="mt-3 max-w-xl text-base leading-7 text-muted">
             Saknar källan ett värde lämnas fältet tomt. Du behöver inget konto för att köpa.
           </p>
+          <dl id="pris" className="mt-8 grid max-w-xl grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
+            <div>
+              <dt className="text-sm text-muted">Lägsta order</dt>
+              <dd className="mt-1 text-2xl tracking-tight">{(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr</dd>
+            </div>
+            <PriceUnit label="Grunduppgifter" ore={BASE_ORE} detail="per komplett rad" />
+            <PriceUnit label="Telefon" ore={PHONE_ORE} detail="per nummer" />
+            <PriceUnit label="E-post" ore={EMAIL_ORE} detail="per adress" />
+            <PriceUnit label="Beslutsfattare" ore={SIGNATORY_ORE} detail="per nummer" />
+          </dl>
         </article>
 
         <ListBuilder
@@ -74,29 +84,9 @@ export function CustomerHome({ initial }: { initial: Selection }) {
           dirty={dirty}
           matchCount={summarize(priced).counts.companies}
         />
-
-        <aside className="flex flex-col justify-center overflow-y-auto bg-amber-soft px-5 py-8 text-ink sm:px-8 lg:h-full lg:min-h-0 lg:px-10">
-          <p className="text-sm uppercase tracking-[0.16em] text-ink/60">Lägsta order</p>
-          <p className="mt-2 text-5xl tracking-tight">
-            {(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr
-          </p>
-          <p className="mt-3 max-w-sm text-sm leading-6">
-            En kort lista hamnar på lägsta order. Tomma fält kostar inget, och du betalar som gäst utan konto.
-          </p>
-        </aside>
-
-        <aside id="pris" className="flex flex-col justify-center overflow-y-auto bg-foam px-5 py-8 sm:px-8 lg:h-full lg:min-h-0 lg:px-10">
-          <p className="text-sm uppercase tracking-[0.16em] text-sea">Pris per uppgift</p>
-          <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4">
-            <PriceUnit label="Grunduppgifter" ore={BASE_ORE} detail="per komplett rad" />
-            <PriceUnit label="Telefon" ore={PHONE_ORE} detail="per nummer" />
-            <PriceUnit label="E-post" ore={EMAIL_ORE} detail="per adress" />
-            <PriceUnit label="Beslutsfattare" ore={SIGNATORY_ORE} detail="per nummer" />
-          </dl>
-        </aside>
       </section>
 
-      <section id="sa-funkar-det" className="border-t border-line">
+      <section id="sa-funkar-det">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <h2 className="text-4xl tracking-tight">Tre steg</h2>
           <p className="mt-3 max-w-2xl text-lg leading-8 text-muted">
@@ -105,7 +95,7 @@ export function CustomerHome({ initial }: { initial: Selection }) {
           <ol className="mt-8 grid gap-4">
             <li className="rounded-3xl border border-line bg-card p-5 sm:p-6">
               <StepNumber n="1" />
-              <h3 className="mt-3 text-2xl tracking-tight">Fyll i listbyggaren</h3>
+              <h3 className="mt-3 text-2xl tracking-tight">Skapa företagslistan</h3>
               <p className="mt-2 max-w-2xl leading-7 text-muted">
                 Ange branschnamn eller SNI-kod i sökfältet, komplettera med ort och bolagsform, och tryck Sök bolag.
                 Förslagen under fälten kommer från det som finns i registret.
@@ -225,7 +215,7 @@ function Result({ selection, dirty }: { selection: Selection; dirty: boolean }) 
         <p className="mt-2 text-sm leading-6 text-muted">{describeSelection(selection)}</p>
         <p className="mt-2 text-sm leading-6 text-muted">
           {dirty
-            ? "Filtren i listbyggaren är ändrade. Tryck Sök bolag för att räkna om det här resultatet."
+            ? "Filtren är ändrade. Tryck Sök bolag för att räkna om det här resultatet."
             : "Samma urval som senaste Sök bolag. Raderna är exempel tills det riktiga registret är kopplat."}
         </p>
 
