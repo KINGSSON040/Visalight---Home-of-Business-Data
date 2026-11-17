@@ -44,16 +44,18 @@ const prices = [
 export function HomeStory() {
   return (
     <>
-      <section id="sa-funkar-det" className="mx-auto max-w-6xl px-4 py-8">
-        <h2 className="font-serif text-4xl tracking-tight">Så funkar ett köp</h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          {steps.map((step) => (
-            <article key={step.number} className="rounded-3xl border border-line bg-card p-5">
-              <p className="font-mono text-sm text-green">{step.number}</p>
-              <h3 className="mt-3 font-serif text-2xl">{step.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-muted">{step.text}</p>
-            </article>
-          ))}
+      <section id="sa-funkar-det" className="bg-foam">
+        <div className="mx-auto max-w-6xl px-4 py-10">
+          <h2 className="font-serif text-4xl tracking-tight">Så funkar ett köp</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {steps.map((step) => (
+              <article key={step.number} className="rounded-3xl border border-line bg-card p-5">
+                <p className="font-mono text-sm text-green">{step.number}</p>
+                <h3 className="mt-3 font-serif text-2xl">{step.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted">{step.text}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -70,12 +72,12 @@ export function HomeStory() {
                   <h3 className="font-medium">{item.name}</h3>
                   <p className="mt-1 text-sm leading-6 text-muted">{item.detail}</p>
                 </div>
-                <p className="font-mono text-sm sm:pt-1">{item.price}</p>
+                <p className="font-mono text-sm text-sea sm:pt-1">{item.price}</p>
               </div>
             ))}
           </div>
         </div>
-        <aside className="h-fit rounded-3xl bg-green-soft p-5">
+        <aside className="h-fit rounded-3xl bg-amber-soft p-5">
           <h3 className="font-serif text-2xl">En större order</h3>
           <p className="mt-3 text-sm leading-6">
             10 000 bolag där alla har ett telefonnummer kostar 4 000 kr. Grunduppgifter är 1 000 kr och numren 3 000 kr.

@@ -1,14 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f3efe6;
-  --ink: #1c1915;
-  --muted: #5e584e;
-  --line: #ddd6c8;
-  --card: #fffcf7;
-  --green: #0f6e56;
-  --green-soft: #e7f4ef;
-  --rust: #8a3d2f;
+  --paper: #d9eef3;
+  --ink: #102a36;
+  --muted: #3e5a66;
+  --line: #b7d4de;
+  --card: #ffffff;
+  --green: #0c6b60;
+  --green-soft: #d2f5ef;
+  --rust: #c2412d;
+  --sea: #0e6678;
+  --sea-deep: #14324a;
+  --amber: #f2b427;
+  --amber-soft: #fff3d1;
+  --foam: #b9dce7;
 }
 
 @theme inline {
@@ -20,6 +25,11 @@
   --color-green: var(--green);
   --color-green-soft: var(--green-soft);
   --color-rust: var(--rust);
+  --color-sea: var(--sea);
+  --color-sea-deep: var(--sea-deep);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+  --color-foam: var(--foam);
   --font-sans: var(--font-familjen);
   --font-serif: var(--font-newsreader);
   --font-mono: var(--font-geist-mono);
@@ -32,11 +42,12 @@ body {
 }
 
 ::selection {
-  background: #d5eee4;
+  background: #f2b427;
+  color: #102a36;
 }
 
 :focus-visible {
-  outline: 2px solid var(--green);
+  outline: 2px solid var(--sea);
   outline-offset: 2px;
 }
 

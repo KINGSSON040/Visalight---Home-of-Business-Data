@@ -49,7 +49,7 @@ export function PricePanel({
   ];
 
   return (
-    <aside className="rounded-3xl bg-ink p-5 text-paper shadow-sm" aria-live="polite">
+    <aside className="rounded-3xl bg-sea-deep p-5 text-white shadow-sm" aria-live="polite">
       <p className="text-xs uppercase tracking-[0.16em] text-white/60">Att betala</p>
       <p className="mt-2 font-serif text-5xl leading-none tracking-tight">
         {formatKronor(price.totalOre)}
@@ -91,7 +91,7 @@ export function PricePanel({
         counts.companies > 0 ? (
           <Link
             href={href}
-            className="mt-5 flex h-12 items-center justify-center rounded-full bg-white font-medium text-ink"
+            className="mt-5 flex h-12 items-center justify-center rounded-full bg-amber font-medium text-ink"
           >
             Till kassan
           </Link>

@@ -19,7 +19,7 @@ export default async function CheckoutPage({
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
-      <Link href={back} className="text-sm text-muted">
+      <Link href={back} className="text-sm font-medium text-sea">
         Ändra urvalet
       </Link>
       <h1 className="mt-3 font-serif text-5xl tracking-tight">Kassa</h1>
@@ -30,7 +30,7 @@ export default async function CheckoutPage({
         <div className="mt-8 rounded-3xl border border-dashed border-line bg-card px-6 py-12">
           <p className="font-serif text-3xl">Urvalet är tomt</p>
           <p className="mt-2 text-muted">Gå tillbaka och välj minst ett bolag.</p>
-          <Link href="/" className="mt-6 inline-flex rounded-full bg-ink px-4 py-2 text-sm text-white">
+          <Link href="/" className="mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
             Till urvalet
           </Link>
         </div>

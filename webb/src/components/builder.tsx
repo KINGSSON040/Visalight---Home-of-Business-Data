@@ -30,8 +30,8 @@ export function Builder({ initial }: { initial: Selection }) {
 
   return (
     <section id="urval" className="mx-auto max-w-6xl px-4 pb-28 lg:pb-16">
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="rounded-3xl border border-line bg-card p-4 sm:p-6">
+      <div className="grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="min-w-0 rounded-3xl border border-line bg-card p-4 sm:p-6">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="font-serif text-3xl tracking-tight">Bygg urvalet</h2>
@@ -123,7 +123,7 @@ export function Builder({ initial }: { initial: Selection }) {
               <p className="mb-2 text-sm text-muted sm:hidden">Dra i sidled för att se alla kolumner.</p>
               <div className="overflow-x-auto rounded-2xl border border-line">
                 <table className="w-full min-w-[880px] border-collapse text-sm">
-                  <thead className="bg-paper text-left text-xs uppercase tracking-wide text-muted">
+                  <thead className="bg-foam text-left text-xs uppercase tracking-wide text-sea">
                     <tr>
                       <th className="px-3 py-3 font-medium">Bolag</th>
                       <th className="px-3 py-3 font-medium">Adress</th>
@@ -176,7 +176,7 @@ export function Builder({ initial }: { initial: Selection }) {
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-ink px-4 py-3 text-paper lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-sea-deep px-4 py-3 text-white lg:hidden">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <div>
             <p className="text-xs text-white/60">
@@ -187,7 +187,7 @@ export function Builder({ initial }: { initial: Selection }) {
           {summary.counts.companies > 0 ? (
             <a
               href={`/kassa?${selectionToQuery(selection)}`}
-              className="rounded-full bg-white px-4 py-2 text-sm font-medium text-ink"
+              className="rounded-full bg-amber px-4 py-2 text-sm font-medium text-ink"
             >
               Till kassan
             </a>
@@ -217,7 +217,7 @@ function Toggle({
       aria-pressed={pressed}
       onClick={onClick}
       className={`rounded-full border px-3 py-2 text-left text-sm ${
-        pressed ? "border-ink bg-ink text-white" : "border-line bg-white text-ink"
+        pressed ? "border-sea bg-sea text-white" : "border-line bg-white text-ink"
       }`}
     >
       <span className="block font-medium">{label}</span>

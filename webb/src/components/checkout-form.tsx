@@ -123,7 +123,7 @@ export function CheckoutForm({ selection }: { selection: Selection }) {
         </p>
       </fieldset>
 
-      <button type="submit" className="mt-6 h-12 w-full rounded-full bg-ink font-medium text-white">
+      <button type="submit" className="mt-6 h-12 w-full rounded-full bg-sea font-medium text-white">
         Visa beställningen
       </button>
     </form>
