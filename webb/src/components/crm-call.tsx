@@ -6,30 +6,8 @@ import { useRouter } from "next/navigation";
 import { CrmCard } from "@/components/crm-card";
 import { CrmWorkspace } from "@/components/crm-workspace";
 import { OwnerChip, Panel } from "@/components/crm-ui";
-import {
-  COMPANIES,
-  defaultSelection,
-  filterCompanies,
-  type Company,
-  type Selection,
-} from "@/lib/catalog";
-import { formatStamp, outcomeInfo, useCrmStore, type CallList, type Segment } from "@/lib/crm-store";
-
-export function selectionFromSegment(segment: Segment): Selection {
-  return {
-    ...defaultSelection,
-    phones: false,
-    emails: false,
-    signatory: false,
-    query: segment.query,
-    city: segment.city,
-    county: segment.county,
-    bransch: segment.bransch,
-    sni: segment.sni,
-    forms: segment.forms,
-    employees: segment.employees,
-  };
-}
+import { COMPANIES, type Company } from "@/lib/catalog";
+import { formatStamp, outcomeInfo, segmentCompanies, useCrmStore, type CallList } from "@/lib/crm-store";
 
 export function ColdCall({ listId }: { listId: string }) {
   const store = useCrmStore();
@@ -92,11 +70,13 @@ export function NewCallListForm({
       const due = new Set(store.openTasks(store.userId).map((item) => item.orgNr));
       return COMPANIES.filter((item) => due.has(item.orgNr));
     }
-    return chosenSegment ? filterCompanies(selectionFromSegment(chosenSegment)) : [];
+    return chosenSegment ? segmentCompanies(chosenSegment) : [];
   }, [fixed, source, chosenSegment, store]);
 
-  const queue = build(base, { phoneOnly, skipOwned, untouched });
-  const sourceLabel = fixed?.source ?? (source === "mina" ? "Mina företag" : source === "uppfoljning" ? "Uppföljningar" : chosenSegment?.name ?? "");
+  const callable = base.filter((item) => !store.blockedChannels(item.orgNr).includes("phone"));
+  const excluded = base.length - callable.length;
+  const queue = build(callable, { phoneOnly, skipOwned, untouched });
+  const sourceLabel = fixed?.source ?? (source === "mina" ? "Mina kunder" : source === "uppfoljning" ? "Uppföljningar" : chosenSegment?.name ?? "");
 
   function create() {
     const finalName = name.trim() || (fixed ? "" : sourceLabel);
@@ -132,7 +112,7 @@ export function NewCallListForm({
               className="h-12 w-full rounded-xl border border-line bg-paper px-3"
             >
               <option value="segment">Ett sparat segment</option>
-              <option value="mina">Mina företag</option>
+              <option value="mina">Mina kunder</option>
               <option value="uppfoljning">Mina uppföljningar</option>
             </select>
           </label>
@@ -175,7 +155,7 @@ export function NewCallListForm({
       </fieldset>
 
       <p className="rounded-2xl bg-foam px-3 py-2 text-sm font-medium">
-        {queue.length.toLocaleString("sv-SE")} av {base.length.toLocaleString("sv-SE")} bolag hamnar i listan.
+        {queue.length.toLocaleString("sv-SE")} av {base.length.toLocaleString("sv-SE")} bolag hamnar i listan.{excluded ? ` ${excluded} spärrade för telefon utelämnas.` : ""}
       </p>
       {error ? <p className="text-sm font-medium text-rust">{error}</p> : null}
       <button type="submit" className="btn-fade-green h-12 rounded-full bg-green font-semibold text-white">
@@ -343,7 +323,7 @@ function ListRun({ list }: { list: CallList }) {
             <button type="button" className="btn-fade-sea h-12 rounded-full bg-sea px-5 font-semibold text-white" onClick={() => store.restartCallList(list.id)}>
               Börja om från första bolaget
             </button>
-            <Link href="/crm?vy=aktivitet" className="inline-flex h-12 items-center rounded-full border border-line px-5 text-sm font-medium">
+            <Link href="/crm/aktivitet" className="inline-flex h-12 items-center rounded-full border border-line px-5 text-sm font-medium">
               Se aktivitetsloggen
             </Link>
           </div>
