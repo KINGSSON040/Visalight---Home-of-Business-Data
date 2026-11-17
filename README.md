@@ -2,6 +2,18 @@
 
 Register över svenska företag, byggt för att sälja urval utan prenumeration.
 
+## Hemsidan
+
+Katalogen `webb/` är kundsidan: bygg ett urval, se priset och gå till kassan. Den visar exempelbolag tills SCB-registret är inläst. Kassan drar inga pengar ännu.
+
+```bash
+cd webb
+npm install
+npm run dev
+```
+
+Sidan lyssnar på port 4480.
+
 ## Registerverktyget
 
 Katalogen `register/` är det interna verktyget: sök bolag, flagga, räkna pris och läs in SCB.
