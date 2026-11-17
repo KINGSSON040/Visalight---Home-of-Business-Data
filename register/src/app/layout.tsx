@@ -8,7 +8,7 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Visalight register",
+  title: "VisaLight register",
   description: "Internt register över svenska företag, med källa på varje kontaktuppgift.",
 };
 

@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Visalight — Företagsdata utan abonnemang",
+  title: "VisaLight — Företagsdata utan abonnemang",
   description:
     "Välj svenska företag, betala från 399 kr och få filen till din e-post. Inget abonnemang och inget konto krävs.",
 };

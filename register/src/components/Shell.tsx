@@ -13,7 +13,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <header className="border-b border-[var(--line)] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-4">
           <Link href="/" className="text-lg font-semibold tracking-tight">
-            Visalight
+            VisaLight
           </Link>
           <nav className="flex gap-1 text-sm">
             {links.map((link) => (

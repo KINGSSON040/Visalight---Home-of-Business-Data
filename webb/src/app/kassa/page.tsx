@@ -5,7 +5,7 @@ import { PricePanel } from "@/components/price-panel";
 import { describeSelection, selectionFromRecord, selectionToQuery, summarize } from "@/lib/catalog";
 
 export const metadata: Metadata = {
-  title: "Kassa — Visalight",
+  title: "Kassa — VisaLight",
 };
 
 export default async function CheckoutPage({

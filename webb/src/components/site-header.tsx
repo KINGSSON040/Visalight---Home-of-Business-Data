@@ -8,7 +8,7 @@ export function SiteHeader() {
       </p>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="min-w-0">
-          <span className="block font-serif text-2xl leading-none tracking-tight">Visalight</span>
+          <span className="block font-serif text-2xl leading-none tracking-tight">VisaLight</span>
           <span className="mt-1 block text-[0.68rem] uppercase tracking-[0.16em] text-white/75">
             Företagsdata
           </span>
