@@ -256,7 +256,7 @@ function Contacts({ companyOrg, people }: { companyOrg: string; people: Contact[
                   />
                   <button
                     type="button"
-                    className="h-10 rounded-full bg-sea px-3 text-sm font-medium text-white"
+                    className="btn-fade-sea h-10 rounded-full bg-sea px-3 text-sm font-medium text-white"
                     onClick={() => {
                       if (extra.phone.trim()) store.addContactPhone(person.id, extra.phone.trim());
                       if (extra.email.trim()) store.addContactEmail(person.id, extra.email.trim());
@@ -320,7 +320,7 @@ function Contacts({ companyOrg, people }: { companyOrg: string; people: Contact[
           </p>
         ) : null}
         {error ? <p className="sm:col-span-2 text-sm text-rust">{error}</p> : null}
-        <button type="submit" className="h-12 rounded-full bg-sea font-medium text-white sm:col-span-2">
+        <button type="submit" className="btn-fade-sea h-12 rounded-full bg-sea font-medium text-white sm:col-span-2">
           Lägg till kontaktperson
         </button>
       </form>
@@ -440,7 +440,7 @@ function ActivityForm({
         </div>
         <Field label="Vad som ska göras då" value={nextNote} onChange={setNextNote} />
         {error ? <p className="text-sm text-rust">{error}</p> : null}
-        <button type="submit" className="h-12 rounded-full bg-amber font-medium text-ink">
+        <button type="submit" className="btn-fade-amber h-12 rounded-full bg-amber font-medium text-ink">
           {call ? "Spara och nästa bolag" : "Spara utfall"}
         </button>
       </form>

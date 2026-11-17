@@ -18,7 +18,7 @@ export function PageIntro({
       <p className="mt-4 text-lg leading-8 text-muted">{lead}</p>
       <div className="mt-8 space-y-8">{children}</div>
       <div className="mt-10 flex flex-wrap gap-3">
-        <Link href="/#urval" className="inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+        <Link href="/#urval" className="btn-fade-sea inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
           Skapa ert utdrag
         </Link>
       </div>

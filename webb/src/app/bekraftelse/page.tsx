@@ -39,7 +39,7 @@ export default function ConfirmationPage() {
       <main className="mx-auto max-w-3xl px-4 py-16">
         <h1 className="font-serif text-5xl tracking-tight">Ingen beställning här</h1>
         <p className="mt-3 text-muted">Kvittot finns bara i den här webbläsaren, efter att kassan har fyllts i.</p>
-        <Link href="/" className="mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
+        <Link href="/" className="btn-fade-sea mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
           Till urvalet
         </Link>
       </main>
@@ -94,13 +94,13 @@ export default function ConfirmationPage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href={`/?${selectionToQuery(order.selection)}`}
-              className="rounded-full bg-sea px-4 py-2 text-sm text-white"
+              className="btn-fade-sea rounded-full bg-sea px-4 py-2 text-sm text-white"
             >
               Ändra urvalet
             </Link>
             <Link
               href={`/kassa?${selectionToQuery(order.selection)}`}
-              className="rounded-full border border-line bg-white px-4 py-2 text-sm"
+              className="btn-fade-white rounded-full border border-line bg-white px-4 py-2 text-sm"
             >
               Tillbaka till kassan
             </Link>

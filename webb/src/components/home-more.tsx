@@ -68,7 +68,7 @@ export function HomeMore({ updatedLabel }: { updatedLabel: string | null }) {
               </p>
             </article>
           </div>
-          <Link href="/#urval" className="mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+          <Link href="/#urval" className="btn-fade-sea mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
             Skapa utdraget från den här uppdateringen
           </Link>
           <p className="mt-4 flex flex-wrap gap-4 text-sm font-medium">
@@ -96,7 +96,7 @@ export function HomeMore({ updatedLabel }: { updatedLabel: string | null }) {
               </li>
             ))}
           </ul>
-          <Link href="/#urval" className="mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
+          <Link href="/#urval" className="btn-fade-sea mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
             Öppna utdraget
           </Link>
         </div>

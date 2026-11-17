@@ -67,7 +67,7 @@ function Queue({ segment }: { segment: Segment }) {
         <p className="mt-2 text-sm leading-6 text-muted">{segment.name}. Alla bolag i kön har fått ett utfall.</p>
         <button
           type="button"
-          className="mt-4 h-12 rounded-full bg-sea px-4 text-sm font-medium text-white"
+          className="btn-fade-sea mt-4 h-12 rounded-full bg-sea px-4 text-sm font-medium text-white"
           onClick={() => store.saveQueue({ segmentId: segment.id, orgNrs, index: 0 })}
         >
           Börja om

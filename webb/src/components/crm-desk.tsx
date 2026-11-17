@@ -261,7 +261,7 @@ function Desk() {
               className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base"
             />
           </label>
-          <button type="submit" className="h-12 rounded-full bg-sea px-4 text-sm font-medium text-white">
+          <button type="submit" className="btn-fade-sea h-12 rounded-full bg-sea px-4 text-sm font-medium text-white">
             Spara segment
           </button>
         </form>

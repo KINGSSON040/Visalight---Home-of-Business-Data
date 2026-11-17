@@ -93,7 +93,7 @@ function ShellLink({ href, pressed, children }: { href: string; pressed: boolean
       href={href}
       aria-current={pressed ? "page" : undefined}
       className={`whitespace-nowrap rounded-xl px-3 py-2 text-left text-sm font-medium ${
-        pressed ? "bg-sea text-white" : "bg-transparent text-ink/75 hover:bg-foam"
+        pressed ? "btn-fade-sea bg-sea text-white" : "bg-transparent text-ink/75 hover:bg-foam"
       }`}
     >
       {children}

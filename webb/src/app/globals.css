@@ -1,19 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f4f7fb;
-  --ink: #1b2437;
-  --muted: #5c6b82;
-  --line: #e3e9f2;
+  --paper: #f5f7fb;
+  --ink: #152033;
+  --muted: #44546c;
+  --line: #e1e8f2;
   --card: #ffffff;
-  --green: #16a34a;
-  --green-soft: #e8f8ee;
-  --rust: #e11d48;
-  --sea: #2f6bff;
-  --sea-deep: #1e40af;
-  --amber: #f5c518;
-  --amber-soft: #fff4c2;
-  --foam: #e8f0ff;
+  --green: #008a00;
+  --green-soft: #e3f8e8;
+  --rust: #e10600;
+  --sea: #0057ff;
+  --sea-bright: #2a64ff;
+  --sea-deep: #0036d6;
+  --amber: #ffcc00;
+  --amber-soft: #fff0a8;
+  --foam: #d9e6ff;
 }
 
 @theme inline {
@@ -52,12 +53,12 @@ body {
 }
 
 .band-mint {
-  background: #eef3fb;
+  background: #f5f7fb;
   border-top: 1px solid var(--line);
 }
 
 .band-lime {
-  background: #fff8dc;
+  background: #ffffff;
   border-top: 1px solid var(--line);
 }
 
@@ -66,8 +67,8 @@ body {
 }
 
 ::selection {
-  background: #fff4c2;
-  color: #1b2437;
+  background: #ffcc00;
+  color: #152033;
 }
 
 :focus-visible {
@@ -79,4 +80,97 @@ section[id],
 #urval,
 #pris {
   scroll-margin-top: 6.5rem;
+}
+
+/* Mjuk toning: ljusare mättat hörn mot ett rikare. Ingen disig glöd. */
+.bg-sea,
+.btn-fade-sea {
+  background-color: var(--sea);
+  background-image: linear-gradient(128deg, var(--sea-bright) 0%, var(--sea) 46%, var(--sea-deep) 100%);
+}
+
+.btn-fade-sea {
+  color: #fff;
+}
+
+.bg-amber,
+.btn-fade-amber {
+  background-color: var(--amber);
+  background-image: linear-gradient(128deg, #ffe14a 0%, var(--amber) 50%, #f5b400 100%);
+  color: var(--ink);
+}
+
+.btn-fade-green {
+  background-color: var(--green);
+  background-image: linear-gradient(128deg, #009600 0%, var(--green) 48%, #006600 100%);
+  color: #fff;
+}
+
+.btn-fade-rust {
+  background-color: var(--rust);
+  background-image: linear-gradient(128deg, #ff3b30 0%, var(--rust) 48%, #b00000 100%);
+  color: #fff;
+}
+
+.btn-fade-white {
+  background-color: #ffffff;
+  background-image: none;
+  color: var(--ink);
+}
+
+.btn-fade-sea:hover,
+.btn-fade-green:hover,
+.btn-fade-rust:hover {
+  filter: saturate(1.06) brightness(1.04);
+}
+
+.btn-fade-amber:hover {
+  filter: saturate(1.05) brightness(1.02);
+}
+
+.wash-sea,
+.wash-green,
+.wash-amber,
+.wash-rust {
+  background-color: #ffffff;
+  background-repeat: no-repeat;
+  background-size: 100% 3px;
+  background-position: top;
+}
+
+.wash-sea {
+  background-image: linear-gradient(var(--sea), var(--sea));
+}
+
+.wash-green {
+  background-image: linear-gradient(var(--green), var(--green));
+}
+
+.wash-amber {
+  background-image: linear-gradient(var(--amber), var(--amber));
+}
+
+.wash-rust {
+  background-image: linear-gradient(var(--rust), var(--rust));
+}
+
+.check-on {
+  background-color: #ffffff;
+  background-image: none;
+  box-shadow: inset 0 0 0 2px var(--sea);
+}
+
+.builder-card {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(90deg, var(--sea-bright), var(--sea) 55%, var(--sea-deep)) top / 100% 3px no-repeat,
+    #ffffff;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 20px 36px -22px rgba(0, 54, 214, 0.38),
+    0 2px 6px -3px rgba(21, 32, 51, 0.12);
 }

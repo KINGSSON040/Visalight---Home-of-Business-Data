@@ -123,7 +123,7 @@ export function CheckoutForm({ selection }: { selection: Selection }) {
         </p>
       </fieldset>
 
-      <button type="submit" className="mt-6 h-12 w-full rounded-full bg-sea font-medium text-white">
+      <button type="submit" className="btn-fade-sea mt-6 h-12 w-full rounded-full bg-sea font-medium text-white">
         Visa beställningen
       </button>
     </form>
@@ -147,7 +147,7 @@ function PayCard({
       aria-pressed={selected}
       onClick={onSelect}
       className={`rounded-2xl border p-4 text-left ${
-        selected ? "border-green bg-green-soft" : "border-line bg-white"
+        selected ? "border-green wash-green" : "border-line bg-white"
       }`}
     >
       <span className="block font-medium">{title}</span>
