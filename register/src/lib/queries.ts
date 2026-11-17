@@ -53,9 +53,14 @@ function where(filters: Filters, sellableOnly: boolean) {
     clauses.push(SELLABLE_SQL);
   }
   if (filters.q) {
-    clauses.push("(c.name LIKE @q OR c.org_nr LIKE @qDigits)");
+    const digits = filters.q.replace(/\D/g, "");
+    const parts = ["c.name LIKE @q COLLATE NOCASE"];
     args.q = `%${filters.q}%`;
-    args.qDigits = `%${filters.q.replace(/\D/g, "")}%`;
+    if (digits) {
+      parts.push("c.org_nr LIKE @qDigits");
+      args.qDigits = `%${digits}%`;
+    }
+    clauses.push(`(${parts.join(" OR ")})`);
   }
   if (filters.city) {
     clauses.push("c.city LIKE @city");
