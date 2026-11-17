@@ -11,6 +11,27 @@ export function registerStamp(): { when: string; example: boolean } {
   return { when: EXAMPLE_REGISTER_WHEN, example: true };
 }
 
+/** Datum (YYYY-MM-DD) för senaste synk, eller exempeldatumet när registret saknas. */
+export function registerUpdatedIso(): string {
+  const file = registerDatabasePath();
+  if (!file) return EXAMPLE_REGISTER_ISO;
+  const connection = new Database(file, { readonly: true, fileMustExist: true });
+  try {
+    const row = connection
+      .prepare("SELECT MAX(finished_at) AS at FROM sync_runs WHERE status = 'klar' AND finished_at IS NOT NULL")
+      .get() as { at: string | null };
+    const date = row.at ? new Date(row.at) : null;
+    if (!date || Number.isNaN(date.getTime())) return EXAMPLE_REGISTER_ISO;
+    return new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm" }).format(date);
+  } catch {
+    return EXAMPLE_REGISTER_ISO;
+  } finally {
+    connection.close();
+  }
+}
+
+const EXAMPLE_REGISTER_ISO = "2026-03-12";
+
 /** Tidpunkt för senaste lyckade synk, formaterad på svenska. Null om registret saknas. */
 export function registerUpdatedLabel(): string | null {
   const file = registerDatabasePath();

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Bricolage_Grotesque, DM_Mono, Figtree, Inter } from "next/font/google";
 import { SiteFrame } from "@/components/site-frame";
 import { registerDatabasePath } from "@/lib/register-path";
 import { registerStamp } from "@/lib/register-status";
@@ -9,6 +9,22 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const display = Bricolage_Grotesque({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-pop-display",
+});
+
+const mono = DM_Mono({
+  weight: ["400", "500"],
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-pop-mono",
+});
+
+const body = Figtree({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-pop-body",
 });
 
 export const metadata: Metadata = {
@@ -33,7 +49,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv">
-      <body className={`${inter.variable} ${inter.className} antialiased`}>
+      <body className={`${inter.variable} ${display.variable} ${body.variable} ${mono.variable} ${inter.className} antialiased`}>
         <SiteFrame registerReady={registerDatabasePath() !== null} updatedLabel={registerStamp().when} exampleData={registerStamp().example}>
           {children}
         </SiteFrame>
