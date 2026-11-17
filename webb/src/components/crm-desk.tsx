@@ -377,7 +377,7 @@ export function CrmDesk() {
                   draft={draft}
                   onChange={patch}
                   onSearch={() => runSearch()}
-                  onClear={() => patch({ query: "", city: "", bransch: "", sni: "", forms: [] })}
+                  onClear={() => patch({ query: "", city: "", county: "", bransch: "", sni: "", forms: [], employees: "" })}
                   hint={hint}
                 />
                 <form

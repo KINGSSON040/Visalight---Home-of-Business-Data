@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ListBuilder } from "@/components/builder";
 import { HomeMore } from "@/components/home-more";
+import { SampleOffer } from "@/components/sample-offer";
 import { sameSearch, selectionToQuery, type Selection } from "@/lib/catalog";
 import { BASE_ORE, EMAIL_ORE, formatKronor, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import type { UrvalResult } from "@/lib/urval";
@@ -164,6 +165,8 @@ export function CustomerHome({
           </ol>
         </div>
       </section>
+
+      <SampleOffer selection={draft} />
 
       <HomeMore updatedLabel={updatedLabel} />
 

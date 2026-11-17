@@ -2,6 +2,8 @@
 
 import { useEffect, useId, useState, type ReactNode } from "react";
 import {
+  COUNTIES,
+  EMPLOYEE_BANDS,
   LEGAL_FORMS,
   SUGGESTION_KIND_LABEL,
   suggestCities,
@@ -109,6 +111,39 @@ export function CompanySearch({
           })}
         </div>
       </fieldset>
+
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <label className="block text-sm">
+          <span className="mb-1.5 block font-medium">Län</span>
+          <select
+            value={draft.county ?? ""}
+            onChange={(event) => onChange({ county: event.target.value })}
+            className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base"
+          >
+            <option value="">Alla län</option>
+            {COUNTIES.map((item) => (
+              <option key={item.code} value={item.label}>
+                {item.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block text-sm">
+          <span className="mb-1.5 block font-medium">Anställda</span>
+          <select
+            value={draft.employees ?? ""}
+            onChange={(event) => onChange({ employees: event.target.value })}
+            className="h-12 w-full rounded-xl border border-line bg-paper px-3 text-base"
+          >
+            <option value="">Alla storlekar</option>
+            {EMPLOYEE_BANDS.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
         {children}
       </div>
 

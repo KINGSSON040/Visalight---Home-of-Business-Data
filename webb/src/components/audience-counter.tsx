@@ -36,8 +36,8 @@ export function AudienceCounter() {
             <Select label="Län" value={county} onChange={setCounty}>
               <option value="">Alla län</option>
               {COUNTIES.map((item) => (
-                <option key={item} value={item}>
-                  {item}
+                <option key={item.code} value={item.label}>
+                  {item.label}
                 </option>
               ))}
             </Select>

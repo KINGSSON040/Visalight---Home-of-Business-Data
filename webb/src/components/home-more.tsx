@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { AudienceCounter } from "@/components/audience-counter";
-import { CompanyLookup } from "@/components/company-lookup";
 
 const VALUES = [
   {
@@ -39,30 +38,6 @@ export function HomeMore({ updatedLabel }: { updatedLabel: string | null }) {
   return (
     <>
       <AudienceCounter />
-      <CompanyLookup />
-      <section id="smakprov" className="band-lime">
-        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-12 sm:py-14 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
-          <div>
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Smakprov</p>
-            <h2 className="mt-3 text-3xl tracking-tight">Se hur filen ser ut innan ni köper.</h2>
-            <p className="mt-3 max-w-xl leading-7 text-muted">
-              16 påhittade rader med samma kolumner som ett riktigt utdrag. Ladda ner utan konto och prova inläsningen
-              i ert system.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <a href="/smakprov/csv" className="inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink">
-              Ladda ner CSV
-            </a>
-            <a href="/smakprov/xls" className="inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
-              Ladda ner Excel
-            </a>
-            <Link href="/smakprov" className="inline-flex h-12 items-center text-sm font-medium text-sea">
-              Se kolumnerna
-            </Link>
-          </div>
-        </div>
-      </section>
 
       <section id="kallor" className="band-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">

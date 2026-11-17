@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { CompanySearch } from "@/components/company-search";
-import { selectionToQuery, suggestBranscher, type Selection } from "@/lib/catalog";
+import { selectionToQuery, suggestSegment, type Selection } from "@/lib/catalog";
 import { BASE_ORE, EMAIL_ORE, formatKronor, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import { priceForUrval, pricedCounts, type UrvalResult } from "@/lib/urval";
 
@@ -32,7 +32,8 @@ export function ListBuilder({
       <div>
         <h2 className="text-2xl tracking-tight">Skapa ert utdrag</h2>
         <p className="mt-1 text-sm leading-6 text-muted">
-          Skriv en bransch, till exempel frisör, restaurang eller revisionsbyrå. Förslagen är branscher, inte bolag.
+          Skriv en bransch, till exempel frisör, restaurang eller revisionsbyrå. Samma fält tar också ort, län,
+          bolagsform och storlek. Förslagen är segment, inte enskilda företag.
         </p>
       </div>
 
@@ -41,9 +42,9 @@ export function ListBuilder({
           draft={draft}
           onChange={onChange}
           onSearch={onSearch}
-          onClear={() => onChange({ query: "", city: "", bransch: "", sni: "", forms: [] })}
-          queryPlaceholder="Branschnamn eller SNI-kod"
-          querySuggestions={suggestBranscher}
+          onClear={() => onChange({ query: "", city: "", county: "", bransch: "", sni: "", forms: [], employees: "" })}
+          queryPlaceholder="Bransch, ort, län eller storlek"
+          querySuggestions={suggestSegment}
           hint={hint}
         >
           <fieldset className="mt-4">

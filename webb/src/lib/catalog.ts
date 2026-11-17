@@ -19,9 +19,13 @@ export type Company = {
 export type Selection = {
   query: string;
   city: string;
+  /** Län, till exempel "Skåne län". Tomt betyder alla län. */
+  county: string;
   bransch: string;
   sni: string;
   forms: string[];
+  /** Storleksklass, samma text som i EMPLOYEE_BANDS. Tomt betyder alla storlekar. */
+  employees: string;
   phones: boolean;
   signatory: boolean;
   emails: boolean;
@@ -140,30 +144,34 @@ const EMPLOYEE_BY_ORG: Record<string, string> = {
   "559100-1024": "5–9",
 };
 
-/** Län som används i urvalet. Alla län finns med, även när exempelregistret saknar bolag där. */
-export const COUNTIES = [
-  "Stockholms län",
-  "Uppsala län",
-  "Södermanlands län",
-  "Östergötlands län",
-  "Jönköpings län",
-  "Kronobergs län",
-  "Kalmar län",
-  "Gotlands län",
-  "Blekinge län",
-  "Skåne län",
-  "Hallands län",
-  "Västra Götalands län",
-  "Värmlands län",
-  "Örebro län",
-  "Västmanlands län",
-  "Dalarnas län",
-  "Gävleborgs län",
-  "Västernorrlands län",
-  "Jämtlands län",
-  "Västerbottens län",
-  "Norrbottens län",
+/** Län som används i urvalet. Koden är SCB:s länsnummer. */
+export const COUNTIES: { code: string; label: string }[] = [
+  { code: "01", label: "Stockholms län" },
+  { code: "03", label: "Uppsala län" },
+  { code: "04", label: "Södermanlands län" },
+  { code: "05", label: "Östergötlands län" },
+  { code: "06", label: "Jönköpings län" },
+  { code: "07", label: "Kronobergs län" },
+  { code: "08", label: "Kalmar län" },
+  { code: "09", label: "Gotlands län" },
+  { code: "10", label: "Blekinge län" },
+  { code: "12", label: "Skåne län" },
+  { code: "13", label: "Hallands län" },
+  { code: "14", label: "Västra Götalands län" },
+  { code: "17", label: "Värmlands län" },
+  { code: "18", label: "Örebro län" },
+  { code: "19", label: "Västmanlands län" },
+  { code: "20", label: "Dalarnas län" },
+  { code: "21", label: "Gävleborgs län" },
+  { code: "22", label: "Västernorrlands län" },
+  { code: "23", label: "Jämtlands län" },
+  { code: "24", label: "Västerbottens län" },
+  { code: "25", label: "Norrbottens län" },
 ];
+
+export function countyCode(label: string): string | null {
+  return COUNTIES.find((item) => item.label === label)?.code ?? null;
+}
 
 /** Storleksklasser i samma indelning som SCB brukar redovisa anställda. */
 export const EMPLOYEE_BANDS = ["0", "1–4", "5–9", "10–19", "20–49", "50–99", "100–199", "200 eller fler"];
@@ -203,15 +211,17 @@ export const CITIES = [...new Set(COMPANIES.map((item) => item.city))].sort((a, 
 export const defaultSelection: Selection = {
   query: "",
   city: "",
+  county: "",
   bransch: "",
   sni: "",
   forms: [],
+  employees: "",
   phones: true,
   signatory: true,
   emails: true,
 };
 
-export type SuggestionKind = "bolag" | "bransch" | "ort" | "form";
+export type SuggestionKind = "bolag" | "bransch" | "ort" | "lan" | "form" | "storlek";
 
 export type Suggestion = {
   id: string;
@@ -224,8 +234,22 @@ export type Suggestion = {
     bransch?: string;
     sni?: string;
     form?: string;
+    county?: string;
+    employees?: string;
   };
 };
+
+/** Sant när besökaren har valt bransch, område, bolagsform eller storlek. */
+export function hasSegment(selection: Selection): boolean {
+  return Boolean(
+    selection.city.trim() ||
+      (selection.county ?? "").trim() ||
+      (selection.bransch ?? "").trim() ||
+      selection.sni ||
+      (selection.employees ?? "").trim() ||
+      formsOf(selection).length > 0,
+  );
+}
 
 function company(
   orgNr: string,
@@ -387,6 +411,67 @@ export function suggestBranscher(text: string): Suggestion[] {
   return INDUSTRIES.filter((item) => industryMatches(item, needle, digits)).slice(0, 8).map((item) => industrySuggestion(item, true));
 }
 
+/** Butikens sökfält. Bransch först, sedan område, län, bolagsform och storlek. Aldrig ett enskilt bolag. */
+export function suggestSegment(text: string): Suggestion[] {
+  const needle = fold(text.trim());
+  const digits = text.replace(/\D/g, "");
+  if (needle.length < 2 && digits.length < 2) return [];
+  const found: Suggestion[] = [];
+
+  for (const item of INDUSTRIES) {
+    if (!industryMatches(item, needle, digits)) continue;
+    found.push(industrySuggestion(item, true));
+  }
+  for (const city of CITIES) {
+    if (!fold(city).includes(needle)) continue;
+    found.push({
+      id: `ort-${city}`,
+      kind: "ort",
+      title: city,
+      detail: "Område",
+      apply: { city, query: "" },
+    });
+  }
+  for (const county of COUNTIES) {
+    if (!fold(county.label).includes(needle)) continue;
+    found.push({
+      id: `lan-${county.code}`,
+      kind: "lan",
+      title: county.label,
+      detail: "Län",
+      apply: { county: county.label, query: "" },
+    });
+  }
+  for (const form of LEGAL_FORMS) {
+    if (!fold(form.label).includes(needle)) continue;
+    found.push({
+      id: `form-${form.code}`,
+      kind: "form",
+      title: form.label,
+      detail: "Bolagsform",
+      apply: { form: form.code, query: "" },
+    });
+  }
+  for (const band of EMPLOYEE_BANDS) {
+    if (!fold(band).includes(needle)) continue;
+    found.push({
+      id: `storlek-${band}`,
+      kind: "storlek",
+      title: `${band} anställda`,
+      detail: "Storlek",
+      apply: { employees: band, query: "" },
+    });
+  }
+
+  const limits: Record<SuggestionKind, number> = { bolag: 0, bransch: 6, ort: 3, lan: 3, form: 3, storlek: 3 };
+  const used: Record<SuggestionKind, number> = { bolag: 0, bransch: 0, ort: 0, lan: 0, form: 0, storlek: 0 };
+  return found.filter((item) => {
+    if (used[item.kind] >= limits[item.kind]) return false;
+    used[item.kind] += 1;
+    return true;
+  });
+}
+
 export function suggestQuery(text: string): Suggestion[] {
   const needle = fold(text.trim());
   if (needle.length < 1) return [];
@@ -439,8 +524,8 @@ export function suggestQuery(text: string): Suggestion[] {
     });
   }
 
-  const limits: Record<SuggestionKind, number> = { bolag: 4, bransch: 3, ort: 3, form: 3 };
-  const used: Record<SuggestionKind, number> = { bolag: 0, bransch: 0, ort: 0, form: 0 };
+  const limits: Record<SuggestionKind, number> = { bolag: 4, bransch: 3, ort: 3, lan: 0, form: 3, storlek: 0 };
+  const used: Record<SuggestionKind, number> = { bolag: 0, bransch: 0, ort: 0, lan: 0, form: 0, storlek: 0 };
   return found.filter((item) => {
     if (used[item.kind] >= limits[item.kind]) return false;
     used[item.kind] += 1;
@@ -472,8 +557,10 @@ export function selectionToQuery(selection: Selection): string {
   const params = new URLSearchParams();
   if (selection.query.trim()) params.set("q", selection.query.trim());
   if (selection.city.trim()) params.set("ort", selection.city.trim());
+  if ((selection.county ?? "").trim()) params.set("lan", selection.county.trim());
   if ((selection.bransch ?? "").trim()) params.set("bransch", selection.bransch.trim());
   if (selection.sni) params.set("sni", selection.sni);
+  if ((selection.employees ?? "").trim()) params.set("anst", selection.employees.trim());
   const forms = formsOf(selection);
   if (forms.length) params.set("form", forms.join(","));
   params.set("tel", selection.phones ? "1" : "0");
@@ -503,9 +590,11 @@ export function selectionFromQuery(params: URLSearchParams): Selection {
   return {
     query: params.get("q") ?? "",
     city: params.get("ort") ?? "",
+    county: COUNTIES.some((item) => item.label === (params.get("lan") ?? "")) ? (params.get("lan") ?? "") : "",
     bransch,
     sni,
     forms,
+    employees: EMPLOYEE_BANDS.includes(params.get("anst") ?? "") ? (params.get("anst") ?? "") : "",
     phones: params.get("tel") !== "0",
     signatory: params.get("firma") !== "0",
     emails: params.get("epost") !== "0",
@@ -525,8 +614,10 @@ export function sameSearch(a: Selection, b: Selection): boolean {
   return (
     a.query.trim() === b.query.trim() &&
     a.city.trim() === b.city.trim() &&
+    (a.county ?? "").trim() === (b.county ?? "").trim() &&
     (a.bransch ?? "").trim() === (b.bransch ?? "").trim() &&
     (a.sni ?? "") === (b.sni ?? "") &&
+    (a.employees ?? "").trim() === (b.employees ?? "").trim() &&
     forms(a) === forms(b)
   );
 }
@@ -553,6 +644,8 @@ export function filterCompanies(selection: Selection): Company[] {
       const itemCity = fold(item.city);
       if (itemCity !== cityFold && !itemCity.includes(cityFold)) return false;
     }
+    if ((selection.county ?? "").trim() && item.county !== selection.county.trim()) return false;
+    if ((selection.employees ?? "").trim() && item.employees !== selection.employees.trim()) return false;
     const industry = INDUSTRIES.find((entry) => entry.sni === item.sni);
     if (selection.sni) {
       if (!item.sni.startsWith(selection.sni)) return false;
@@ -617,10 +710,12 @@ export function describeSelection(selection: Selection): string {
   const forms = formsOf(selection).map(legalFormLabel);
   const bransch = (selection.bransch ?? "").trim();
   const parts = [
-    selection.city.trim() || "Alla orter",
+    selection.city.trim() || (selection.county ?? "").trim() || "Alla områden",
+    selection.city.trim() && (selection.county ?? "").trim() ? selection.county.trim() : "",
     bransch || (selection.sni ? industryLabel(selection.sni) : "Alla branscher"),
     forms.length ? forms.join(", ") : "Alla bolagsformer",
-  ];
+    (selection.employees ?? "").trim() ? `${selection.employees.trim()} anställda` : "",
+  ].filter(Boolean);
   if (selection.query.trim()) parts.push(`"${selection.query.trim()}"`);
   return parts.join(" · ");
 }
@@ -642,5 +737,7 @@ export const SUGGESTION_KIND_LABEL: Record<SuggestionKind, string> = {
   bolag: "Bolag",
   bransch: "Bransch",
   ort: "Ort",
+  lan: "Län",
   form: "Bolagsform",
+  storlek: "Storlek",
 };

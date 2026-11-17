@@ -1,5 +1,5 @@
 import Database from "better-sqlite3";
-import { COMPANIES, selectionSniFilter, type Selection } from "@/lib/catalog";
+import { COMPANIES, countyCode, selectionSniFilter, type Selection } from "@/lib/catalog";
 import { registerDatabasePath } from "@/lib/register-path";
 import type { UrvalPreview, UrvalResult } from "@/lib/urval";
 
@@ -25,6 +25,20 @@ const FORM_CODES: Record<string, string[]> = {
   region: ["84"],
   stat: ["81", "89"],
 };
+
+const SIZE_VALUES: Record<string, string[]> = {
+  "0": ["0"],
+  "1–4": ["1–4", "1-4", "1"],
+  "5–9": ["5–9", "5-9", "2"],
+  "10–19": ["10–19", "10-19", "3"],
+  "20–49": ["20–49", "20-49", "4"],
+  "50–99": ["50–99", "50-99", "5"],
+  "100–199": ["100–199", "100-199", "6"],
+  "200 eller fler": ["200 eller fler", "200-499", "200–499", "500-999", "7", "8", "9"],
+};
+
+const NOT_A_COMPANY =
+  "Vi säljer inte enskilda företag. Välj bransch, ort, län, bolagsform eller storlek i förslagen.";
 
 const CITY_SQL =
   "lower(replace(replace(replace(replace(replace(replace(c.city, 'Ö', 'o'), 'ö', 'o'), 'Ä', 'a'), 'ä', 'a'), 'Å', 'a'), 'å', 'a'))";
@@ -101,7 +115,10 @@ function where(selection: Selection): BuiltWhere {
   if (filter.kind === "none") return { idle: false, empty: true };
   const city = selection.city.trim();
   const forms = selection.forms ?? [];
-  if (filter.kind === "any" && !city && forms.length === 0) return { idle: true };
+  const county = countyCode(selection.county ?? "");
+  const sizes = SIZE_VALUES[selection.employees ?? ""] ?? [];
+  const narrowed = Boolean(city || forms.length > 0 || county || sizes.length > 0);
+  if (filter.kind === "any" && !narrowed) return { idle: true };
 
   const clauses = [SELLABLE];
   const args: Record<string, string> = {};
@@ -123,6 +140,18 @@ function where(selection: Selection): BuiltWhere {
     clauses.push(
       "EXISTS (SELECT 1 FROM industries i WHERE i.org_nr = c.org_nr AND (i.sni LIKE @prefix OR replace(i.sni, '.', '') LIKE @prefix))",
     );
+  }
+  if (county) {
+    args.county = county;
+    args.countyShort = county.replace(/^0/, "");
+    clauses.push("(c.county_code = @county OR c.county_code = @countyShort)");
+  }
+  if (sizes.length > 0) {
+    sizes.forEach((value, index) => {
+      args[`size${index}`] = value;
+    });
+    const names = sizes.map((_, index) => `@size${index}`);
+    clauses.push(`c.employee_class IN (${names.join(", ")})`);
   }
   if (forms.length > 0) {
     const codes = [...new Set(forms.flatMap((form) => FORM_CODES[form] ?? []))];
@@ -151,7 +180,7 @@ function fromDatabase(selection: Selection): UrvalResult | null {
       0,
       0,
       [],
-      "Ingen bransch matchar det ni skrev. Välj ett förslag under sökfältet.",
+      NOT_A_COMPANY,
     );
   }
   const db = openDatabase(file);
@@ -209,18 +238,23 @@ function exampleUrval(selection: Selection): UrvalResult {
   const filter = selectionSniFilter(selection);
   const city = foldCity(selection.city.trim());
   const forms = selection.forms ?? [];
-  if (filter.kind === "any" && !city && forms.length === 0) {
+  const county = (selection.county ?? "").trim();
+  const employees = (selection.employees ?? "").trim();
+  const narrowed = Boolean(city || forms.length > 0 || county || employees);
+  if (filter.kind === "any" && !narrowed) {
     return idle(
       "example",
-      "Registret är inte inkopplat i den här körningen, så bara exempelbolag kan visas. Välj bransch och tryck Sök bolag.",
+      "Registret är inte inkopplat i den här körningen, så bara exempelbolag kan visas. Välj bransch, område eller segment och tryck Sök bolag.",
     );
   }
   if (filter.kind === "none") {
-    return ready("example", 0, 0, 0, 0, [], "Ingen bransch matchar det ni skrev. Välj ett förslag under sökfältet.");
+    return ready("example", 0, 0, 0, 0, [], NOT_A_COMPANY);
   }
   const rows = COMPANIES.filter((company) => {
     if (forms.length > 0 && !forms.includes(company.form)) return false;
     if (city && !foldCity(company.city).includes(city)) return false;
+    if (county && company.county !== county) return false;
+    if (employees && company.employees !== employees) return false;
     if (filter.kind === "codes" && !filter.codes.includes(company.sni)) return false;
     if (filter.kind === "prefix" && !company.sni.startsWith(filter.prefix)) return false;
     return true;

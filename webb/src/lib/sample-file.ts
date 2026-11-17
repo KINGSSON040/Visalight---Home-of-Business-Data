@@ -1,4 +1,4 @@
-import { COMPANIES, legalFormLabel, type Company } from "@/lib/catalog";
+import { COMPANIES, filterCompanies, hasSegment, legalFormLabel, type Company, type Selection } from "@/lib/catalog";
 
 const COLUMNS = [
   "organisationsnummer",
@@ -16,14 +16,15 @@ const COLUMNS = [
   "beslutsfattare",
 ] as const;
 
-export function sampleCompanies(): Company[] {
-  return COMPANIES.slice(0, 16);
+export function sampleCompanies(selection?: Selection): Company[] {
+  if (!selection || !hasSegment(selection)) return COMPANIES.slice(0, 16);
+  return filterCompanies({ ...selection, query: "" }).slice(0, 16);
 }
 
-export function sampleRows(): string[][] {
+export function sampleRows(selection?: Selection): string[][] {
   return [
     [...COLUMNS],
-    ...sampleCompanies().map((company) => [
+    ...sampleCompanies(selection).map((company) => [
       company.orgNr,
       company.name,
       company.street,
@@ -47,8 +48,8 @@ function csvCell(value: string): string {
 }
 
 /** Semikolon och BOM, så filen öppnas kolumnvis i svensk Excel. */
-export function sampleCsv(): string {
-  const body = sampleRows()
+export function sampleCsv(selection?: Selection): string {
+  const body = sampleRows(selection)
     .map((row) => row.map(csvCell).join(";"))
     .join("\r\n");
   return `\uFEFF${body}\r\n`;
@@ -63,8 +64,8 @@ function xml(value: string): string {
 }
 
 /** SpreadsheetML som Excel öppnar utan extra programbibliotek. */
-export function sampleXls(): string {
-  const rows = sampleRows()
+export function sampleXls(selection?: Selection): string {
+  const rows = sampleRows(selection)
     .map(
       (row) =>
         `<Row>${row
