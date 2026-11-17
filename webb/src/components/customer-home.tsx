@@ -12,19 +12,19 @@ import { PUBLIC_FAQ } from "@/lib/public-faq";
 import { linkedIndustries, topicBuilderHref } from "@/lib/topics";
 import type { UrvalResult } from "@/lib/urval";
 
-const STEPS = [
-  { title: "Välj vilka ni vill nå", text: "Skriv frisör, bygg eller en SNI-kod. Lägg till ort eller län om ni vill.", tone: "text-neon" },
-  { title: "Se antal och pris direkt", text: "Talet räknas om medan ni väljer. Priset står under, innan ni bestämmer er.", tone: "text-magenta" },
-  { title: "Få filen", text: "CSV eller Excel med de fält ni valt. Ingen prenumeration, ingen bindningstid.", tone: "text-gold" },
-];
+const FREE_ACCESS = "Ingen inloggning. Ingen prenumeration. Ingen bindningstid.";
 
-const CARD_TONES = ["glow-neon", "glow-magenta", "glow-gold"];
+const STEPS = [
+  { title: "Välj vilka ni vill nå", text: "Skriv frisör, bygg eller en SNI-kod. Lägg till ort eller län om ni vill." },
+  { title: "Se antal och pris direkt", text: "Talet räknas om medan ni väljer. Priset står under, innan ni bestämmer er." },
+  { title: "Få filen", text: "CSV eller Excel med de fält ni valt. Ingen prenumeration, ingen bindningstid." },
+];
 
 const BENEFITS = [
   "Färsk data från officiella register",
   "Nya bolag kommer med vid varje uppdatering",
   "Reklamspärrade bolag tas alltid bort",
-  "Ingen prenumeration, ingen bindningstid",
+  "Ingen inloggning och ingen prenumeration",
 ];
 
 const PRICE_ROWS = [
@@ -120,6 +120,7 @@ export function CustomerHome({
           </p>
         </div>
         <div className="min-w-0 lg:row-span-2">
+          <p className="promise-row mb-3">{FREE_ACCESS}</p>
           <AuroraBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} exampleData={exampleData} />
         </div>
         <div className="min-w-0">
@@ -144,7 +145,7 @@ export function CustomerHome({
         </div>
       </section>
 
-      <div className="marquee border-y border-line bg-white/60 py-3" aria-label="Populära branscher">
+      <div className="marquee border-y border-line bg-white py-3" aria-label="Populära branscher">
         <ul className="marquee-track gap-2">
           {stripItems.map((topic, index) => (
             <li key={`${topic.slug}-${index}`} aria-hidden={index >= industries.length}>
@@ -153,7 +154,7 @@ export function CustomerHome({
                 tabIndex={index >= industries.length ? -1 : undefined}
                 className="chip mx-1 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold whitespace-nowrap"
               >
-                <span className={["text-neon", "text-magenta", "text-gold-ink"][index % 3]} aria-hidden="true">
+                <span className="text-magenta" aria-hidden="true">
                   ✦
                 </span>
                 {topic.nav}
@@ -171,8 +172,8 @@ export function CustomerHome({
         </h2>
         <ol className="mt-8 grid gap-4 md:grid-cols-3">
           {STEPS.map((step, index) => (
-            <li key={step.title} className={`glass ${CARD_TONES[index]} relative overflow-hidden rounded-3xl p-5`}>
-              <span aria-hidden="true" className={`font-display pointer-events-none absolute -top-4 -right-1 text-[7rem] leading-none font-extrabold opacity-25 ${step.tone}`}>
+            <li key={step.title} className="glass relative overflow-hidden rounded-3xl p-5">
+              <span aria-hidden="true" className="font-display pointer-events-none absolute -top-4 -right-1 text-[7rem] leading-none font-extrabold text-magenta opacity-15">
                 {index + 1}
               </span>
               <h3 className="relative text-2xl font-bold">{step.title}</h3>
@@ -185,7 +186,8 @@ export function CustomerHome({
         </a>
       </section>
 
-      <section id="branscher" aria-labelledby="branscher-rubrik" className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+      <section id="branscher" aria-labelledby="branscher-rubrik" className="section-calm">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 id="branscher-rubrik" className="text-4xl font-extrabold tracking-tight sm:text-5xl">
             Vilka vill ni sälja till?
@@ -193,13 +195,13 @@ export function CustomerHome({
           {stats.source === "example" ? <span className="rounded-full bg-gold px-2.5 py-0.5 text-xs font-bold text-night">Antal: exempeldata</span> : null}
         </div>
         <ul className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
-          {industries.map((topic, index) => {
+          {industries.map((topic) => {
             const count = stats.byIndustry.find((item) => item.sni === topic.sni)?.count;
             return (
               <li key={topic.slug}>
                 <Link
                   href={topic.sni ? builderHrefForSni(topic.sni) : "/#urval"}
-                  className={`glass group flex h-full flex-col rounded-3xl p-4 transition-transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${CARD_TONES[index % 3]}`}
+                  className="glass group flex h-full flex-col rounded-3xl p-4 transition-transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
                   <span className="text-xs font-semibold text-muted">SNI {topic.sni ? `${topic.sni.slice(0, 2)}.${topic.sni.slice(2)}` : ""}</span>
                   <span className="font-display mt-1 text-xl font-bold">{topic.nav}</span>
@@ -211,13 +213,14 @@ export function CustomerHome({
           })}
         </ul>
         <p className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
-          <Link href="/bransch" className="text-neon hover:underline">
+          <Link href="/bransch" className="text-magenta hover:underline">
             Alla branscher
           </Link>
-          <Link href="/sni" className="text-neon hover:underline">
+          <Link href="/sni" className="text-magenta hover:underline">
             SNI-koder
           </Link>
         </p>
+        </div>
       </section>
 
       <section id="pris" aria-labelledby="pris-rubrik" className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
@@ -229,9 +232,10 @@ export function CustomerHome({
             </h2>
             <p className="mt-4 max-w-md text-muted">
               Varje bolag har grunddata. Kontaktuppgifter väljer ni till per rad, och ett tomt fält kostar inget. Lägsta order{" "}
-              {formatKronor(MINIMUM_ORE).replace(",00", "")} kr exkl. moms. Ingen prenumeration, ingen bindningstid.
+              {formatKronor(MINIMUM_ORE).replace(",00", "")} kr exkl. moms.
             </p>
-            <a href="#urval" className="btn-neon mt-6 inline-flex h-12 items-center gap-2 rounded-xl px-5 font-bold">
+            <p className="promise-row mt-5 max-w-md">{FREE_ACCESS}</p>
+            <a href="#urval" className="btn-neon mt-5 inline-flex h-12 items-center gap-2 rounded-xl px-5 font-bold">
               Räkna på ert urval <span aria-hidden="true">→</span>
             </a>
           </div>
@@ -249,9 +253,9 @@ export function CustomerHome({
         </div>
         <h3 className="mt-12 text-2xl font-bold">Räkneexempel</h3>
         <ul className="mt-4 grid gap-3 md:grid-cols-3">
-          {PRICE_EXAMPLES.map((item, index) => (
+          {PRICE_EXAMPLES.map((item) => (
             <li key={item.title}>
-              <Link href={item.href} className={`glass ${CARD_TONES[index]} flex h-full flex-col rounded-3xl p-5 transition-transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0`}>
+              <Link href={item.href} className="glass flex h-full flex-col rounded-3xl p-5 transition-transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
                 <span className="font-display text-xl font-bold">{item.title}</span>
                 <span className="mt-1 text-sm text-muted">{item.detail}</span>
                 <span className="font-price mt-4 text-3xl font-bold text-ink">{formatKronor(item.quote.totalOre)} kr</span>
@@ -263,7 +267,8 @@ export function CustomerHome({
         </ul>
       </section>
 
-      <section id="nyheter" aria-labelledby="nyheter-rubrik" className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+      <section id="nyheter" aria-labelledby="nyheter-rubrik" className="section-calm">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 id="nyheter-rubrik" className="text-4xl font-extrabold tracking-tight sm:text-5xl">
             Nyheter och uppdateringar
@@ -273,11 +278,11 @@ export function CustomerHome({
           </Link>
         </div>
         <ul className="mt-8 grid gap-3 md:grid-cols-3">
-          {news.map((post, index) => (
+          {news.map((post) => (
             <li key={post.slug}>
-              <Link href={`/nyheter/${post.slug}`} className={`glass group flex h-full flex-col rounded-3xl p-5 ${index === 0 ? "glow-neon" : ""}`}>
+              <Link href={`/nyheter/${post.slug}`} className="glass group flex h-full flex-col rounded-3xl p-5">
                 <span className="flex flex-wrap items-center gap-2 text-xs font-semibold">
-                  <span className={["text-neon", "text-magenta", "text-gold-ink"][index % 3]}>{post.kind}</span>
+                  <span className="text-magenta">{post.kind}</span>
                   <time dateTime={post.date} className="text-muted">
                     {formatNewsDate(post.date)}
                   </time>
@@ -289,6 +294,7 @@ export function CustomerHome({
             </li>
           ))}
         </ul>
+        </div>
       </section>
 
       <section id="fragor" aria-labelledby="fragor-rubrik" className="mx-auto max-w-3xl px-4 py-14 sm:py-20">

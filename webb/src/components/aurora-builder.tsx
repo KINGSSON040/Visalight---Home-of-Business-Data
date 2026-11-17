@@ -430,6 +430,7 @@ function Result({
           Förhandsboka utdraget <span aria-hidden="true">→</span>
         </Link>
       </div>
+      <p className="mt-2 text-sm font-extrabold tracking-tight text-white">Ingen inloggning. Ingen prenumeration. Ingen bindningstid.</p>
       <p className="mt-1.5 truncate text-xs text-white/90">{describeSelection(counted)}</p>
       {urval.companies === 0 ? (
         <p className="mt-1 text-xs font-semibold">{urval.note || "Inget bolag matchar."} Ta bort ett filter så kommer de tillbaka.</p>

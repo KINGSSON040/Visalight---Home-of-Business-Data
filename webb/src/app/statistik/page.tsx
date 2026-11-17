@@ -34,7 +34,7 @@ export default function StatistikPage() {
         <ExampleBadge show={example} />
       </p>
       {example ? (
-        <p className="mt-2 text-sm font-semibold text-gold-ink">Registret är inte inkopplat i den här körningen. Alla tal på sidan är exempeldata, inte riktiga siffror.</p>
+        <p className="mt-2 text-sm font-semibold text-muted">Registret är inte inkopplat i den här körningen. Alla tal på sidan är exempeldata, inte riktiga siffror.</p>
       ) : null}
       <div className="mt-8">
         <StatTiles stats={stats} />
