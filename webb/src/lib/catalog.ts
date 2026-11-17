@@ -131,6 +131,12 @@ export function selectionFromRecord(
   return selectionFromQuery(params);
 }
 
+export function hasCompleteBasics(row: Company): boolean {
+  return [row.name, row.orgNr, row.street, row.postalCode, row.city, row.sni, row.industry].every(
+    (value) => value.trim() !== "",
+  );
+}
+
 export function filterCompanies(selection: Selection): Company[] {
   const raw = selection.query.trim().toLowerCase();
   const compact = raw.replace(/[-\s]/g, "");
@@ -173,7 +179,7 @@ export function summarize(selection: Selection): Summary {
   }
   if (selection.signatory) {
     const missing = rows.filter((row) => row.signatoryPhones.length === 0).length;
-    if (missing) gaps.push(`${missing} utan firmatecknarens nummer`);
+    if (missing) gaps.push(`${missing} utan beslutsfattarnummer`);
   }
   if (selection.emails) {
     const missing = rows.filter((row) => row.emails.length === 0).length;

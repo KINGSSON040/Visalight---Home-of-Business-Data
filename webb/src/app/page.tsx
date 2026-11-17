@@ -1,7 +1,5 @@
-import { Builder } from "@/components/builder";
-import { HomeStory } from "@/components/home-story";
+import { CustomerHome } from "@/components/customer-home";
 import { selectionFromRecord } from "@/lib/catalog";
-import { MINIMUM_ORE, formatKronor } from "@/lib/pricing";
 
 export default async function Home({
   searchParams,
@@ -9,40 +7,5 @@ export default async function Home({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const selection = selectionFromRecord(await searchParams);
-
-  return (
-    <main>
-      <section className="border-b border-line bg-foam">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:py-16 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-end">
-          <div>
-            <p className="text-sm uppercase tracking-[0.16em] text-green">
-              Verifierad företagsdata · från {formatKronor(MINIMUM_ORE)} kr
-            </p>
-            <h1 className="mt-3 max-w-3xl font-serif text-5xl leading-[1.02] tracking-tight sm:text-6xl">
-              Företagsdata utan abonnemang.
-            </h1>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-muted">
-              VisaLight arbetar med verifierad, uppdaterad och färsk företagsdata från officiella register.
-              Välj ort, bransch och vilka kontaktfält du vill ha. Saknas telefon eller e-post i källan lämnas fältet tomt, och det kostar inget.
-              Filen skickas till din e-post när betalningen är klar. Inget konto behövs.
-            </p>
-          </div>
-          <dl className="grid grid-cols-3 gap-3 lg:grid-cols-1">
-            {[
-              ["0,10 kr", "grunduppgift"],
-              ["0,30 kr", "telefonnummer"],
-              ["0,40 kr", "e-post"],
-            ].map(([price, label]) => (
-              <div key={label} className="rounded-2xl border border-line bg-white px-3 py-3">
-                <dt className="font-mono text-sm text-sea">{price}</dt>
-                <dd className="text-sm text-muted">{label}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
-      <Builder initial={selection} />
-      <HomeStory />
-    </main>
-  );
+  return <CustomerHome initial={selection} />;
 }

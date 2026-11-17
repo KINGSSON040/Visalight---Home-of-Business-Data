@@ -58,9 +58,9 @@ export const TOPICS: Topic[] = [
   ord("bolagsregister", "Bolagsregister", "Bolagsregistret är underlaget för namn, organisationsnummer och status, inklusive vilka bolag som är avregistrerade."),
   ord("nystartade-bolag", "Nystartade bolag", "Nystartade bolag syns när startdatumet finns i källan. Ett ungt bolag har oftare tomma kontaktfält."),
   ord("aktiebolag", "Aktiebolag", "Aktiebolag är en bolagsform i urvalet. Namnet slutar ofta på AB, men filtret kan ändå hålla sig till formen."),
-  ord("kontaktuppgifter", "Kontaktuppgifter", "Kontaktuppgifter är telefon, firmatecknarens nummer och e-post. Grunduppgifterna namn och adress ingår alltid."),
+  ord("kontaktuppgifter", "Kontaktuppgifter", "Kontaktuppgifter är telefon, beslutsfattarnummer och e-post. Grunduppgifterna namn och adress ingår alltid."),
   ord("postadress", "Postadress", "Postadressen är gata, postnummer och ort. Saknas gata eller ort hålls bolaget utanför en säljbar fil."),
-  ord("b2b-data", "B2B-data", "B2B-data här är uppgifter om bolag, inte om privatpersoner. Firmatecknarens nummer är märkt för sig när källan pekar ut det."),
+  ord("b2b-data", "B2B-data", "B2B-data här är uppgifter om bolag, inte om privatpersoner. Beslutsfattarnumret är märkt för sig när källan pekar ut det."),
 ];
 
 function bransch(slug: string, nav: string, sni: string | undefined, lead: string): Topic {

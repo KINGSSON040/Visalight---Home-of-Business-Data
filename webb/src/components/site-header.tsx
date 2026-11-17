@@ -24,6 +24,9 @@ export function SiteHeader() {
           <Link className="hidden lg:inline" href="/bransch">
             Branscher
           </Link>
+          <Link href="/crm" className="text-white/70 hover:text-white">
+            Logga in
+          </Link>
           <Link href="/kassa" className="rounded-full bg-amber px-3.5 py-2 font-medium text-ink">
             Kassa
           </Link>

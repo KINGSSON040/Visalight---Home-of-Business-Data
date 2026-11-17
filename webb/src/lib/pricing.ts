@@ -1,8 +1,8 @@
 /** Öre. Grunduppgifter 10 öre per säljbart bolag. */
 export const BASE_ORE = 10;
-/** Öre per nummer som inte är firmatecknarens. */
+/** Öre per telefonnummer som inte är beslutsfattarens. */
 export const PHONE_ORE = 30;
-/** Öre per firmatecknarens nummer. */
+/** Öre per beslutsfattarnummer. */
 export const SIGNATORY_ORE = 40;
 /** Öre per e-postadress. */
 export const EMAIL_ORE = 40;

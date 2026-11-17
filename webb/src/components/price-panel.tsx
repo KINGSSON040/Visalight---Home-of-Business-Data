@@ -33,11 +33,11 @@ export function PricePanel({
       empty: "Inget nummer i urvalet",
     },
     {
-      label: "Firmatecknarens nummer",
+      label: "Beslutsfattarnummer",
       count: counts.signatoryPhones,
       unit: SIGNATORY_ORE,
       included: selection.signatory,
-      empty: "Inget firmatecknarnummer i urvalet",
+      empty: "Inget beslutsfattarnummer i urvalet",
     },
     {
       label: "E-post",

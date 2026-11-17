@@ -55,6 +55,8 @@ body {
   outline-offset: 2px;
 }
 
-section[id] {
+section[id],
+#urval,
+#pris {
   scroll-margin-top: 6.5rem;
 }

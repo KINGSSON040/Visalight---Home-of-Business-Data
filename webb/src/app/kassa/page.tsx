@@ -24,7 +24,8 @@ export default async function CheckoutPage({
       </Link>
       <h1 className="mt-3 font-serif text-5xl tracking-tight">Kassa</h1>
       <p className="mt-3 max-w-xl text-muted">
-        {describeSelection(selection)}. {summary.counts.companies.toLocaleString("sv-SE")} exempelbolag i den här förhandsvisningen.
+        Du betalar som gäst. Inget konto krävs, och filen skickas till e-postadressen. {describeSelection(selection)}.{" "}
+        {summary.counts.companies.toLocaleString("sv-SE")} exempelbolag i den här förhandsvisningen.
       </p>
       {summary.counts.companies === 0 ? (
         <div className="mt-8 rounded-3xl border border-dashed border-line bg-card px-6 py-12">
