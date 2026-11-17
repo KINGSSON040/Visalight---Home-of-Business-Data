@@ -6,7 +6,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-serif text-lg text-ink">VisaLight</p>
-          <p>VisaLight arbetar med verifierad, uppdaterad och färsk företagsdata från officiella register. Lägsta order 399 kr, utan konto.</p>
+          <p>Företagslistor från svenska bolag. Lägsta order 399 kr, utan konto.</p>
         </div>
         <nav className="flex flex-wrap gap-x-4 gap-y-2">
           <Link href="/smakprov">Smakprov</Link>

@@ -6,35 +6,35 @@ const USES = [
   {
     href: "/salj",
     title: "Sälj och marknad",
-    text: "Prospektera, segmentera och nå beslutsfattare där numret finns.",
+    text: "Ring eller mejla bolag i en bransch och en ort. Numret följer med bara när det finns.",
   },
   {
     href: "/ekonomi",
     title: "Ekonomi",
-    text: "Aktuellt organisationsnummer, adress och SNI. Inte en kreditupplysning.",
+    text: "Namn, organisationsnummer, adress och SNI. Ingen kreditupplysning.",
   },
   {
     href: "/utvecklare",
     title: "Utvecklare",
-    text: "CSV och Excel med fasta kolumner. API är inte öppet ännu.",
+    text: "CSV och Excel med fasta kolumner. Ett API finns inte ännu.",
   },
 ];
 
 const EXAMPLES = [
   {
-    figure: "35 %",
-    title: "Fler bokade möten i räkneexemplet",
-    text: "20 bokade möten på en gammal lista, 27 när urvalet bara innehåller aktiva bolag i rätt bransch. 7 fler möten är 35 %. Det är ett räkneexempel, inte en kundberättelse.",
+    figure: "Rätt bolag",
+    title: "Bara bolag som finns kvar",
+    text: "Avregistrerade bolag och bolag i konkurs tas bort vid uppdateringen. Du ringer inte nummer till bolag som har lagts ner.",
   },
   {
-    figure: "10 tim",
-    title: "Mindre letande efter adress",
-    text: "200 bolag gånger 3 minuter att leta adress och SNI är 10 timmar. Med filen är fälten redan ifyllda när SCB har dem.",
+    figure: "Färdiga fält",
+    title: "Adress och SNI är redan ifyllda",
+    text: "Du slipper slå upp varje bolag för att hitta adress och bransch. Fälten kommer från SCB när de finns där.",
   },
   {
     figure: "0 kr",
-    title: "Tomma e-postfält skickas inte",
-    text: "Ett utskick som bara tar rader med e-post betalar 40 öre per adress som finns. Saknas adressen är fältet tomt och kostar inget.",
+    title: "Tom e-post kostar inget",
+    text: "E-post kostar 40 öre per adress som finns. Saknas adressen är fältet tomt, och raden kostar inte för e-post.",
   },
 ];
 
@@ -47,10 +47,10 @@ export function HomeMore() {
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:py-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
           <div>
             <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Smakprov</p>
-            <h2 className="mt-3 text-4xl tracking-tight">Testa filen i ditt CRM innan du köper.</h2>
+            <h2 className="mt-3 text-4xl tracking-tight">Se hur filen ser ut innan du köper.</h2>
             <p className="mt-3 max-w-xl text-lg leading-8 text-muted">
-              16 påhittade rader med samma kolumner som en beställd lista. Ladda ner utan konto och se hur
-              inläsningen ser ut.
+              16 påhittade rader med samma kolumner som en riktig beställning. Ladda ner utan konto och prova
+              inläsningen i ditt CRM.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -69,26 +69,27 @@ export function HomeMore() {
 
       <section id="kallor" className="border-t border-line">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Färskt uttag</p>
-          <h2 className="mt-3 max-w-3xl text-4xl tracking-tight">Datan byts ut när registret synkas.</h2>
+          <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Källa</p>
+          <h2 className="mt-3 max-w-3xl text-4xl tracking-tight">Uppgifterna byts ut när registret uppdateras.</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             <article className="rounded-3xl border border-line bg-white p-5">
               <h3 className="text-xl tracking-tight">SCB</h3>
               <p className="mt-2 text-sm leading-6 text-muted">
-                Grunduppgifterna kommer från SCB:s allmänna företagsregister: namn, adress, SNI, form och storlek.
+                Namn, adress, SNI, bolagsform och storlek hämtas från SCB:s företagsregister.
               </p>
             </article>
             <article className="rounded-3xl border border-line bg-white p-5">
-              <h3 className="text-xl tracking-tight">Vid varje synk</h3>
+              <h3 className="text-xl tracking-tight">Vid varje uppdatering</h3>
               <p className="mt-2 text-sm leading-6 text-muted">
-                Inte en realtidsström och inte en gammal årsfil. Nästa uttag ersätter det förra. Avregistrerade bolag
-                följer inte med.
+                Nästa köp använder det nya registret. Det är inte en direktström, och det är inte en fil som ligger
+                kvar i flera år. Avregistrerade bolag följer inte med.
               </p>
             </article>
             <article className="rounded-3xl border border-line bg-white p-5">
-              <h3 className="text-xl tracking-tight">Tomt är tomt</h3>
+              <h3 className="text-xl tracking-tight">Tomma fält lämnas tomma</h3>
               <p className="mt-2 text-sm leading-6 text-muted">
-                Telefon och e-post skrivs bara när källan har värdet. Skatteverket är inte källa för listan.
+                Telefon och e-post tas med bara när de finns. Saknas de lämnas fältet tomt. Skatteverket är inte källa
+                för listan.
               </p>
             </article>
           </div>
@@ -105,14 +106,14 @@ export function HomeMore() {
 
       <section className="border-t border-line bg-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <h2 className="text-4xl tracking-tight">Så används en aktuell lista</h2>
+          <h2 className="text-4xl tracking-tight">Vad listan används till</h2>
           <p className="mt-3 max-w-2xl text-muted">
-            Tre räkneexempel. De är inte resultat från namngivna kunder.
+            Tre saker den löser. Inga påhittade kundresultat.
           </p>
           <ul className="mt-8 grid gap-4 lg:grid-cols-3">
             {EXAMPLES.map((item) => (
               <li key={item.title} className="rounded-3xl border border-line bg-foam/40 p-5">
-                <p className="text-xs font-medium uppercase tracking-[0.14em] text-sea">Räkneexempel</p>
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-sea">I praktiken</p>
                 <p className="mt-3 text-4xl tracking-tight">{item.figure}</p>
                 <h3 className="mt-3 text-xl tracking-tight">{item.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted">{item.text}</p>
@@ -142,10 +143,10 @@ export function HomeMore() {
         <div className="mx-auto grid max-w-6xl gap-6 px-4 py-12 sm:py-16 lg:grid-cols-2">
           <div>
             <p className="text-sm uppercase tracking-[0.16em] text-amber">Köp själv</p>
-            <h2 className="mt-3 text-3xl tracking-tight">Lista från 399 kr, utan konto.</h2>
+            <h2 className="mt-3 text-3xl tracking-tight">Från 399 kr, utan konto.</h2>
             <p className="mt-3 leading-7 text-white/75">
-              Kort eller faktura. Filen skickas till e-posten när betalningen är klar. Priset står öppet: 10 öre för
-              grundraden, 30 öre för telefon, 40 öre för e-post och beslutsfattare.
+              Du betalar för grunduppgifterna och för de tillval du kryssar i. Tomma fält kostar inget. Filen skickas
+              till din e-post när betalningen är klar.
             </p>
             <Link href="/kassa" className="mt-5 inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink">
               Till kassan
@@ -153,9 +154,9 @@ export function HomeMore() {
           </div>
           <div>
             <p className="text-sm uppercase tracking-[0.16em] text-amber">Större upplägg</p>
-            <h2 className="mt-3 text-3xl tracking-tight">15 minuter om filen ska in i ett system.</h2>
+            <h2 className="mt-3 text-3xl tracking-tight">Behöver filen in i ett system?</h2>
             <p className="mt-3 leading-7 text-white/75">
-              Inget abonnemang. Ett kort samtal om format, återkommande uttag eller en senare koppling.
+              Boka 15 minuter. Vi går igenom format och om ni behöver samma uttag igen. Inget abonnemang.
             </p>
             <Link href="/demo" className="mt-5 inline-flex h-12 items-center rounded-full border border-white/30 px-5 font-medium">
               Boka 15 minuter

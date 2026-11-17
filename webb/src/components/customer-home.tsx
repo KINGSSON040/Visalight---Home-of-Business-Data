@@ -21,11 +21,42 @@ import {
 import { priceForUrval, pricedCounts, type UrvalResult } from "@/lib/urval";
 import { linkedIndustries, topicPath } from "@/lib/topics";
 
-const EXAMPLE_FIGURES = [
-  { value: "9", label: "nya bolag i Malmö" },
-  { value: "4", label: "nya bolag i restauranger" },
-  { value: "6", label: "konkurser som lämnats utanför filen" },
-  { value: "2", label: "bolag med näringsförbud som lämnats utanför filen" },
+const LEFT_OUT = [
+  {
+    title: "Avregistrerade bolag",
+    text: "Bolag som har avregistrerats tas bort när registret uppdateras. De ligger inte kvar i nästa fil.",
+  },
+  {
+    title: "Konkurs och näringsförbud",
+    text: "Bolag i konkurs, inaktiva bolag och bolag med näringsförbud följer inte med i det du köper.",
+  },
+  {
+    title: "Reklamspärr",
+    text: "Bolag som har spärrat reklam säljs inte. Du behöver inte rensa filen själv.",
+  },
+  {
+    title: "Uppgifter som saknas",
+    text: "Finns inget telefonnummer eller ingen e-post lämnas fältet tomt. Ett tomt fält kostar inget.",
+  },
+];
+
+const QUESTIONS = [
+  {
+    q: "Vad kostar listan?",
+    a: "Grunduppgifter kostar 10 öre per bolag. Telefon kostar 30 öre per nummer, e-post 40 öre per adress och beslutsfattare 40 öre per nummer. Du betalar bara när uppgiften finns. Lägsta order är 399 kr, och priset visas innan du betalar.",
+  },
+  {
+    q: "Hur aktuell är listan?",
+    a: "Namn, adress, bransch och SNI kommer från SCB:s företagsregister. Registret byts ut när det uppdateras. Det är inte en direktuppdatering varje minut, och det är inte en fil som ligger kvar från förra året.",
+  },
+  {
+    q: "Måste jag skapa ett konto?",
+    a: "Nej. Du betalar som gäst med kort eller faktura. Filen skickas till e-postadressen du anger.",
+  },
+  {
+    q: "Vilket format får jag?",
+    a: "CSV och Excel med fasta kolumner: företagsnamn, organisationsnummer, adress, ort, bransch och SNI, plus de tillval du har kryssat i. Ett smakprov med påhittade rader kan laddas ner innan köp.",
+  },
 ];
 
 export function CustomerHome({ initial, initialUrval }: { initial: Selection; initialUrval: UrvalResult }) {
@@ -73,17 +104,17 @@ export function CustomerHome({ initial, initialUrval }: { initial: Selection; in
     <main>
       <section className="mx-auto grid max-w-6xl items-start gap-8 px-4 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.92fr)_minmax(20rem,1fr)] lg:gap-12 lg:py-16">
         <article>
-          <p className="text-sm uppercase tracking-[0.18em] text-sea">Officiella register</p>
+          <p className="text-sm uppercase tracking-[0.18em] text-sea">Företagslistor</p>
           <h1 className="mt-3 max-w-xl text-4xl leading-[1.08] tracking-tight text-balance sm:text-5xl">
-            Verifierad, uppdaterad och färsk företagsdata.
+            Välj bolagen. Se priset. Få filen.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-            VisaLight arbetar med verifierad, uppdaterad och färsk företagsdata från SCB:s allmänna företagsregister.
-            Vid varje synk kommer nya bolag med, och konkurs, inaktiva bolag och bolag med näringsförbud
-            lämnas utanför filen du köper.
+            Sök på bransch och ort och ladda ner en lista med svenska bolag. I grundpriset ingår namn,
+            organisationsnummer, adress, bransch och SNI. Telefon, e-post och beslutsfattare lägger du till där
+            uppgiften finns.
           </p>
           <p className="mt-3 max-w-xl text-base leading-7 text-muted">
-            Saknar källan ett värde lämnas fältet tomt. Du behöver inget konto för att köpa.
+            Inget abonnemang och inget konto. Lägsta order är 399 kr.
           </p>
           <dl id="pris" className="mt-8 grid max-w-xl grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
             <div>
@@ -109,30 +140,30 @@ export function CustomerHome({ initial, initialUrval }: { initial: Selection; in
 
       <section id="sa-funkar-det">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <h2 className="text-4xl tracking-tight">Tre steg</h2>
+          <h2 className="text-4xl tracking-tight">Så köper du en lista</h2>
           <p className="mt-3 max-w-2xl text-lg leading-8 text-muted">
-            Så köper du verifierad, uppdaterad och färsk företagsdata. Inget konto, och filen kommer med e-post.
+            Du ser hur många bolag det blir, och vad det kostar, innan du betalar.
           </p>
           <ol className="mt-8 grid gap-4">
             <li className="rounded-3xl border border-line bg-card p-5 sm:p-6">
               <StepNumber n="1" />
-              <h3 className="mt-3 text-2xl tracking-tight">Skapa företagslistan</h3>
+              <h3 className="mt-3 text-2xl tracking-tight">Välj vilka bolag</h3>
               <p className="mt-2 max-w-2xl leading-7 text-muted">
-                Ange branschnamn eller SNI-kod i sökfältet, komplettera med ort och bolagsform, och tryck Sök bolag.
-                Förslagen under fälten kommer från det som finns i registret.
+                Skriv en bransch, till exempel frisör, restaurang eller revisionsbyrå. Lägg till ort och bolagsform
+                om listan ska vara smalare. Förslagen är branscher, inte enskilda bolag.
               </p>
             </li>
             <li className="rounded-3xl border border-line bg-card p-5 sm:p-6">
               <StepNumber n="2" />
-              <h3 className="mt-3 text-2xl tracking-tight">Se resultatet</h3>
+              <h3 className="mt-3 text-2xl tracking-tight">Se antal och pris</h3>
               <Result selection={priced} dirty={dirty} urval={urval} />
             </li>
             <li className="rounded-3xl border border-line bg-card p-5 sm:p-6">
               <StepNumber n="3" />
-              <h3 className="mt-3 text-2xl tracking-tight">Betala som gäst</h3>
+              <h3 className="mt-3 text-2xl tracking-tight">Betala och få filen</h3>
               <p className="mt-2 max-w-2xl leading-7 text-muted">
-                Gå till kassan och betala som gäst. Filen skickas till din e-post när betalningen är klar.
-                Inget konto krävs.
+                Betala som gäst med kort eller faktura. Filen skickas till din e-post när betalningen är klar.
+                Du behöver inget konto.
               </p>
             </li>
           </ol>
@@ -141,37 +172,44 @@ export function CustomerHome({ initial, initialUrval }: { initial: Selection; in
 
       <HomeMore />
 
-      <section aria-labelledby="exempel-statistik" className="border-t border-line bg-white">
+      <section aria-labelledby="utanfor" className="border-t border-line bg-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">
-            Exempel tills kundsidan läser det riktiga registret
-          </p>
-          <h2 id="exempel-statistik" className="mt-3 max-w-3xl text-4xl tracking-tight">
-            Så kan ett uppdaterat register se ut
+          <h2 id="utanfor" className="max-w-3xl text-4xl tracking-tight">
+            Det som inte ska med i filen
           </h2>
-          <p className="mt-4 max-w-2xl text-lg leading-8">
-            VisaLight uppdaterar registret och därmed bara erbjuder aktiva bolag.
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
+            Listan ska gå att använda direkt. Därför tar vi bort bolag du inte ska kontakta, och gissar inte när en
+            uppgift saknas.
           </p>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-            Siffrorna nedan är exempel. De är inte nationell statistik och inte hämtade ur det riktiga registret.
-          </p>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {EXAMPLE_FIGURES.map((figure) => (
-              <li key={figure.label} className="rounded-3xl border border-line bg-foam/50 p-5">
-                <p className="text-xs font-medium uppercase tracking-[0.14em] text-sea">Exempel</p>
-                <p className="mt-3 text-4xl tracking-tight">{figure.value}</p>
-                <p className="mt-2 text-sm leading-6">{figure.label}</p>
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+            {LEFT_OUT.map((item) => (
+              <li key={item.title} className="rounded-3xl border border-line bg-foam/50 p-5">
+                <h3 className="text-xl tracking-tight">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted">{item.text}</p>
               </li>
             ))}
           </ul>
         </div>
       </section>
 
+      <section aria-labelledby="fragor" className="border-t border-line">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+          <h2 id="fragor" className="text-4xl tracking-tight">Vanliga frågor</h2>
+          <div className="mt-6 max-w-3xl divide-y divide-line rounded-3xl border border-line bg-white">
+            {QUESTIONS.map((item) => (
+              <details key={item.q} className="px-5 py-4">
+                <summary className="cursor-pointer text-lg tracking-tight">{item.q}</summary>
+                <p className="mt-2 text-sm leading-6 text-muted">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <h2 className="text-4xl tracking-tight">Branscher och ord</h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Sidorna beskriver urval för vanliga branscher och registerord. Verktyget visar fortfarande
-          exempelbolag tills det riktiga registret är kopplat.
+          Välj en bransch och öppna samma urval i listan.
         </p>
         <ul className="mt-6 flex flex-wrap gap-2">
           {linkedIndustries().map((topic) => (
