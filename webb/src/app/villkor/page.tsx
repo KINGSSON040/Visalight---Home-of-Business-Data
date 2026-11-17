@@ -5,7 +5,7 @@ import { Mark, SELLER } from "@/lib/seller";
 export const metadata: Metadata = {
   title: "Köpvillkor — VisaLight",
   description:
-    "Köpvillkor för utdrag av företagsregistret. Pris exklusive moms, lägsta order 399 kr, gästköp med kort eller faktura.",
+    "Köpvillkor för utdrag av företagsregistret. Pris exklusive moms, lägsta order 399 kr. Beställning öppnar snart. Ingen betalning dras.",
   alternates: { canonical: "/villkor" },
 };
 
@@ -13,7 +13,7 @@ export default function TermsPage() {
   return (
     <PageIntro
       eyebrow="Köpvillkor"
-      title="Så köper ni ett utdrag."
+      title="Villkor för utdraget."
       lead="VisaLight är ännu inte ett registrerat bolag. Beställning öppnar snart. Tills dess kan ni förhandsboka ett utdrag med e-post. Ingen betalning dras."
     >
       <section>

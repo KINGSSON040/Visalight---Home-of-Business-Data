@@ -9,6 +9,7 @@ import {
   selectionToQuery,
   type OrderDraft,
 } from "@/lib/catalog";
+import { Mark, SELLER } from "@/lib/seller";
 
 export default function ConfirmationPage() {
   const [order, setOrder] = useState<OrderDraft | null | undefined>(undefined);
@@ -29,7 +30,7 @@ export default function ConfirmationPage() {
   if (order === undefined) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-16">
-        <p className="text-muted">Hämtar beställningen.</p>
+        <p className="text-muted">Hämtar förhandsbokningen.</p>
       </main>
     );
   }
@@ -37,8 +38,10 @@ export default function ConfirmationPage() {
   if (!order) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-16">
-        <h1 className="font-serif text-5xl tracking-tight">Ingen beställning här</h1>
-        <p className="mt-3 text-muted">Kvittot finns bara i den här webbläsaren, efter att kassan har fyllts i.</p>
+        <h1 className="font-serif text-5xl tracking-tight">Ingen förhandsbokning här</h1>
+        <p className="mt-3 text-muted">
+          Förhandsbokningen sparas bara i den här webbläsaren, efter att ni lämnat e-post. Det är inte ett kvitto.
+        </p>
         <Link href="/" className="btn-fade-sea mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
           Till urvalet
         </Link>
@@ -55,9 +58,14 @@ export default function ConfirmationPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
       <p className="text-sm uppercase tracking-[0.16em] text-green">Förhandsbokning</p>
-      <h1 className="mt-3 font-serif text-5xl tracking-tight">Urvalet är sparat i den här webbläsaren.</h1>
+      <h1 className="mt-3 font-serif text-5xl tracking-tight">Förhandsbokningen är sparad i den här webbläsaren.</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
-        Beställning öppnar snart. Ingen betalning har dragits och ingen fil har skickats. Det här är inte ett kvitto.
+        Beställning öppnar snart. Ingen betalning har dragits och ingen fil har skickats. Det här är en förhandsbokning,
+        inte ett kvitto.
+      </p>
+      <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">
+        {SELLER.tradeName} är inte ett registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark>{" "}
+        · <Mark>{SELLER.vatNr}</Mark>
       </p>
       <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <article className="rounded-3xl border border-line bg-card p-5 sm:p-6">
@@ -98,7 +106,7 @@ export default function ConfirmationPage() {
             </Link>
           </div>
         </article>
-        <PricePanel selection={order.selection} />
+        <PricePanel selection={order.selection} quoteOnly />
       </div>
     </main>
   );

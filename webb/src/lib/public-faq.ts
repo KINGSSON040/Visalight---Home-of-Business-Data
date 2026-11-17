@@ -1,3 +1,5 @@
+import { SELLER } from "@/lib/seller";
+
 export const PUBLIC_FAQ = [
   {
     q: "Vad kostar utdraget?",
@@ -5,7 +7,7 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Ingår moms?",
-    a: "Priserna i utdraget är exklusive moms. VisaLight är inte momsregistrerat ännu. Momsnummer fylls i som [Momsregistreringsnummer] när bolaget finns.",
+    a: `Priserna i utdraget är exklusive moms. ${SELLER.tradeName} är inte momsregistrerat ännu. Momsnummer fylls i som ${SELLER.vatNr} när bolaget finns.`,
   },
   {
     q: "Hur aktuellt är utdraget?",

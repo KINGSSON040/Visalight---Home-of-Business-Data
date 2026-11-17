@@ -4,7 +4,8 @@ import { Mark, SELLER } from "@/lib/seller";
 
 export const metadata: Metadata = {
   title: "Cookies — VisaLight",
-  description: "VisaLight använder inga marknadsföringscookies. CRM-läget sparar arbetsdata i webbläsarens session.",
+  description:
+    "VisaLight använder inga marknadsföringscookies. En förhandsbokning sparas i webbläsaren. Ingen betalning dras.",
   alternates: { canonical: "/cookies" },
 };
 
@@ -18,8 +19,10 @@ export default function CookiesPage() {
       <section>
         <h2 className="text-2xl tracking-tight">Det som kan sparas i webbläsaren</h2>
         <p className="mt-2 leading-7 text-muted">
-          Ett påbörjat köp och CRM-läget kan spara urval, stjärnor och anteckningar i webbläsarens egen lagring på den
-          dator ni använder. Det följer inte med till en annan dator, och det används inte för att visa annonser.
+          En förhandsbokning kan spara urvalet och e-postadressen i webbläsarens egen lagring på den dator ni använder.
+          Det är inte ett kvitto. Ingen betalning dras och ingen fil skickas. CRM-läget kan spara stjärnor och
+          anteckningar på samma sätt. Inget av det följer med till en annan dator, och det används inte för att visa
+          annonser.
         </p>
       </section>
       <section>

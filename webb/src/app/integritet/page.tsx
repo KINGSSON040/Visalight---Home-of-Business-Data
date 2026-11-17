@@ -6,7 +6,7 @@ import { Mark, SELLER } from "@/lib/seller";
 export const metadata: Metadata = {
   title: "Integritet — VisaLight",
   description:
-    "Så behandlar VisaLight uppgifter om beställare och om bolagen i utdraget. B2B-prospektering, reklamspärr och gästköp.",
+    "Så behandlar VisaLight uppgifter om bolag i utdraget och om en förhandsbokning. Ingen betalning dras. Bolaget är inte registrerat ännu.",
   alternates: { canonical: "/integritet" },
 };
 

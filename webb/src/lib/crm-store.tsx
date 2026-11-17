@@ -252,8 +252,8 @@ export function readPurchases(orgNr: string): Purchase[] {
         id: order.id,
         orgNr,
         at: order.createdAt,
-        what: "Beställning i kassan",
-        sum: order.payment === "faktura" ? "Faktura" : "Kort",
+        what: "Förhandsbokning",
+        sum: "Ingen betalning",
       },
     ];
   });
