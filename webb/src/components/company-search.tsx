@@ -19,6 +19,7 @@ export function CompanySearch({
   split = false,
   hint,
   queryPlaceholder = "Bransch, SNI, namn eller organisationsnummer",
+  querySuggestions = suggestQuery,
   children,
 }: {
   draft: Selection;
@@ -28,6 +29,7 @@ export function CompanySearch({
   split?: boolean;
   hint?: string;
   queryPlaceholder?: string;
+  querySuggestions?: (text: string) => Suggestion[];
   children?: ReactNode;
 }) {
   const forms = draft.forms ?? [];
@@ -61,7 +63,7 @@ export function CompanySearch({
         label="Sök"
         value={draft.query}
         placeholder={queryPlaceholder}
-        suggestions={suggestQuery(draft.query)}
+        suggestions={querySuggestions(draft.query)}
         onValue={(query) => onChange({ query })}
         onPick={applySuggestion}
       />

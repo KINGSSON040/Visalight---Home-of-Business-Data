@@ -2,7 +2,7 @@
 
 import { CompanySearch } from "@/components/company-search";
 import { BASE_ORE, EMAIL_ORE, formatKronor, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
-import type { Selection } from "@/lib/catalog";
+import { suggestBranscher, type Selection } from "@/lib/catalog";
 
 export function ListBuilder({
   draft,
@@ -26,7 +26,7 @@ export function ListBuilder({
       <div>
         <h2 className="text-2xl tracking-tight">Skapa företagslista</h2>
         <p className="mt-1 text-sm leading-6 text-muted">
-          Ange branschnamn eller SNI-kod. Förslag visas under fältet. Tryck Sök bolag när valen är klara.
+          Skriv en bransch, till exempel frisör, restaurang eller revisionsbyrå. Förslagen är branscher, inte bolag.
         </p>
       </div>
 
@@ -37,6 +37,7 @@ export function ListBuilder({
           onSearch={onSearch}
           onClear={() => onChange({ query: "", city: "", bransch: "", sni: "", forms: [] })}
           queryPlaceholder="Branschnamn eller SNI-kod"
+          querySuggestions={suggestBranscher}
           hint={hint}
         >
           <fieldset className="mt-4">

@@ -13,20 +13,20 @@ export type Topic = {
 };
 
 export const TOPICS: Topic[] = [
-  bransch("restauranger", "Restauranger", "56101", "En restauranglista behöver namn, adress och SNI, och telefon bara där krogen har ett nummer."),
+  bransch("restauranger", "Restauranger", "56110", "En restauranglista behöver namn, adress och SNI, och telefon bara där krogen har ett nummer."),
   bransch("byggforetag", "Byggföretag", "41200", "Byggföretag söks på ort och SNI för husbyggnad, med tom ruta där telefon eller e-post saknas."),
   bransch("datakonsulter", "Datakonsulter", "62010", "Datakonsulter ligger ofta under SNI för dataprogrammering. Urvalet kan begränsas till en ort."),
   bransch("livsmedelshandel", "Livsmedelshandel", "47112", "Butiker i livsmedelshandeln kan filtreras på ort. Kontaktfält följer med bara när de finns."),
   bransch("vardcentraler", "Vårdcentraler", "86211", "Vårdcentraler har en egen SNI-kod. Filen tar med adressen och lämnar telefon tom om den inte är angiven."),
   bransch("akerier", "Åkerier", "49410", "Åkerier och annan vägtransport kan avgränsas med SNI och ort innan filen beställs."),
-  bransch("frisorsalonger", "Frisörsalonger", "96021", "Frisörsalonger är många och lokala. Ortfiltret gör listan användbar, och tomma nummer kostar inget."),
+  bransch("frisorsalonger", "Frisörsalonger", "96210", "Frisörsalonger har SNI 96.210, Frisörer och barberare. Skönhetssalonger är en annan kod, 96.220."),
   bransch("redovisningsbyraer", "Redovisningsbyråer", "69201", "Redovisningsbyråer söks via sin SNI-kod. E-post kommer med när källan har en adress."),
   bransch("elektriker", "Elektriker", undefined, "Elektriker och elinstallatörer är en vanlig lista när man söker hantverkare i en kommun."),
   bransch("rormokare", "Rörmokare", undefined, "Rörmokare och VVS-firmor behövs ofta ort för ort, med namn och adress som grund."),
   bransch("malerifirmor", "Målerifirmor", undefined, "Målerifirmor kan samlas som ett branschurval. Numret följer med bara om det står i källan."),
   bransch("stadfirmor", "Städfirmor", undefined, "Städfirmor och lokalvård är ett vanligt urval för den som ringer eller mejlar företag."),
   bransch("advokatbyraer", "Advokatbyråer", undefined, "Advokatbyråer identifieras som bransch, med organisationsnummer och adress på varje rad."),
-  bransch("revisionsbyraer", "Revisionsbyråer", undefined, "Revisionsbyråer kan skiljas från redovisning när urvalet görs på bransch."),
+  bransch("revisionsbyraer", "Revisionsbyråer", "69202", "Revisionsbyråer har SNI 69.202. Redovisningsbyråer ligger på 69.201 och är ett annat urval."),
   bransch("fastighetsforvaltare", "Fastighetsförvaltare", undefined, "Fastighetsförvaltare har egna listor, skilda från mäklare och från bolag som bara äger hus."),
   bransch("hotell", "Hotell", undefined, "Hotell söks som bransch och kan begränsas till en ort. Kedjor och enskilda hus ligger som egna bolag."),
   bransch("tandlakare", "Tandläkare", undefined, "Tandläkarmottagningar behövs ofta lokalt. Adressen finns med, telefonen bara när den är publicerad i källan."),

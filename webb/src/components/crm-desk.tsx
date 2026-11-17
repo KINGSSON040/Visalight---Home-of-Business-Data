@@ -364,8 +364,9 @@ function NavButton({
       type="button"
       aria-pressed={pressed}
       onClick={onClick}
+      aria-current={pressed ? "page" : undefined}
       className={`whitespace-nowrap rounded-xl px-3 py-2 text-left text-sm font-medium ${
-        pressed ? "bg-white text-sea-deep" : "text-white/80 hover:bg-white/10"
+        pressed ? "bg-amber text-ink" : "bg-transparent text-white/70 hover:bg-white/10"
       }`}
     >
       {children}
