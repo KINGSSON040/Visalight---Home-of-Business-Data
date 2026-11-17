@@ -13,6 +13,20 @@ import type { RegisterOverview } from "@/lib/register-stats";
 import { linkedIndustries, topicBuilderHref } from "@/lib/topics";
 import type { UrvalResult } from "@/lib/urval";
 
+const BENEFITS = [
+  "Färsk data från SCB:s företagsregister",
+  "Nya bolag kommer med vid varje uppdatering",
+  "Reklamspärrade bolag tas alltid bort",
+  "Inget abonnemang, ingen bindning",
+];
+
+const PRICE_ROWS = [
+  { title: "Företagsuppgifter (grunddata)", price: `${formatKronor(BASE_ORE)} kr/bolag`, text: "Namn, organisationsnummer, adress, ort, bransch och SNI-kod. Ingår i varje rad." },
+  { title: "Kontaktnummer", price: `+${formatKronor(PHONE_ORE)} kr/rad`, text: "Bolagets växel- eller företagsnummer. Ni betalar bara för bolag som har ett nummer." },
+  { title: "Beslutsfattare med direktnummer", price: `+${formatKronor(SIGNATORY_ORE)} kr/rad`, text: "Direktnummer till den som bestämmer. Ni betalar bara där numret finns." },
+  { title: "E-post", price: `+${formatKronor(EMAIL_ORE)} kr/rad`, text: "Bolagets e-postadress. Ni betalar bara för bolag som har en adress." },
+];
+
 const STEPS = [
   {
     title: "Välj bransch och ort",
@@ -36,19 +50,19 @@ const PRICE_EXAMPLES = [
     title: "Frisörer i en stad",
     detail: "250 bolag, bara grunduppgifter",
     counts: { companies: 250, phones: 0, signatoryPhones: 0, emails: 0 },
-    tone: "bg-white tilt-r-sm",
+    tone: "bg-white",
   },
   {
     title: "Restauranger med telefon",
     detail: "2 000 bolag och 1 400 telefonnummer",
     counts: { companies: 2_000, phones: 1_400, signatoryPhones: 0, emails: 0 },
-    tone: "bg-[var(--pop-sun)] tilt-l-sm",
+    tone: "bg-[var(--pop-sun)]",
   },
   {
     title: "Byggbolag, allt med",
     detail: "20 000 bolag, 14 000 nummer, 6 000 beslutsfattare, 8 000 e-post",
     counts: { companies: 20_000, phones: 14_000, signatoryPhones: 6_000, emails: 8_000 },
-    tone: "bg-[var(--pop-magenta)] text-white tilt-r-sm",
+    tone: "bg-[var(--pop-lime)]",
   },
 ];
 
@@ -135,25 +149,44 @@ export function CustomerHome({
       <section className="pop-dots relative overflow-x-clip">
         <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 pt-5 pb-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,36rem)] lg:gap-10 lg:pt-6 lg:pb-8">
           <div className="relative min-w-0">
-            <p className="sticker-sm tilt-l inline-flex bg-[var(--pop-lime)] px-3 py-1 text-xs font-extrabold tracking-[0.14em] uppercase sm:text-sm">
-              Utdrag ur företagsregistret
-            </p>
-            <h1 className="mt-4 text-[clamp(2.9rem,6.3vw,6rem)] leading-[0.98] uppercase">
-              <span className="block text-[var(--pop-magenta)] [-webkit-text-stroke:2px_var(--pop-ink)]">Alla</span>
-              <span className="pop-outline block">Sveriges</span>
-              <span className="pop-highlight tilt-l mt-3">Företag.</span>
+            <p className="eyebrow text-[var(--pop-magenta-deep)]">Företagslistor · utdrag ur registret</p>
+            <h1 className="mt-4 text-[clamp(3rem,6.2vw,5.9rem)] leading-[0.9]">
+              <span className="block">Alla Sveriges</span>
+              <span className="block">företag.</span>
+              <span className="mt-1 block text-[var(--pop-magenta)]">
+                Se antal och pris <span className="relative inline-block">direkt.<span aria-hidden="true" className="absolute right-0 -bottom-1 left-0 h-[0.12em] -rotate-1 rounded-full bg-[var(--pop-sun)]" /></span>
+              </span>
             </h1>
-            <p className="mt-5 max-w-xl text-lg leading-7 font-semibold sm:mt-6 sm:text-xl">
-              Fyll i listbyggaren och se direkt hur många kunder ni når och vad det kostar.
+            <p className="mt-5 max-w-xl text-base leading-7 font-medium text-[#3d2440] sm:mt-6 sm:text-lg">
+              Fyll i listbyggaren: bransch, region och vilka kontaktuppgifter ni vill ha. Antalet och priset syns direkt. Ingen prenumeration, ingen bindningstid.
             </p>
-            <ul className="mt-4 flex flex-wrap gap-2 text-xs font-extrabold sm:gap-2.5 sm:text-sm">
-              <li className="sticker-sm tilt-r-sm bg-white px-2.5 py-1 sm:px-3 sm:py-1.5">Ingen prenumeration</li>
-              <li className="sticker-sm tilt-l-sm bg-[var(--pop-sun)] px-2.5 py-1 sm:px-3 sm:py-1.5">Ingen bindningstid</li>
-              <li className="sticker-sm tilt-r-sm bg-white px-2.5 py-1 sm:px-3 sm:py-1.5">Priset före köp</li>
+            <div className="mt-6 hidden flex-wrap gap-3 sm:flex">
+              <button
+                type="button"
+                onClick={() => document.querySelector<HTMLInputElement>("#urval input[role=combobox]")?.focus()}
+                className="pop-btn pop-btn--magenta h-13 px-6 text-base"
+              >
+                Bygg en företagslista <span aria-hidden="true">→</span>
+              </button>
+              <Link href="/statistik" className="pop-btn pop-btn--white h-13 px-6 text-base">
+                Se näringslivet i siffror
+              </Link>
+            </div>
+            <ul className="mt-6 hidden max-w-xl gap-x-6 gap-y-2 text-sm font-semibold sm:grid sm:grid-cols-2">
+              {BENEFITS.map((benefit) => (
+                <li key={benefit} className="flex items-start gap-2">
+                  <span aria-hidden="true" className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 border-[var(--pop-ink)] bg-[var(--pop-lime)] text-[0.7rem] font-black">
+                    ✓
+                  </span>
+                  {benefit}
+                </li>
+              ))}
             </ul>
-            <div aria-hidden="true" className="star-burst spin-slow absolute top-2 right-2 hidden h-28 w-28 bg-[var(--pop-coral)] xl:block" />
           </div>
-          <div className="min-w-0">
+          <div className="relative min-w-0">
+            <p aria-hidden="true" className="sticker-sm tilt-r font-display absolute -top-4 right-4 z-10 hidden bg-[var(--pop-sun)] px-3 py-1 text-sm sm:block">
+              Ingen bindningstid!
+            </p>
             <PopBuilder
               draft={draft}
               onChange={patch}
@@ -164,6 +197,16 @@ export function CustomerHome({
               updatedLabel={updatedLabel}
               exampleData={exampleData}
             />
+            <ul className="mt-5 grid gap-2 text-sm font-semibold sm:hidden">
+              {BENEFITS.map((benefit) => (
+                <li key={benefit} className="flex items-start gap-2">
+                  <span aria-hidden="true" className="grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 border-[var(--pop-ink)] bg-[var(--pop-lime)] text-[0.7rem] font-black">
+                    ✓
+                  </span>
+                  {benefit}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -187,7 +230,7 @@ export function CustomerHome({
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="sticker-sm tilt-r-sm inline-flex bg-[var(--pop-sun)] px-3 py-1 text-xs font-extrabold tracking-[0.14em] uppercase">Uppdateras med registret</p>
-              <h2 id="statistik-rubrik" className="mt-4 max-w-3xl text-4xl leading-[1.02] uppercase sm:text-6xl">
+              <h2 id="statistik-rubrik" className="mt-4 max-w-3xl text-4xl leading-[0.95] sm:text-6xl">
                 Sveriges näringsliv <span className="text-[var(--pop-magenta)]">i siffror</span>
               </h2>
             </div>
@@ -211,7 +254,7 @@ export function CustomerHome({
 
       <section id="sa-funkar-det" aria-labelledby="steg-rubrik" className="band-white">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
-          <h2 id="steg-rubrik" className="text-4xl uppercase sm:text-6xl">
+          <h2 id="steg-rubrik" className="text-4xl sm:text-6xl">
             Tre steg. <span className="text-[var(--pop-coral)]">Klart.</span>
           </h2>
           <ol className="mt-10 grid gap-6 md:grid-cols-3">
@@ -233,7 +276,7 @@ export function CustomerHome({
 
       <section id="branscher" aria-labelledby="bransch-rubrik" className="band-lime">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
-          <h2 id="bransch-rubrik" className="max-w-4xl text-4xl uppercase sm:text-6xl">
+          <h2 id="bransch-rubrik" className="max-w-4xl text-4xl sm:text-6xl">
             Vilka vill ni sälja till?
           </h2>
           <p className="mt-3 max-w-2xl text-lg font-semibold">Tryck på en bransch. Listbyggaren öppnas med den ifylld och räknar direkt.</p>
@@ -264,34 +307,44 @@ export function CustomerHome({
       </section>
 
       <section id="pris" aria-labelledby="pris-rubrik" className="band-white">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
-          <h2 id="pris-rubrik" className="text-4xl uppercase sm:text-6xl">
-            Betala per rad. <span className="text-[var(--pop-magenta)]">Inte per månad.</span>
-          </h2>
-          <div className="mt-6 flex flex-wrap gap-3 text-sm font-extrabold">
-            <span className="sticker-sm bg-[var(--pop-lime)] px-3 py-1.5">Grunduppgifter {formatKronor(BASE_ORE)} kr/bolag</span>
-            <span className="sticker-sm bg-white px-3 py-1.5">Telefon {formatKronor(PHONE_ORE)} kr</span>
-            <span className="sticker-sm bg-white px-3 py-1.5">E-post {formatKronor(EMAIL_ORE)} kr</span>
-            <span className="sticker-sm bg-white px-3 py-1.5">Beslutsfattare {formatKronor(SIGNATORY_ORE)} kr</span>
-            <span className="sticker-sm bg-[var(--pop-sun)] px-3 py-1.5">Lägsta order {formatKronor(MINIMUM_ORE)} kr</span>
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+          <div>
+            <p className="eyebrow text-[var(--pop-magenta-deep)]">Innehåll och pris</p>
+            <h2 className="mt-3 text-4xl leading-[0.95] sm:text-6xl">
+              Ni betalar endast för <span className="text-[var(--pop-magenta)]">det ni behöver.</span>
+            </h2>
+            <p className="mt-5 max-w-md text-lg leading-7 font-medium">
+              Varje bolag har grunddata. Kontaktuppgifter väljer ni till per rad. Lägsta order {formatKronor(MINIMUM_ORE)} kr exkl. moms.
+            </p>
+            <ul className="mt-8 grid gap-3">
+              {PRICE_EXAMPLES.map((example) => {
+                const price = quote(example.counts);
+                return (
+                  <li key={example.title} className={`sticker flex items-center justify-between gap-4 px-4 py-3 ${example.tone}`}>
+                    <span className="min-w-0">
+                      <span className="block font-extrabold">{example.title}</span>
+                      <span className="block text-xs font-semibold opacity-90">{example.detail}</span>
+                    </span>
+                    <span className="mono shrink-0 text-lg font-medium tabular-nums">{formatKronor(price.totalOre)} kr</span>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-2 text-xs font-semibold text-muted">Räkneexempel exkl. moms. Antalen är påhittade.</p>
+            <Link href="/#urval" className="pop-btn pop-btn--magenta mt-6 h-12 px-5 text-base">
+              Räkna på ert utdrag <span aria-hidden="true">→</span>
+            </Link>
           </div>
-          <ul className="mt-10 grid gap-6 md:grid-cols-3">
-            {PRICE_EXAMPLES.map((example) => {
-              const price = quote(example.counts);
-              return (
-                <li key={example.title} className={`sticker flex flex-col p-6 ${example.tone}`}>
-                  <h3 className="font-display text-2xl leading-tight">{example.title}</h3>
-                  <p className="mt-1 text-sm font-semibold opacity-90">{example.detail}</p>
-                  <p className="font-display mt-5 text-4xl tabular-nums sm:text-5xl">{formatKronor(price.totalOre)} kr</p>
-                  <p className="mt-1 text-xs font-bold opacity-90">
-                    exkl. moms{price.minimumApplied ? " · lägsta order" : ""}. Räkneexempel, antalen är påhittade.
-                  </p>
-                  <Link href="/#urval" className="pop-btn pop-btn--white mt-5 h-11 self-start px-4 text-sm text-[var(--pop-ink)]">
-                    Räkna på ert utdrag
-                  </Link>
-                </li>
-              );
-            })}
+          <ul className="sticker divide-y-[2.5px] divide-[var(--pop-ink)] self-start overflow-hidden bg-white">
+            {PRICE_ROWS.map((row, index) => (
+              <li key={row.title} className={`px-5 py-5 ${index === 0 ? "bg-[var(--pop-cream)]" : ""}`}>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <h3 className="text-lg font-extrabold">{row.title}</h3>
+                  <span className="mono text-sm font-medium tracking-[0.08em] text-[var(--pop-magenta-deep)] uppercase">{row.price}</span>
+                </div>
+                <p className="mt-2 text-sm leading-6 font-medium text-muted">{row.text}</p>
+              </li>
+            ))}
           </ul>
         </div>
       </section>
@@ -299,7 +352,7 @@ export function CustomerHome({
       <section id="nyheter" aria-labelledby="nyheter-rubrik" className="band-mint">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 id="nyheter-rubrik" className="text-4xl uppercase sm:text-6xl">
+            <h2 id="nyheter-rubrik" className="text-4xl sm:text-6xl">
               Nyheter och <span className="text-[var(--pop-coral)]">uppdateringar</span>
             </h2>
             <Link href="/nyheter" className="pop-btn pop-btn--white h-11 px-4 text-sm">
@@ -315,7 +368,7 @@ export function CustomerHome({
       <section id="fragor" aria-labelledby="fragor-rubrik" className="band-white">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
           <div>
-            <h2 id="fragor-rubrik" className="text-4xl uppercase sm:text-6xl">
+            <h2 id="fragor-rubrik" className="text-4xl sm:text-6xl">
               Frågor? <span className="text-[var(--pop-magenta)]">Svar.</span>
             </h2>
             <p className="mt-4 max-w-sm text-lg font-semibold">Det folk brukar undra innan de bygger sitt första utdrag.</p>
@@ -338,7 +391,7 @@ export function CustomerHome({
 
       <section aria-labelledby="sista-rubrik" className="border-t-[3px] border-[var(--pop-ink)] bg-[var(--pop-magenta)] text-white">
         <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 px-4 py-16 sm:px-6 sm:py-24">
-          <h2 id="sista-rubrik" className="text-5xl leading-[0.95] uppercase [-webkit-text-stroke:2px_var(--pop-ink)] sm:text-7xl">
+          <h2 id="sista-rubrik" className="text-5xl leading-[0.95] sm:text-7xl">
             Alla Sveriges företag.
             <br />
             <span className="text-[var(--pop-sun)]">Ett klick bort.</span>

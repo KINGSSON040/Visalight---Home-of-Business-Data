@@ -31,7 +31,7 @@ export default async function NyhetPage({ params }: { params: Promise<{ slug: st
           <time dateTime={item.date}>{formatNewsDate(item.date)}</time>
           {item.example ? <span className="sticker-sm bg-white px-2 py-0.5">Exempeltext</span> : null}
         </p>
-        <h1 className="mt-4 text-4xl leading-[1.02] uppercase sm:text-6xl">{item.title}</h1>
+        <h1 className="mt-4 text-4xl leading-[0.98] sm:text-6xl">{item.title}</h1>
         <p className="sticker tilt-l-sm mt-8 bg-[var(--pop-sun)] p-5 text-xl leading-8 font-bold">{item.lead}</p>
         <div className="mt-8 space-y-5 text-lg leading-8 font-medium">
           {item.body.map((paragraph) => (

@@ -19,7 +19,7 @@ export default function StatistikPage() {
     <main className="pop-dots">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
         <p className="sticker-sm tilt-l inline-flex bg-[var(--pop-lime)] px-3 py-1 text-xs font-extrabold tracking-[0.14em] uppercase">Statistik</p>
-        <h1 className="mt-4 max-w-4xl text-5xl leading-[0.95] uppercase sm:text-7xl">
+        <h1 className="mt-4 max-w-4xl text-5xl leading-[0.92] sm:text-7xl">
           Sveriges näringsliv <span className="text-[var(--pop-magenta)]">i siffror</span>
         </h1>
         <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -38,7 +38,7 @@ export default function StatistikPage() {
           <StatsShowcase overview={overview} full />
         </div>
         <section className="sticker mt-12 flex flex-col items-start gap-4 bg-[var(--pop-ink)] p-6 text-white sm:p-8">
-          <h2 className="text-3xl uppercase sm:text-5xl">
+          <h2 className="text-3xl sm:text-5xl">
             Gör siffrorna till <span className="text-[var(--pop-lime)]">kunder</span>
           </h2>
           <p className="max-w-xl text-lg font-semibold">Välj bransch och ort i listbyggaren. Antalet och priset syns direkt, utan prenumeration.</p>
