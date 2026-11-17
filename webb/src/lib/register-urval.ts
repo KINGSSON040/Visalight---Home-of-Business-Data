@@ -151,7 +151,7 @@ function fromDatabase(selection: Selection): UrvalResult | null {
       0,
       0,
       [],
-      "Ingen bransch matchar det du skrev. Välj ett förslag under sökfältet.",
+      "Ingen bransch matchar det ni skrev. Välj ett förslag under sökfältet.",
     );
   }
   const db = openDatabase(file);
@@ -216,7 +216,7 @@ function exampleUrval(selection: Selection): UrvalResult {
     );
   }
   if (filter.kind === "none") {
-    return ready("example", 0, 0, 0, 0, [], "Ingen bransch matchar det du skrev. Välj ett förslag under sökfältet.");
+    return ready("example", 0, 0, 0, 0, [], "Ingen bransch matchar det ni skrev. Välj ett förslag under sökfältet.");
   }
   const rows = COMPANIES.filter((company) => {
     if (forms.length > 0 && !forms.includes(company.form)) return false;

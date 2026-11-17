@@ -48,7 +48,7 @@ export const TOPICS: Topic[] = [
   ord("foretagsdata", "Företagsdata", "Företagsdata är namn, organisationsnummer, adress, ort, bransch och de kontaktfält källan faktiskt har."),
   ord("foretagsregister", "Företagsregister", "Ett företagsregister används för att hitta bolag och avgränsa dem innan en fil beställs."),
   ord("organisationsnummer", "Organisationsnummer", "Organisationsnumret är nyckeln på varje rad, så två bolag med liknande namn inte blandas ihop."),
-  ord("foretagslista", "Företagslista", "En företagslista är urvalet som exporteras, med de kolumner du kryssat i och tomma celler där uppgift saknas."),
+  ord("foretagslista", "Företagslista", "En företagslista är urvalet som exporteras, med de kolumner ni kryssat i och tomma celler där uppgift saknas."),
   ord("branschregister", "Branschregister", "Ett branschregister grupperar bolag efter SNI, så en lista kan gälla en bransch i stället för alla bolag."),
   ord("sni-kod", "SNI-kod", "SNI-koden talar om branschen. Filtret kan ta en exakt kod eller de koder som börjar med samma siffror."),
   ord("kundregister", "Kundregister", "Ett kundregister byggt på företagsdata är ett urval av bolag, inte en färdig lista över vem som redan är kund."),

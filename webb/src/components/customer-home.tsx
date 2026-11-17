@@ -16,11 +16,11 @@ const LEFT_OUT = [
   },
   {
     title: "Konkurs och näringsförbud",
-    text: "Bolag i konkurs, inaktiva bolag och bolag med näringsförbud följer inte med i det du köper.",
+    text: "Bolag i konkurs, inaktiva bolag och bolag med näringsförbud följer inte med i det ni köper.",
   },
   {
     title: "Reklamspärr",
-    text: "Bolag som har spärrat reklam säljs inte. Du behöver inte rensa filen själv.",
+    text: "Bolag som har spärrat reklam säljs inte. Ni behöver inte rensa filen själva.",
   },
   {
     title: "Uppgifter som saknas",
@@ -46,7 +46,7 @@ const STEPS = [
 const QUESTIONS = [
   {
     q: "Vad kostar utdraget?",
-    a: "Grunduppgifter kostar 10 öre per bolag. Telefon kostar 30 öre per nummer, e-post 40 öre per adress och beslutsfattare 40 öre per nummer. Du betalar bara när uppgiften finns. Lägsta order är 399 kr, och priset visas alltid innan ni köper.",
+    a: "Grunduppgifter kostar 10 öre per bolag. Telefon kostar 30 öre per nummer, e-post 40 öre per adress och beslutsfattare 40 öre per nummer. Ni betalar bara när uppgiften finns. Lägsta order är 399 kr, och priset visas alltid innan ni köper.",
   },
   {
     q: "Hur aktuellt är utdraget?",
@@ -54,11 +54,11 @@ const QUESTIONS = [
   },
   {
     q: "Måste jag skapa ett konto?",
-    a: "Nej. Du betalar som gäst med kort eller faktura. Filen skickas till e-postadressen du anger.",
+    a: "Nej. Ni betalar som gäst med kort eller faktura. Filen skickas till e-postadressen ni anger.",
   },
   {
     q: "Vilket format får jag?",
-    a: "CSV och Excel med fasta kolumner: företagsnamn, organisationsnummer, adress, ort, bransch och SNI, plus de tillval du har kryssat i. Ett smakprov med påhittade rader kan laddas ner innan köp.",
+    a: "CSV och Excel med fasta kolumner: företagsnamn, organisationsnummer, adress, ort, bransch och SNI, plus de tillval ni har kryssat i. Ett smakprov med påhittade rader kan laddas ner innan köp.",
   },
 ];
 

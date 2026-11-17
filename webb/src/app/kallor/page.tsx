@@ -26,7 +26,7 @@ export default function SourcesPage() {
         <p className="mt-2 leading-7 text-muted">
           Vi arbetar endast med aktuella uppgifter. Registret uppdateras vid varje ny synk mot SCB, och utdraget tas
           alltid från den senaste uppdateringen. Äldre register används inte. Det är inte en realtidsström. Nya bolag
-          kommer med. Bolag som avregistrerats, är inaktiva eller har näringsförbud tas ur filen du köper.
+          kommer med. Bolag som avregistrerats, är inaktiva eller har näringsförbud tas ur filen ni köper.
         </p>
       </section>
       <section>

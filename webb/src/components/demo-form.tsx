@@ -14,7 +14,7 @@ export function DemoForm() {
   function submit(event: FormEvent) {
     event.preventDefault();
     const next: Record<string, string> = {};
-    if (name.trim().length < 2) next.name = "Ange ditt namn.";
+    if (name.trim().length < 2) next.name = "Ange ert namn.";
     if (company.trim().length < 2) next.company = "Ange företaget.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) next.email = "Ange en e-postadress.";
     setErrors(next);

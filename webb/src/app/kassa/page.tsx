@@ -27,7 +27,7 @@ export default async function CheckoutPage({
       </Link>
       <h1 className="mt-3 font-serif text-5xl tracking-tight">Kassa</h1>
       <p className="mt-3 max-w-xl text-muted">
-        Du betalar som gäst. Inget konto krävs, och filen skickas till e-postadressen. {describeSelection(selection)}.{" "}
+        Ni betalar som gäst. Inget konto krävs, och filen skickas till e-postadressen. {describeSelection(selection)}.{" "}
         {companies.toLocaleString("sv-SE")} {urval.source === "register" ? "bolag" : "exempelbolag"} i urvalet.
       </p>
       {companies === 0 ? (

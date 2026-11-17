@@ -11,14 +11,14 @@ export function AudienceCounter() {
   const result = useMemo(() => countAudience({ sni, county, employees }), [sni, county, employees]);
   const headline =
     result.decisionMakers > 0
-      ? `Vi hittade ${result.decisionMakers.toLocaleString("sv-SE")} beslutsfattare som matchar ditt urval.`
-      : `Vi hittade ${result.companies.toLocaleString("sv-SE")} bolag som matchar ditt urval.`;
+      ? `Vi hittade ${result.decisionMakers.toLocaleString("sv-SE")} beslutsfattare som matchar ert urval.`
+      : `Vi hittade ${result.companies.toLocaleString("sv-SE")} bolag som matchar ert urval.`;
 
   return (
     <section id="raknare" className="band-mint">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Aktuellt urval</p>
-        <h2 className="mt-3 max-w-3xl text-4xl tracking-tight">Se antalet innan du köper.</h2>
+        <h2 className="mt-3 max-w-3xl text-4xl tracking-tight">Se antalet innan ni köper.</h2>
         <p className="mt-3 max-w-2xl text-lg leading-8 text-muted">
           Välj bransch, län och antal anställda. Siffran ändras direkt och kommer från det register som är inkopplat
           just nu.
