@@ -9,6 +9,8 @@ export type Company = {
   sni: string;
   industry: string;
   form: string;
+  county: string;
+  employees: string;
   phones: string[];
   signatoryPhones: string[];
   emails: string[];
@@ -55,6 +57,73 @@ export const INDUSTRIES: { sni: string; label: string }[] = [
   { sni: "96021", label: "Frisörsalonger" },
   { sni: "69201", label: "Redovisning" },
 ];
+
+
+const COUNTY_BY_CITY: Record<string, string> = {
+  Stockholm: "Stockholms län",
+  Malmö: "Skåne län",
+  Göteborg: "Västra Götalands län",
+  Umeå: "Västerbottens län",
+  Västerås: "Västmanlands län",
+  Uppsala: "Uppsala län",
+  Linköping: "Östergötlands län",
+  Helsingborg: "Skåne län",
+};
+
+const EMPLOYEE_BY_ORG: Record<string, string> = {
+  "559100-1001": "10–19",
+  "559100-1002": "5–9",
+  "559100-1003": "1–4",
+  "559100-1004": "20–49",
+  "559100-1005": "10–19",
+  "559100-1006": "5–9",
+  "559100-1007": "20–49",
+  "559100-1008": "50–99",
+  "559100-1009": "100–199",
+  "559100-1010": "1–4",
+  "559100-1011": "5–9",
+  "559100-1012": "0",
+  "559100-1013": "50–99",
+  "559100-1014": "1–4",
+  "559100-1015": "10–19",
+  "559100-1016": "20–49",
+  "559100-1017": "50–99",
+  "559100-1018": "5–9",
+  "559100-1019": "1–4",
+  "559100-1020": "5–9",
+  "559100-1021": "0",
+  "559100-1022": "10–19",
+  "559100-1023": "20–49",
+  "559100-1024": "5–9",
+};
+
+/** Län som används i urvalet. Alla län finns med, även när exempelregistret saknar bolag där. */
+export const COUNTIES = [
+  "Stockholms län",
+  "Uppsala län",
+  "Södermanlands län",
+  "Östergötlands län",
+  "Jönköpings län",
+  "Kronobergs län",
+  "Kalmar län",
+  "Gotlands län",
+  "Blekinge län",
+  "Skåne län",
+  "Hallands län",
+  "Västra Götalands län",
+  "Värmlands län",
+  "Örebro län",
+  "Västmanlands län",
+  "Dalarnas län",
+  "Gävleborgs län",
+  "Västernorrlands län",
+  "Jämtlands län",
+  "Västerbottens län",
+  "Norrbottens län",
+];
+
+/** Storleksklasser i samma indelning som SCB brukar redovisa anställda. */
+export const EMPLOYEE_BANDS = ["0", "1–4", "5–9", "10–19", "20–49", "50–99", "100–199", "200 eller fler"];
 
 /** Påhittade bolag. Tomma kontaktfält är tomma med flit. */
 export const COMPANIES: Company[] = [
@@ -128,7 +197,50 @@ function company(
   form: string,
 ): Company {
   const industry = INDUSTRIES.find((item) => item.sni === sni)?.label ?? sni;
-  return { orgNr, name, street, postalCode, city, sni, industry, form, phones, signatoryPhones, emails };
+  return {
+    orgNr,
+    name,
+    street,
+    postalCode,
+    city,
+    sni,
+    industry,
+    form,
+    county: COUNTY_BY_CITY[city] ?? "",
+    employees: EMPLOYEE_BY_ORG[orgNr] ?? "",
+    phones,
+    signatoryPhones,
+    emails,
+  };
+}
+
+
+export function lookupCompanies(query: string): Company[] {
+  const raw = fold(query.trim());
+  if (raw.length < 2) return [];
+  const digits = query.replace(/\D/g, "");
+  return COMPANIES.filter((item) => {
+    const org = item.orgNr.replace("-", "");
+    return (
+      fold(item.name).includes(raw) ||
+      fold(item.city).includes(raw) ||
+      (digits.length >= 2 && (org.includes(digits) || item.sni.startsWith(digits)))
+    );
+  }).slice(0, 8);
+}
+
+export function countAudience(input: { sni: string; county: string; employees: string }): {
+  companies: number;
+  decisionMakers: number;
+} {
+  const rows = COMPANIES.filter((item) => {
+    if (input.sni && item.sni !== input.sni) return false;
+    if (input.county && item.county !== input.county) return false;
+    if (input.employees && item.employees !== input.employees) return false;
+    return true;
+  });
+  const decisionMakers = rows.reduce((sum, item) => sum + item.signatoryPhones.length, 0);
+  return { companies: rows.length, decisionMakers };
 }
 
 export function legalFormLabel(code: string): string {

@@ -21,6 +21,9 @@ export function SiteHeader() {
           <Link className="hidden md:inline" href="/#sa-funkar-det">
             Så funkar det
           </Link>
+          <Link className="hidden md:inline" href="/smakprov">
+            Smakprov
+          </Link>
           <Link className="hidden lg:inline" href="/bransch">
             Branscher
           </Link>

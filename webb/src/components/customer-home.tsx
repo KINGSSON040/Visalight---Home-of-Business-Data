@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ListBuilder } from "@/components/builder";
+import { HomeMore } from "@/components/home-more";
 import {
   describeSelection,
   hasCompleteBasics,
@@ -57,9 +58,9 @@ export function CustomerHome({ initial }: { initial: Selection }) {
             Verifierad, uppdaterad och färsk företagsdata.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-white/88">
-            VisaLight arbetar med verifierad, uppdaterad och färsk företagsdata från officiella register.
-            Vi uppdaterar databasen och erbjuder bara aktiva bolag, så konkurs, inaktiva bolag och bolag
-            med näringsförbud inte kommer med i en fil du köper.
+            VisaLight arbetar med verifierad, uppdaterad och färsk företagsdata från SCB:s allmänna företagsregister.
+            Vid varje synk kommer nya bolag med, och konkurs, inaktiva bolag och bolag med näringsförbud
+            lämnas utanför filen du köper.
           </p>
           <p className="mt-3 max-w-xl text-base leading-7 text-white/75">
             Saknar källan ett värde lämnas fältet tomt. Du behöver inget konto för att köpa.
@@ -126,6 +127,8 @@ export function CustomerHome({ initial }: { initial: Selection }) {
           </ol>
         </div>
       </section>
+
+      <HomeMore />
 
       <section aria-labelledby="exempel-statistik" className="border-t border-line bg-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
