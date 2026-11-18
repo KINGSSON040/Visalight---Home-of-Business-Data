@@ -68,8 +68,8 @@ function Sparkline({ values }: { values: number[] }) {
     <svg viewBox="0 0 100 32" preserveAspectRatio="none" className="mt-2 h-10 w-full" role="img" aria-label="Nya företag per månad, senaste tolv månaderna">
       <defs>
         <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#1fe08a" stopOpacity="0.4" />
-          <stop offset="1" stopColor="#1fe08a" stopOpacity="0" />
+          <stop offset="0" stopColor="#00a85e" stopOpacity="0.4" />
+          <stop offset="1" stopColor="#00a85e" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={`0,32 ${points.join(" ")} 100,32`} fill="url(#spark-fill)" />

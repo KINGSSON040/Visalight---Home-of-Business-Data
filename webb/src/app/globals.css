@@ -179,11 +179,11 @@ section[id],
   --line: #ecdfe8;
   --card: #ffffff;
   --green: #00a85e;
-  --green-soft: #ddfbea;
+  --green-soft: #00a85e;
   --rust: #e0244f;
   --sea: #00a85e;
-  --sea-bright: #1fe08a;
-  --sea-deep: #008a4c;
+  --sea-bright: #00a85e;
+  --sea-deep: #00a85e;
   --amber: #ffcc00;
   --amber-soft: #fff3bf;
   --foam: #fdeef7;
@@ -319,9 +319,14 @@ body:has(.customer-site) {
 .glow-gold { box-shadow: 0 0 0 1px rgba(27, 16, 35, 0.06), 0 16px 36px -28px rgba(27, 16, 35, 0.35); }
 
 .builder-card {
-  background: #c3f3de;
-  border: 1px solid #a4e3c8;
+  background: #00a85e;
+  border: 1px solid #00a85e;
   box-shadow: 0 16px 40px -28px rgba(27, 16, 35, 0.35);
+  color: #1b1023;
+}
+
+.builder-card .text-muted {
+  color: #1b1023;
 }
 
 .price-figure {
@@ -379,9 +384,9 @@ body:has(.customer-site) {
 .chip:hover { background: #faf7f8; }
 
 .chip[aria-pressed="true"] {
-  border-color: #00a85e;
-  background: #e7f6ee;
-  color: #046b3a;
+  border-color: #fff;
+  background: #00a85e;
+  color: #1b1023;
 }
 
 .addon-chip {
@@ -394,15 +399,16 @@ body:has(.customer-site) {
 .addon-chip:hover { background: #faf7f8; }
 
 .addon-chip[aria-pressed="true"] {
-  border-color: #00a85e;
-  background: #e7f6ee;
+  border-color: #fff;
+  background: #00a85e;
+  color: #1b1023;
 }
 
 .brick,
 .brick.region {
-  background: #e7f8ee;
-  color: #046b3a;
-  box-shadow: inset 0 0 0 1px #00a85e;
+  background: #00a85e;
+  color: #1b1023;
+  box-shadow: inset 0 0 0 1px #fff;
 }
 
 .field-box {
@@ -412,7 +418,7 @@ body:has(.customer-site) {
 
 .field-box:focus-within {
   border-color: #00a85e;
-  box-shadow: 0 0 0 4px rgba(31, 224, 138, 0.22);
+  box-shadow: 0 0 0 4px rgba(0, 168, 94, 0.28);
 }
 
 .step-no {
@@ -429,11 +435,11 @@ body:has(.customer-site) {
 .bar-track { background: #f3e9f0; }
 
 .bar-fill {
-  background: linear-gradient(90deg, #00b864, #1fe08a);
+  background: #00a85e;
   transition: width 1.1s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.bar-fill.magenta { background: linear-gradient(90deg, #00b864, #1fe08a); }
+.bar-fill.magenta { background: #00a85e; }
 
 .marquee { mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
 

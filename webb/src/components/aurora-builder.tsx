@@ -76,7 +76,7 @@ export function AuroraBuilder({
 
   return (
     <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-2xl">
-      <p className="border-b border-[#a4e3c8] px-4 pt-3 pb-2.5 text-xs leading-5 text-muted sm:px-5">
+      <p className="border-b border-white/40 px-4 pt-3 pb-2.5 text-xs leading-5 text-muted sm:px-5">
         Registret senast uppdaterat: {updatedLabel}. Siffran följer den senaste uppdateringen.
       </p>
       <div className="space-y-3 p-4 sm:p-5">
@@ -214,7 +214,7 @@ function AddonChip({ on, onToggle, label, price }: { on: boolean; onToggle: () =
     <button type="button" aria-pressed={on} onClick={onToggle} className="addon-chip inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold">
       <span
         aria-hidden="true"
-        className={`inline-flex h-4 w-4 items-center justify-center rounded-full text-[0.62rem] font-bold ${on ? "bg-neon text-white" : "border border-ink/30"}`}
+        className={`inline-flex h-4 w-4 items-center justify-center rounded-full text-[0.62rem] font-bold ${on ? "bg-white text-neon" : "border border-ink/30"}`}
       >
         {on ? "✓" : ""}
       </span>
