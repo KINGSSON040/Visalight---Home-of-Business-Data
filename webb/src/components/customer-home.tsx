@@ -123,10 +123,18 @@ export function CustomerHome({
             Alla Sveriges företag.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-            Ni hämtar ett utdrag med de aktiva bolag ni vill nå: namn, adress, bransch och de kontaktfält ni väljer. Antal och pris syns direkt.
+            Bygg listan. Se priset. Betala en gång.
           </p>
           <p className="mt-3 max-w-xl text-base leading-7 text-muted">
-            Ingen prenumeration och ingen inloggning. Välj <strong className="font-bold text-ink">bransch</strong>, <strong className="font-bold text-ink">ort</strong> och <strong className="font-bold text-ink">SNI</strong>, och se vad utdraget kostar innan ni bestämmer er.
+            Listan innehåller de aktiva bolag ni valt, med namn, adress, bransch och de kontaktfält ni kryssar i. Vill ni hellre ha hjälp kan ni{" "}
+            <a href="#kontakt" className="font-semibold text-ink underline-offset-4 hover:underline">
+              ringa
+            </a>{" "}
+            eller{" "}
+            <Link href="/demo?arende=tid" className="font-semibold text-ink underline-offset-4 hover:underline">
+              boka tid
+            </Link>
+            .
           </p>
           <p className="access-line mt-4 max-w-xl">{FREE_ACCESS}</p>
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">

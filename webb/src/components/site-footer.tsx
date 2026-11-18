@@ -23,7 +23,7 @@ export function SiteFooter({
         <p className="text-sm leading-6 text-muted">
           {SELLER.line}
         </p>
-        <p className="text-sm leading-6 text-muted">
+        <p id="kontakt" className="text-sm leading-6 text-muted">
           Telefon: numret läggs in när det finns. Vill ni inte köpa själva kan ni{" "}
           <Link href="/demo?arende=meddelande" className="font-semibold text-ink hover:underline">skriva ett meddelande</Link>,{" "}
           <Link href="/demo?arende=tid" className="font-semibold text-ink hover:underline">boka tid</Link>{" "}
