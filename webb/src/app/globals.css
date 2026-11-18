@@ -173,17 +173,17 @@ section[id],
 
 /* Kundsidan: ljust norrsken. CRM ligger utanför .customer-site och behåller sina färger. */
 .customer-site {
-  --paper: #f5f4f2;
+  --paper: #f6efe6;
   --ink: #1b1023;
   --muted: #574862;
-  --line: #ecdfe8;
+  --line: #e6ddd4;
   --card: #ffffff;
-  --green: #00a85e;
-  --green-soft: #00a85e;
+  --green: #1b1023;
+  --green-soft: #f3ebe3;
   --rust: #e0244f;
-  --sea: #00a85e;
-  --sea-bright: #00a85e;
-  --sea-deep: #00a85e;
+  --sea: #1b1023;
+  --sea-bright: #1b1023;
+  --sea-deep: #1b1023;
   --amber: #ffcc00;
   --amber-soft: #fff3bf;
   --foam: #fdeef7;
@@ -210,17 +210,17 @@ section[id],
 }
 
 .customer-site ::selection {
-  background: #ff3dbb;
-  color: #fff;
+  background: #e7d7c4;
+  color: #1b1023;
 }
 
 .customer-site :focus-visible {
-  outline: 3px solid #d6007a;
+  outline: 3px solid #1b1023;
   outline-offset: 2px;
 }
 
 body:has(.customer-site) {
-  background: #f5f4f2;
+  background: #f6efe6;
 }
 
 /* Norrskenet: en svag glöd bara högst upp. Rörelsen är kvar, men diskret. */
@@ -254,7 +254,7 @@ body:has(.customer-site) {
   right: -10%;
   width: 58%;
   height: 420px;
-  background: radial-gradient(closest-side, rgba(214, 0, 122, 0.07), transparent 74%);
+  background: radial-gradient(closest-side, rgba(27, 16, 35, 0.05), transparent 74%);
   animation: aurora-b 30s ease-in-out infinite alternate;
 }
 
@@ -284,7 +284,7 @@ body:has(.customer-site) {
 }
 
 .aurora-text {
-  color: #d6007a;
+  color: #1b1023;
 }
 
 .section-calm {
@@ -448,14 +448,14 @@ body:has(.customer-site) {
   box-shadow: 0 24px 50px -20px rgba(27, 16, 35, 0.35);
 }
 
-.bar-track { background: #f3e9f0; }
+.bar-track { background: #e7ddd2; }
 
 .bar-fill {
-  background: #f0a3cc;
+  background: #1b1023;
   transition: width 1.1s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.bar-fill.magenta { background: #d6007a; }
+.bar-fill.magenta { background: #1b1023; }
 
 .marquee { mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
 

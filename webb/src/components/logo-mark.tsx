@@ -15,13 +15,13 @@ export function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
           </feMerge>
         </filter>
       </defs>
-      <rect x="1" y="1" width="30" height="30" rx="10" fill="url(#vl-sky)" stroke="#ff3dbb" strokeWidth="1.4" />
+      <rect x="1" y="1" width="30" height="30" rx="10" fill="url(#vl-sky)" stroke="#1b1023" strokeWidth="1.4" />
       <g filter="url(#vl-glow)" fill="none" strokeLinecap="round">
-        <path d="M5 16.2c5.4-.4 8.6-2.6 12.2-3.8 2.2-.7 3.2-1.2 3.8-1.6" stroke="#e0007a" strokeWidth="2.6" />
-        <path d="M4.4 21.4c6.2-.6 9.8-3.8 13.8-5.2 2.8-.9 5-1.5 7.2-2.8" stroke="#ff8fd2" strokeWidth="2.3" />
-        <path d="M6 26.2c5.4-1.3 8.8-4.4 12.8-6.1 2.8-1.1 5-1.7 7.2-3" stroke="#00c26e" strokeWidth="2.5" />
+        <path d="M5 16.2c5.4-.4 8.6-2.6 12.2-3.8 2.2-.7 3.2-1.2 3.8-1.6" stroke="#1b1023" strokeWidth="2.6" />
+        <path d="M4.4 21.4c6.2-.6 9.8-3.8 13.8-5.2 2.8-.9 5-1.5 7.2-2.8" stroke="#1b1023" strokeWidth="2.3" />
+        <path d="M6 26.2c5.4-1.3 8.8-4.4 12.8-6.1 2.8-1.1 5-1.7 7.2-3" stroke="#1b1023" strokeWidth="2.5" />
       </g>
-      <path fill="#ffc400" d="M26.6 4.2 27.3 6.1 29.2 6.8 27.3 7.5 26.6 9.4 25.9 7.5 24 6.8 25.9 6.1Z" />
+      <path fill="#1b1023" d="M26.6 4.2 27.3 6.1 29.2 6.8 27.3 7.5 26.6 9.4 25.9 7.5 24 6.8 25.9 6.1Z" />
     </svg>
   );
 }
@@ -43,10 +43,10 @@ export function BrandLockup({
         <span
           className={`font-display block truncate leading-none font-extrabold tracking-tight ${compact ? "text-xl sm:text-2xl" : "text-2xl"} ${light ? "text-white" : "text-ink"}`}
         >
-          Visa<span className="text-neon">Light</span>
+          Visa<span className={light ? "text-white" : "text-ink"}>Light</span>
         </span>
         {subtitle ? (
-          <span className={`mt-0.5 block truncate text-[0.62rem] uppercase tracking-[0.18em] sm:text-[0.68rem] ${light ? "text-white/80" : "text-magenta"}`}>
+          <span className={`mt-0.5 block truncate text-[0.62rem] uppercase tracking-[0.18em] sm:text-[0.68rem] ${light ? "text-white/80" : "text-ink"}`}>
             {subtitle}
           </span>
         ) : null}

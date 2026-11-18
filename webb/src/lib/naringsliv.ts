@@ -116,10 +116,10 @@ export function exampleStats(): RegisterStats {
     ),
     byCounty,
     growing: [
-      { sni: "62010", label: "Datakonsulter", recent: 420, previous: 356, changePct: 18 },
-      { sni: "96220", label: "Skönhetsvård", recent: 122, previous: 107, changePct: 14 },
-      { sni: "41200", label: "Byggande av hus", recent: 388, previous: 356, changePct: 9 },
-      { sni: "49410", label: "Vägtransport", recent: 113, previous: 107, changePct: 6 },
+      { sni: "62010", label: "Dataprogrammering", recent: 420, previous: 356, changePct: 18 },
+      { sni: "96220", label: "Skönhetsvård och andra skönhetsbehandlingar", recent: 122, previous: 107, changePct: 14 },
+      { sni: "41200", label: "Byggande av bostadshus och andra byggnader", recent: 388, previous: 356, changePct: 9 },
+      { sni: "49410", label: "Vägtransport, godstrafik", recent: 113, previous: 107, changePct: 6 },
     ],
   };
 }
@@ -242,7 +242,7 @@ export const PRICE_EXAMPLES = [
     href: "/?sni=41200&tel=1&epost=0&firma=0#urval",
   },
   {
-    title: "Datakonsulter i hela Sverige",
+    title: "Dataprogrammering i hela Sverige",
     detail: "14 600 aktiva bolag med telefon, e-post och beslutsfattare",
     counts: { companies: 14600, phones: 9052, signatoryPhones: 5110, emails: 5986 },
     href: "/?sni=62010#urval",

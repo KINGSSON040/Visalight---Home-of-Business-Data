@@ -23,7 +23,7 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
         <CountUp value={stats.total} className="font-display mt-1 text-4xl text-ink font-extrabold tracking-tight" />
         <p className="mt-1 text-xs text-muted">som inte spärrat reklam</p>
         {stats.source === "example" ? <p className="mt-1 text-xs leading-5 text-muted">Exempelsiffror. Registret är inte inkopplat.</p> : null}
-        <Link href="/#urval" className="mt-auto pt-3 text-sm font-bold text-magenta hover:underline">
+        <Link href="/#urval" className="mt-auto pt-3 text-sm font-bold text-ink hover:underline">
           Bygg utdrag på alla {formatCount(stats.total)} →
         </Link>
       </article>
@@ -31,7 +31,7 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
         <p className="text-sm font-medium text-muted">Nya företag senaste månaden</p>
         <CountUp value={stats.newLastMonth} className="font-display mt-1 text-4xl font-extrabold tracking-tight text-ink" />
         <Sparkline values={stats.monthly.map((item) => item.count)} />
-        <Link href="/statistik#nya-bolag" className="mt-auto pt-2 text-sm font-semibold text-magenta hover:underline">
+        <Link href="/statistik#nya-bolag" className="mt-auto pt-2 text-sm font-semibold text-ink hover:underline">
           Se var de startar →
         </Link>
       </article>
@@ -40,7 +40,7 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
         <p className="font-display mt-1 text-2xl leading-tight font-extrabold text-ink">{topIndustry?.label ?? "Okänd"}</p>
         {topIndustry ? <CountUp value={topIndustry.count} suffix=" bolag" className="mt-1 text-lg font-semibold text-ink" /> : null}
         {topIndustry ? (
-          <Link href={builderHrefForSni(topIndustry.sni)} className="mt-auto pt-3 text-sm font-semibold text-magenta hover:underline">
+          <Link href={builderHrefForSni(topIndustry.sni)} className="mt-auto pt-3 text-sm font-semibold text-ink hover:underline">
             Bygg ett utdrag på dem →
           </Link>
         ) : null}
@@ -50,7 +50,7 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
         <p className="font-display mt-1 text-2xl leading-tight font-extrabold">{topCounty?.label ?? "Okänt"}</p>
         {topCounty ? <CountUp value={topCounty.count} suffix=" bolag" className="mt-1 text-lg font-semibold text-ink" /> : null}
         {topCounty ? (
-          <Link href={builderHrefForCounty(topCounty.label)} className="mt-auto pt-3 text-sm font-bold text-magenta hover:underline">
+          <Link href={builderHrefForCounty(topCounty.label)} className="mt-auto pt-3 text-sm font-bold text-ink hover:underline">
             Bygg ett utdrag i länet →
           </Link>
         ) : null}
@@ -69,12 +69,12 @@ function Sparkline({ values }: { values: number[] }) {
     <svg viewBox="0 0 100 32" preserveAspectRatio="none" className="mt-2 h-10 w-full" role="img" aria-label="Nya företag per månad, senaste tolv månaderna">
       <defs>
         <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#d6007a" stopOpacity="0.35" />
-          <stop offset="1" stopColor="#d6007a" stopOpacity="0" />
+          <stop offset="0" stopColor="#1b1023" stopOpacity="0.2" />
+          <stop offset="1" stopColor="#1b1023" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={`0,32 ${points.join(" ")} 100,32`} fill="url(#spark-fill)" />
-      <polyline points={points.join(" ")} fill="none" stroke="#d6007a" strokeWidth="1.8" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+      <polyline points={points.join(" ")} fill="none" stroke="#1b1023" strokeWidth="1.8" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -136,7 +136,7 @@ export function Growing({ stats }: { stats: RegisterStats }) {
                 <span className="w-4 text-xs font-semibold text-muted">{index + 1}</span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-semibold">{row.label}</span>
-                  <Link href={builderHrefForSni(row.sni)} className="text-xs font-semibold text-magenta hover:underline">
+                  <Link href={builderHrefForSni(row.sni)} className="text-xs font-semibold text-ink hover:underline">
                     {size ? `Utdrag på ${formatCount(size)} bolag` : "Utdrag på branschen"}
                   </Link>
                 </span>
@@ -183,7 +183,7 @@ export function NaringslivSection({ stats, headingId = "siffror" }: { stats: Reg
       <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Ur registret</p>
+          <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Ur registret</p>
           <h2 id={headingId} className="mt-2 text-2xl font-extrabold tracking-tight text-balance sm:text-3xl">
             Sveriges näringsliv i siffror
           </h2>
@@ -192,7 +192,7 @@ export function NaringslivSection({ stats, headingId = "siffror" }: { stats: Reg
             Hur många aktiva företag som inte spärrat reklam, var de finns och vilka branscher som växer. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. {stats.source === "example" ? "Talen är exempel tills registret är inkopplat." : "Siffran följer den senaste uppdateringen."} En rad öppnar byggaren med branschen eller länet ifyllt.
           </p>
         </div>
-        <Link href="/statistik" className="text-sm font-semibold text-magenta hover:underline">
+        <Link href="/statistik" className="text-sm font-semibold text-ink hover:underline">
           All statistik
         </Link>
       </div>

@@ -23,7 +23,7 @@ export default function StatistikPage() {
   const example = stats.source === "example" || registerStamp().example;
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
-      <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Statistik</p>
+      <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Statistik</p>
       <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">
         Sveriges näringsliv <span className="aurora-text">i siffror</span>
       </h1>

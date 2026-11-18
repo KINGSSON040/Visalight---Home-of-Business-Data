@@ -66,7 +66,7 @@ export default async function NewCompaniesPage({
         Registrerade de senaste {count.days} dagarna
       </p>
       <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
-        <span className="font-display text-[2.9rem] leading-none font-extrabold tracking-[-0.03em] text-magenta sm:text-[3.6rem]">
+        <span className="font-display text-[2.9rem] leading-none font-extrabold tracking-[-0.03em] text-ink sm:text-[3.6rem]">
           {count.companies.toLocaleString("sv-SE")}
         </span>
         <span className="font-display text-lg font-bold">bolag</span>

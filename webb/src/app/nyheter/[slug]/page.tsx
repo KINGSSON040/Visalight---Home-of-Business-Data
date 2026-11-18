@@ -32,7 +32,7 @@ export default async function NyhetPage({ params }: { params: Promise<{ slug: st
         ← Alla nyheter
       </Link>
       <p className="mt-6 flex flex-wrap items-center gap-2 text-sm font-semibold">
-        <span className="text-magenta">{post.kind}</span>
+        <span className="text-ink">{post.kind}</span>
         <time dateTime={post.date} className="text-muted">
           {formatNewsDate(post.date)}
         </time>

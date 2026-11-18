@@ -83,11 +83,11 @@ export type Industry = {
 /** SNI 2025. words är det folk skriver, label är SCB:s namn. */
 export const INDUSTRIES: Industry[] = [
   { sni: "56110", code: "56.110", label: "Restaurangverksamhet", words: ["restaurang", "restauranger"], legacy: ["56101"] },
-  { sni: "41200", code: "41.200", label: "Byggande av hus", words: ["bygg", "byggföretag"] },
-  { sni: "62010", code: "62.010", label: "Datakonsulter", words: ["data", "programmering"] },
-  { sni: "47112", code: "47.112", label: "Livsmedelshandel", words: ["livsmedel", "mataffär"] },
-  { sni: "86211", code: "86.211", label: "Vårdcentraler", words: ["vård", "vårdcentral"] },
-  { sni: "49410", code: "49.410", label: "Vägtransport", words: ["åkeri", "transport"] },
+  { sni: "41200", code: "41.200", label: "Byggande av bostadshus och andra byggnader", words: ["bygg", "byggföretag"] },
+  { sni: "62010", code: "62.010", label: "Dataprogrammering", words: ["data", "programmering"] },
+  { sni: "47112", code: "47.112", label: "Livsmedelshandel med brett sortiment, ej varuhus eller stormarknad", words: ["livsmedel", "mataffär"] },
+  { sni: "86211", code: "86.211", label: "Primärvårdsmottagningar med läkare m.m.", words: ["vård", "vårdcentral"] },
+  { sni: "49410", code: "49.410", label: "Vägtransport, godstrafik", words: ["åkeri", "transport"] },
   {
     sni: "96210",
     code: "96.210",
@@ -99,7 +99,7 @@ export const INDUSTRIES: Industry[] = [
   {
     sni: "96220",
     code: "96.220",
-    label: "Skönhetsvård",
+    label: "Skönhetsvård och andra skönhetsbehandlingar",
     words: ["skönhet", "skönhetssalong", "skönhetssalonger", "skönhetsbehandling"],
     legacy: ["96022"],
     note: "skönhetssalonger, inte frisörer",
@@ -107,7 +107,7 @@ export const INDUSTRIES: Industry[] = [
   {
     sni: "69201",
     code: "69.201",
-    label: "Redovisning och bokföring",
+    label: "Redovisning och bokföring; skatterådgivning",
     words: ["redovisning", "redovisningsbyrå", "bokföring"],
   },
   {

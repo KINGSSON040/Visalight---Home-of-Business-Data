@@ -20,27 +20,18 @@ const STEPS = [
     title: "Ange sökord",
     text: "Skriv bransch, ort eller SNI-kod i byggaren. Sökningen gäller aktiva företag som inte spärrat reklam.",
     icon: "search",
-    tone: "text-[#a67c00]",
-    wash: "bg-[#fff6d6]",
-    rule: "border-[#ffc400]",
   },
   {
     no: "02",
     title: "Välj filter",
     text: "Begränsa med län, bolagsform eller storlek. Lägg till telefon, e-post eller beslutsfattare om ni behöver det.",
     icon: "filter",
-    tone: "text-magenta",
-    wash: "bg-[#fdeef7]",
-    rule: "border-[#d6007a]",
   },
   {
     no: "03",
     title: "Se pris direkt",
     text: "Antal och pris står under urvalet, exklusive moms, innan ni förhandsbokar. Ingen prenumeration krävs.",
     icon: "price",
-    tone: "text-[#00a85e]",
-    wash: "bg-[#e8f8ef]",
-    rule: "border-[#00c26e]",
   },
 ] as const;
 
@@ -146,8 +137,8 @@ export function CustomerHome({
       <section className="border-b border-line bg-white">
         <div className="mx-auto grid max-w-6xl items-start gap-x-12 gap-y-8 px-4 pt-8 pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:pt-12 lg:pb-14">
         <div className="min-w-0 lg:pt-2">
-          <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Företagsdata</p>
-          <h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] text-[#b8860b] sm:text-5xl lg:text-6xl">
+          <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Företagsdata</p>
+          <h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] text-ink sm:text-5xl lg:text-6xl">
             Alla Sveriges företag.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-muted">
@@ -191,8 +182,8 @@ export function CustomerHome({
               className="step-card rounded-2xl bg-white px-6 py-7 ring-1 ring-ink/10"
               style={{ animationDelay: `${index * 90}ms` }}
             >
-              <div className={`flex items-center gap-3 border-t-4 pt-4 ${step.tone} ${step.rule}`}>
-                <span className={`inline-flex h-9 w-9 items-center justify-center rounded-full ${step.wash}`}>
+              <div className="flex items-center gap-3 border-t border-ink/15 pt-4 text-ink">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-ink/5">
                   <StepIcon name={step.icon} />
                 </span>
                 <p className="font-price text-xs font-bold tracking-[0.14em]">{step.no}</p>
@@ -253,7 +244,7 @@ export function CustomerHome({
               {fresh.example ? " Exempelsiffror. Registret är inte inkopplat." : ""}
             </p>
             <p className="mt-3 text-sm font-semibold">
-              <span className="font-display text-2xl font-extrabold text-magenta">{fresh.companies.toLocaleString("sv-SE")}</span> bolag de senaste 30 dagarna.
+              <span className="font-display text-2xl font-extrabold text-ink">{fresh.companies.toLocaleString("sv-SE")}</span> bolag de senaste 30 dagarna.
             </p>
           </div>
           <Link href="/nystartade-bolag" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">

@@ -493,7 +493,7 @@ function Result({
           <p className="flex flex-wrap items-baseline gap-x-2">
             <span
               data-urval-count={String(urval.companies)}
-              className={`big-count font-display text-[2.9rem] leading-none font-extrabold tracking-[-0.03em] text-magenta sm:text-[3.6rem] ${flare ? "flare" : ""} ${loading ? "opacity-85" : ""}`}
+              className={`big-count font-display text-[2.9rem] leading-none font-extrabold tracking-[-0.03em] text-ink sm:text-[3.6rem] ${flare ? "flare" : ""} ${loading ? "opacity-85" : ""}`}
             >
               {shown.toLocaleString("sv-SE")}
             </span>
@@ -545,7 +545,7 @@ function MobileBar({ watch, companies, priceOre }: { watch: React.RefObject<HTML
   if (hidden) return null;
   return (
     <a href="#urval" className="result-field fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-2xl px-4 py-2.5 shadow-xl lg:hidden">
-      <span className="font-display text-xl font-extrabold text-magenta tabular-nums">{companies.toLocaleString("sv-SE")}</span>
+      <span className="font-display text-xl font-extrabold text-ink tabular-nums">{companies.toLocaleString("sv-SE")}</span>
       <span className="price-figure font-price text-xs">företag · {Math.round(priceOre / 100).toLocaleString("sv-SE")} kr</span>
       <span className="rounded-lg border border-ink bg-white px-3 py-1 text-sm font-bold text-ink">Ändra</span>
     </a>
