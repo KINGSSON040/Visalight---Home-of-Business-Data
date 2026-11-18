@@ -250,12 +250,6 @@ export function CustomerHome({
       <section id="nystartade" aria-labelledby="nystartade-rubrik" className="border-t border-line">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
           <div className="fresh-live px-7 py-9 sm:px-10 sm:py-12">
-            <div className="fresh-glow" aria-hidden="true" />
-            <div className="fresh-signals" aria-hidden="true">
-              {Array.from({ length: 12 }, (_, index) => (
-                <span key={index} style={{ animationDelay: `${index * 0.22}s` }} />
-              ))}
-            </div>
             <div className="relative z-[1] flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 id="nystartade-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
@@ -264,12 +258,15 @@ export function CustomerHome({
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
                   För företag och personer som säljer till nya bolag. Bolagen kommer in från Bolagsverket, och filen uppdateras varje vecka. Många behöver bank, redovisning, försäkring, telefoni, webb och lokal.
                 </p>
-                {fresh.example ? (
+                {fresh.example || exampleDate ? (
                   <p className="mt-3 text-sm font-semibold">Registret är inte inkopplat.</p>
                 ) : (
-                  <p className="mt-3 text-sm font-semibold">
-                    <span className="font-display text-4xl font-extrabold tracking-tight text-ink">{fresh.companies.toLocaleString("sv-SE")}</span> bolag de senaste 30 dagarna.
-                  </p>
+                  <>
+                    <p className="mt-3 text-sm font-semibold">
+                      <span className="font-display text-4xl font-extrabold tracking-tight text-ink">{fresh.companies.toLocaleString("sv-SE")}</span> bolag de senaste 30 dagarna.
+                    </p>
+                    <p className="fresh-stamp mt-2 text-xs leading-5 text-muted">Från registret. Senast uppdaterat {updatedLabel}.</p>
+                  </>
                 )}
               </div>
               <Link href="/nystartade-bolag" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">
