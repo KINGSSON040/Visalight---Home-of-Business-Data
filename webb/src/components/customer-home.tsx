@@ -12,28 +12,37 @@ import { PUBLIC_FAQ } from "@/lib/public-faq";
 import { linkedIndustries } from "@/lib/topics";
 import type { UrvalResult } from "@/lib/urval";
 
-const FREE_ACCESS = "Ingen inloggning. Ingen prenumeration. Ingen bindningstid.";
-
 const STEPS = [
   {
     no: "01",
     title: "Ange sökord",
-    text: "Skriv bransch, ort eller SNI-kod i byggaren. Sökningen gäller aktiva företag som inte spärrat reklam.",
+    text: "Skriv bransch, ort eller SNI-kod i byggaren. Sökningen visar endast aktiva företag som inte spärrat reklam.",
     icon: "search",
+    tone: "text-[#9a1458]",
+    wash: "bg-[#fdeef6]",
+    rule: "border-[#d6007a]",
   },
   {
     no: "02",
     title: "Välj filter",
-    text: "Begränsa med län, bolagsform eller storlek. Lägg till telefon, e-post eller beslutsfattare om ni behöver det.",
+    text: "Avgränsa med län, bolagsform eller storlek. Lägg till telefon, e-postadress eller beslutsfattare om ni behöver det.",
     icon: "filter",
+    tone: "text-[#8a5a00]",
+    wash: "bg-[#fff6dc]",
+    rule: "border-[#e2b100]",
   },
   {
     no: "03",
     title: "Se pris direkt",
-    text: "Antal och pris står under urvalet, exklusive moms, innan ni förhandsbokar. Ingen prenumeration krävs.",
+    text: "Antal och pris visas direkt i byggaren, exklusive moms.",
     icon: "price",
+    tone: "text-[#0f6b45]",
+    wash: "bg-[#e8f7ef]",
+    rule: "border-[#1aa36a]",
   },
 ] as const;
+
+const ACCESS_POINTS = ["Ingen inloggning.", "Ingen prenumeration.", "Ingen bindningstid."];
 
 function StepIcon({ name }: { name: (typeof STEPS)[number]["icon"] }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -138,14 +147,14 @@ export function CustomerHome({
         <div className="mx-auto grid max-w-6xl items-start gap-x-12 gap-y-8 px-4 pt-8 pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:pt-12 lg:pb-14">
         <div className="min-w-0 lg:pt-2">
           <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Företagsdata</p>
-          <h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] text-ink sm:text-5xl lg:text-6xl">
+          <h1 className="hero-title mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] sm:text-5xl lg:text-6xl">
             Alla Sveriges företag.
           </h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-            Bygg listan. Se priset. Betala en gång.
+          <p className="mt-4 max-w-xl text-base leading-7 text-ink">
+            Välj bransch. Se priset. Köp direkt.
           </p>
           <p className="mt-3 max-w-xl text-base leading-7 text-muted">
-            Listan innehåller de aktiva bolag ni valt, med namn, adress, bransch och de kontaktfält ni kryssar i. Vill ni hellre ha hjälp kan ni{" "}
+            Listan innehåller de aktiva bolag ni valt, med namn, adress, bransch och det kontaktfält ni kryssar i. Vill ni hellre ha hjälp kan ni{" "}
             <a href="#kontakt" className="font-semibold text-ink underline-offset-4 hover:underline">
               ringa
             </a>{" "}
@@ -155,10 +164,17 @@ export function CustomerHome({
             </Link>
             .
           </p>
-          <p className="access-line mt-4 max-w-xl">{FREE_ACCESS}</p>
+          <ul className="mt-4 space-y-1 text-sm text-ink/80">
+            {ACCESS_POINTS.map((point) => (
+              <li key={point} className="flex items-center gap-2">
+                <span aria-hidden="true" className="text-[#9a1458]">✓</span>
+                {point}
+              </li>
+            ))}
+          </ul>
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
             <a href="#urval" className="btn-neon inline-flex h-11 items-center rounded-lg px-5 text-sm font-semibold">
-              Hämta ett utdrag
+              Skapa utdrag
             </a>
             <a href="#fortroende" className="text-sm font-semibold text-ink underline-offset-4 hover:underline">
               Källa och uppdatering
@@ -182,8 +198,8 @@ export function CustomerHome({
               className="step-card rounded-2xl bg-white px-6 py-7 ring-1 ring-ink/10"
               style={{ animationDelay: `${index * 90}ms` }}
             >
-              <div className="flex items-center gap-3 border-t border-ink/15 pt-4 text-ink">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-ink/5">
+              <div className={`flex items-center gap-3 border-t-4 pt-4 ${step.tone} ${step.rule}`}>
+                <span className={`inline-flex h-9 w-9 items-center justify-center rounded-full ${step.wash}`}>
                   <StepIcon name={step.icon} />
                 </span>
                 <p className="font-price text-xs font-bold tracking-[0.14em]">{step.no}</p>
@@ -307,7 +323,7 @@ export function CustomerHome({
             <p className="mt-3 max-w-md text-sm leading-6 text-muted">
               Priset är ett engångspris per utdrag, exklusive moms. Lägsta order {formatKronor(MINIMUM_ORE).replace(",00", "")} kr. Samma styckpris oavsett om urvalet är en bransch i en stad eller hela landet.
             </p>
-            <p className="access-line mt-4 max-w-md">{FREE_ACCESS}</p>
+            <p className="mt-4 max-w-md text-sm text-ink/80">Ingen inloggning. Ingen prenumeration. Ingen bindningstid.</p>
             <a href="#urval" className="btn-neon mt-5 inline-flex h-11 items-center rounded-lg px-5 text-sm font-semibold">
               Räkna på ert urval
             </a>
@@ -355,7 +371,7 @@ export function CustomerHome({
           <Link href="/smakprov" className="font-semibold text-ink hover:underline">
             Ladda ner ett smakprov
           </Link>{" "}
-          om ni vill se formatet innan ni förhandsbokar.
+          om ni vill se formatet.
         </p>
       </section>
 

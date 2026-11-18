@@ -22,7 +22,6 @@ const GROUPS = [
       { href: "/demo?arende=tid", label: "Boka tid" },
       { href: "/demo?arende=mote", label: "Boka möte" },
       { href: "/demo", label: "Boka 15 minuter" },
-      { href: "/kassa", label: "Förhandsboka" },
     ],
   },
   {

@@ -16,7 +16,7 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Hur betalar vi?",
-    a: "Beställning öppnar snart. Tills dess kan ni förhandsboka utdraget med e-post. Ingen betalning dras och ingen fil skickas.",
+    a: "Beställning öppnar snart. Ingen betalning dras och ingen fil skickas.",
   },
   {
     q: "Får vi kontakta bolagen?",

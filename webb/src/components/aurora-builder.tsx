@@ -95,11 +95,14 @@ export function AuroraBuilder({
 
   return (
     <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-2xl">
-      <p className="register-stamp ml-auto w-max max-w-[15rem] px-4 pt-2.5 text-right text-[0.6rem] leading-[1.35] sm:px-5">
-        {exampleDate
-          ? `Exempelsiffror. Registret är inte inkopplat. Datumet ${updatedLabel} är ett exempel.`
-          : `Registret senast uppdaterat: ${updatedLabel}. Siffran följer den senaste uppdateringen.`}
-      </p>
+      <div className="flex items-start justify-between gap-3 px-4 pt-3 sm:px-5">
+        <SelectionCount companies={urval.companies} loading={loading} />
+        <p className="register-stamp w-max max-w-[15rem] shrink-0 text-right text-[0.6rem] leading-[1.35]">
+          {exampleDate
+            ? `Exempelsiffror. Registret är inte inkopplat. Datumet ${updatedLabel} är ett exempel.`
+            : `Registret senast uppdaterat: ${updatedLabel}. Siffran följer den senaste uppdateringen.`}
+        </p>
+      </div>
       <div className="space-y-3 px-4 pt-2 pb-4 sm:px-5 sm:pb-5">
         <Step no="01" title="Bransch">
           <BrickSearch
@@ -453,6 +456,21 @@ function MoreFilters({ draft, onChange }: { draft: Selection; onChange: Patch })
   );
 }
 
+function SelectionCount({ companies, loading }: { companies: number; loading: boolean }) {
+  const shown = useCountUp(companies, { fromZero: true, duration: 1100 });
+  return (
+    <p className="min-w-0" aria-live="polite" aria-busy={loading}>
+      <span
+        data-urval-count={String(companies)}
+        className={`font-display text-3xl leading-none font-extrabold tracking-tight text-ink ${loading ? "opacity-85" : ""}`}
+      >
+        {shown.toLocaleString("sv-SE")}
+      </span>{" "}
+      <span className="text-base font-semibold">företag</span>
+    </p>
+  );
+}
+
 function Result({
   draft,
   urval,
@@ -465,36 +483,14 @@ function Result({
   const ref = useRef<HTMLDivElement>(null);
   const counts = pricedCounts(urval, draft);
   const price = priceForUrval(urval, draft);
-  const shown = useCountUp(urval.companies, { fromZero: true, duration: 1100 });
   const shownPrice = useCountUp(price.totalOre, { fromZero: true, duration: 1100 });
-  const [flare, setFlare] = useState(false);
   const counted = selectionForCount(draft) ?? draft;
-
-  useEffect(() => {
-    setFlare(true);
-    const timer = window.setTimeout(() => setFlare(false), 900);
-    return () => window.clearTimeout(timer);
-  }, [urval.companies]);
 
   return (
     <div ref={ref} className="result-field rounded-b-2xl px-4 pt-3.5 pb-3 sm:px-5">
-      <div className="flex items-center justify-between gap-2">
-        <p className="font-price text-[0.7rem] font-bold tracking-[0.14em] text-muted uppercase">
-          {selectionForCount(draft) ? "Aktiva i ert urval" : "Aktiva företag i dag"}
-        </p>
-      </div>
-      <div className="mt-0.5 flex flex-wrap items-end justify-between gap-x-4 gap-y-2" aria-live="polite" aria-busy={loading}>
+      <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2" aria-live="polite" aria-busy={loading}>
         <div className="min-w-0">
-          <p className="flex flex-wrap items-baseline gap-x-2">
-            <span
-              data-urval-count={String(urval.companies)}
-              className={`big-count font-display text-[2.9rem] leading-none font-extrabold tracking-[-0.03em] text-ink sm:text-[3.6rem] ${flare ? "flare" : ""} ${loading ? "opacity-85" : ""}`}
-            >
-              {shown.toLocaleString("sv-SE")}
-            </span>
-            <span className="font-display text-lg font-bold">företag</span>
-          </p>
-          <p className="mt-1 text-sm font-semibold">
+          <p className="text-sm font-semibold">
             <span data-urval-price className="price-figure font-price text-base font-bold">
               {formatKronor(shownPrice)} kr
             </span>{" "}
