@@ -94,16 +94,16 @@ export function AuroraBuilder({
   ];
 
   return (
-    <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-2xl">
-      <div className="flex items-start justify-between gap-3 px-4 pt-3 sm:px-5">
+    <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-3xl">
+      <div className="flex flex-col gap-3 px-5 pt-6 sm:flex-row sm:items-start sm:justify-between sm:px-7 sm:pt-7">
         <SelectionCount companies={urval.companies} loading={loading} />
-        <p className="register-stamp w-max max-w-[15rem] shrink-0 text-right text-[0.6rem] leading-[1.35]">
+        <p className="register-stamp w-max max-w-[15rem] shrink-0 text-right text-[0.6rem] leading-[1.35] sm:pt-2">
           {exampleDate
             ? `Exempelsiffror. Registret är inte inkopplat. Datumet ${updatedLabel} är ett exempel.`
             : `Registret senast uppdaterat: ${updatedLabel}. Siffran följer den senaste uppdateringen.`}
         </p>
       </div>
-      <div className="space-y-3 px-4 pt-2 pb-4 sm:px-5 sm:pb-5">
+      <div className="mx-3 mt-4 mb-3 space-y-4 rounded-2xl bg-white px-4 py-4 sm:mx-4 sm:px-5 sm:py-5">
         <Step no="01" title="Bransch">
           <BrickSearch
             kinds={["bransch"]}
@@ -462,11 +462,11 @@ function SelectionCount({ companies, loading }: { companies: number; loading: bo
     <p className="min-w-0" aria-live="polite" aria-busy={loading}>
       <span
         data-urval-count={String(companies)}
-        className={`font-display text-3xl leading-none font-extrabold tracking-tight text-ink ${loading ? "opacity-85" : ""}`}
+        className={`font-display text-5xl leading-none font-extrabold tracking-[-0.04em] text-ink sm:text-6xl ${loading ? "opacity-85" : ""}`}
       >
         {shown.toLocaleString("sv-SE")}
       </span>{" "}
-      <span className="text-base font-semibold">företag</span>
+      <span className="text-lg font-semibold">företag</span>
     </p>
   );
 }
@@ -487,11 +487,11 @@ function Result({
   const counted = selectionForCount(draft) ?? draft;
 
   return (
-    <div ref={ref} className="result-field rounded-b-2xl px-4 pt-3.5 pb-3 sm:px-5">
+    <div ref={ref} className="result-field rounded-b-3xl px-5 pt-4 pb-5 sm:px-7">
       <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2" aria-live="polite" aria-busy={loading}>
         <div className="min-w-0">
           <p className="text-sm font-semibold">
-            <span data-urval-price className="price-figure font-price text-base font-bold">
+            <span data-urval-price className="price-figure font-price text-xl font-bold">
               {formatKronor(shownPrice)} kr
             </span>{" "}
             <span className="text-muted">exkl. moms · Excel eller CSV</span>

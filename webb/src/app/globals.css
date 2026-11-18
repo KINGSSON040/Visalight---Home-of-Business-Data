@@ -470,6 +470,11 @@ body:has(.customer-site) {
 }
 
 .bar-fill.magenta { background: #1b1023; }
+.bar-fill.amber { background: #9a6b16; }
+
+.customer-site .site-footer {
+  background: #e4d0b4;
+}
 
 .marquee { mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
 

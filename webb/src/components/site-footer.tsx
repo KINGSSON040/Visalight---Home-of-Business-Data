@@ -51,8 +51,8 @@ export function SiteFooter({
   hideRegisterChip?: boolean;
 }) {
   return (
-    <footer className="theme-wash border-t border-line px-4 py-14 text-sm text-ink/80">
-      <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)]">
+    <footer className="site-footer border-t border-ink/10 px-4 py-20 text-sm text-ink/80">
+      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)]">
         <div className="space-y-4">
           <BrandLockup />
           <p className="max-w-sm leading-6">Färsk företagsdata för svenska bolag. Priser exkl. moms. Lägsta order 399 kr.</p>
@@ -72,11 +72,11 @@ export function SiteFooter({
           )}
         </div>
       </div>
-      <nav className="mx-auto mt-10 grid max-w-6xl gap-8 border-t border-line pt-8 sm:grid-cols-3" aria-label="Sidfot">
+      <nav className="mx-auto mt-14 grid max-w-6xl gap-10 border-t border-ink/15 pt-10 sm:grid-cols-3" aria-label="Sidfot">
         {GROUPS.map((group) => (
           <div key={group.title}>
-            <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">{group.title}</p>
-            <ul className="mt-3 space-y-2">
+            <p className="text-xs font-semibold tracking-[0.16em] text-ink uppercase">{group.title}</p>
+            <ul className="mt-4 space-y-2.5">
               {group.links.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="hover:text-ink hover:underline">

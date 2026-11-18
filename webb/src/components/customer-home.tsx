@@ -20,7 +20,6 @@ const STEPS = [
     icon: "search",
     tone: "text-[#9a1458]",
     wash: "bg-[#fdeef6]",
-    rule: "border-[#d6007a]",
   },
   {
     no: "02",
@@ -29,7 +28,6 @@ const STEPS = [
     icon: "filter",
     tone: "text-[#8a5a00]",
     wash: "bg-[#fff6dc]",
-    rule: "border-[#e2b100]",
   },
   {
     no: "03",
@@ -38,7 +36,6 @@ const STEPS = [
     icon: "price",
     tone: "text-[#0f6b45]",
     wash: "bg-[#e8f7ef]",
-    rule: "border-[#1aa36a]",
   },
 ] as const;
 
@@ -187,53 +184,53 @@ export function CustomerHome({
         </div>
       </section>
 
-      <section id="sa-funkar-det" aria-labelledby="steg" className="mx-auto max-w-6xl px-4 pt-6 pb-16">
-        <h2 id="steg" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+      <section id="sa-funkar-det" aria-labelledby="steg" className="mx-auto max-w-6xl px-4 pt-16 pb-20">
+        <h2 id="steg" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
           Så fungerar det
         </h2>
-        <ol className="mt-8 grid gap-5 md:grid-cols-3">
+        <ol className="mt-10 grid gap-5 md:grid-cols-3">
           {STEPS.map((step, index) => (
             <li
               key={step.no}
-              className="step-card rounded-2xl bg-white px-6 py-7 ring-1 ring-ink/10"
+              className={`step-card rounded-3xl px-6 py-8 ${step.wash}`}
               style={{ animationDelay: `${index * 90}ms` }}
             >
-              <div className={`flex items-center gap-3 border-t-4 pt-4 ${step.tone} ${step.rule}`}>
-                <span className={`inline-flex h-9 w-9 items-center justify-center rounded-full ${step.wash}`}>
+              <p className={`font-display text-5xl leading-none font-extrabold tracking-[-0.04em] ${step.tone}`}>{step.no}</p>
+              <div className="mt-8 flex items-center gap-3 text-ink">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/80">
                   <StepIcon name={step.icon} />
                 </span>
-                <p className="font-price text-xs font-bold tracking-[0.14em]">{step.no}</p>
+                <h3 className="text-xl font-extrabold tracking-tight">{step.title}</h3>
               </div>
-              <h3 className="mt-5 text-lg font-bold">{step.title}</h3>
-              <p className="mt-2 text-sm leading-7 text-ink/80">{step.text}</p>
+              <p className="mt-3 text-sm leading-7 text-ink/80">{step.text}</p>
             </li>
           ))}
         </ol>
       </section>
 
       <section id="fortroende" aria-labelledby="fortroende-rubrik" className="border-y border-line bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <h2 id="fortroende-rubrik" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+          <h2 id="fortroende-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
             Vad utdraget bygger på
           </h2>
           <p className="soft-copy mt-3 max-w-2xl text-sm leading-6 text-muted">Tre saker som gäller varje fil, oavsett vilket urval ni gör.</p>
-          <div className="mt-10 grid gap-10 md:grid-cols-3">
-            <div className="border-t border-ink/15 pt-5">
-              <h3 className="text-base font-bold">Källa</h3>
+          <div className="mt-12 grid gap-12 md:grid-cols-3">
+            <div className="border-t-2 border-ink pt-6">
+              <h3 className="text-xl font-extrabold tracking-tight">Källa</h3>
               <p className="soft-copy mt-3 text-sm leading-7 text-ink/80">
                 Namn, adress, ort, län, bolagsform och SNI hämtas från SCB:s allmänna företagsregister, och bara för företag som är verksamma. Telefon, e-post och beslutsfattare skrivs bara in när källan har värdet. Saknas uppgiften lämnas fältet tomt.
               </p>
             </div>
-            <div className="border-t border-ink/15 pt-5">
-              <h3 className="text-base font-bold">Uppdatering</h3>
+            <div className="border-t-2 border-[#c4892a] pt-6">
+              <h3 className="text-xl font-extrabold tracking-tight">Uppdatering</h3>
               <p className="soft-copy mt-3 text-sm leading-7 text-ink/80">
                 {exampleDate
                   ? "När registret är inkopplat synkas det en gång i veckan. Siffrorna ni ser nu är exempel och räknar aktiva företag som inte spärrat reklam."
                   : "Registret synkas en gång i veckan. Siffran på sidan följer den senaste uppdateringen och räknar bara aktiva företag som inte spärrat reklam. Utdraget tas från samma uppdatering, inte från en fil från förra året."}
               </p>
             </div>
-            <div className="border-t border-ink/15 pt-5">
-              <h3 className="text-base font-bold">Reklamspärr</h3>
+            <div className="border-t-2 border-[#0f6b45] pt-6">
+              <h3 className="text-xl font-extrabold tracking-tight">Reklamspärr</h3>
               <p className="soft-copy mt-3 text-sm leading-7 text-ink/80">
                 Vilande, inaktiva, avregistrerade och bolag som spärrat reklam tas bort vid varje uppdatering. De ingår inte i siffran och följer inte med i filen ni köper.
               </p>
@@ -250,9 +247,9 @@ export function CustomerHome({
       <NaringslivSection stats={stats} />
 
       <section id="nystartade" aria-labelledby="nystartade-rubrik" className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-4 py-12 sm:flex-row sm:items-end sm:justify-between sm:py-14">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-16 sm:flex-row sm:items-end sm:justify-between sm:py-20">
           <div>
-            <h2 id="nystartade-rubrik" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+            <h2 id="nystartade-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
               Nystartade bolag
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
@@ -260,7 +257,7 @@ export function CustomerHome({
               {fresh.example ? " Exempelsiffror. Registret är inte inkopplat." : ""}
             </p>
             <p className="mt-3 text-sm font-semibold">
-              <span className="font-display text-2xl font-extrabold text-ink">{fresh.companies.toLocaleString("sv-SE")}</span> bolag de senaste 30 dagarna.
+              <span className="font-display text-4xl font-extrabold tracking-tight text-ink">{fresh.companies.toLocaleString("sv-SE")}</span> bolag de senaste 30 dagarna.
             </p>
           </div>
           <Link href="/nystartade-bolag" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">
@@ -270,10 +267,10 @@ export function CustomerHome({
       </section>
 
       <section id="branscher" aria-labelledby="branscher-rubrik" className="border-t border-line bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <h2 id="branscher-rubrik" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+              <h2 id="branscher-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
                 Vanliga urval
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
@@ -288,7 +285,7 @@ export function CustomerHome({
                 <li key={topic.slug}>
                   <Link
                     href={topic.sni ? builderHrefForSni(topic.sni) : "/#urval"}
-                    className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-0.5 py-3 sm:grid-cols-[minmax(0,1.4fr)_6.5rem_7rem_auto]"
+                    className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-1 py-4 sm:grid-cols-[minmax(0,1.4fr)_6.5rem_7rem_auto]"
                   >
                     <span className="font-semibold">{topic.nav}</span>
                     <span className="col-start-1 text-xs text-muted sm:col-start-auto sm:text-sm">SNI {topic.sni ? sniLabel(topic.sni) : ""}</span>
@@ -310,11 +307,11 @@ export function CustomerHome({
         </div>
       </section>
 
-      <section id="pris" aria-labelledby="pris-rubrik" className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+      <section id="pris" aria-labelledby="pris-rubrik" className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
           <div>
             <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Innehåll och pris</p>
-            <h2 id="pris-rubrik" className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">
+            <h2 id="pris-rubrik" className="mt-3 text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
               Ni betalar för det utdrag ni väljer.
             </h2>
             <p className="mt-4 max-w-md text-sm leading-6 text-muted">
@@ -328,25 +325,25 @@ export function CustomerHome({
               Räkna på ert urval
             </a>
           </div>
-          <dl className="divide-y divide-line border-y border-line">
+          <dl className="rounded-3xl bg-white px-6 py-2 sm:px-8">
             {PRICE_ROWS.map((row) => (
-              <div key={row.title} className="py-4">
+              <div key={row.title} className="border-b border-line py-5 last:border-b-0">
                 <div className="flex items-baseline justify-between gap-3">
                   <dt className="font-semibold">{row.title}</dt>
-                  <dd className="font-price shrink-0 text-sm font-bold text-ink">{row.price}</dd>
+                  <dd className="font-price shrink-0 text-xl font-bold tracking-tight text-ink">{row.price}</dd>
                 </div>
                 <dd className="mt-1 text-sm leading-6 text-muted">{row.text}</dd>
               </div>
             ))}
           </dl>
         </div>
-        <h3 className="mt-12 text-lg font-bold">Så räknas priset</h3>
+        <h3 className="mt-16 text-3xl font-extrabold tracking-tight">Så räknas priset</h3>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
           Tre vanliga urval, räknade med styckpriset. Det är en förklaring, inte en offert. Ert eget pris räknas i byggaren.
         </p>
-        <ul className="mt-5 grid gap-4 md:grid-cols-3">
-          {PRICE_EXAMPLES.map((item) => (
-            <li key={item.title} className="rounded-2xl bg-[#fffdf8] px-5 py-5">
+        <ul className="mt-6 grid gap-4 md:grid-cols-3">
+          {PRICE_EXAMPLES.map((item, index) => (
+            <li key={item.title} className={`rounded-3xl bg-white px-6 py-7 ${["border-t-4 border-ink", "border-t-4 border-[#c4892a]", "border-t-4 border-[#8a5a3b]"][index] ?? ""}`}>
               <p className="font-semibold">{item.title}</p>
               <p className="mt-1 text-sm text-muted">{item.detail}</p>
               <ul className="mt-3 space-y-1 text-sm leading-6">
@@ -375,11 +372,11 @@ export function CustomerHome({
         </p>
       </section>
 
-      <section id="nyheter" aria-labelledby="nyheter-rubrik" className="border-t border-line bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <section id="nyheter" aria-labelledby="nyheter-rubrik" className="border-t border-line">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <h2 id="nyheter-rubrik" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+              <h2 id="nyheter-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
                 Nyheter och uppdateringar
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
@@ -390,21 +387,21 @@ export function CustomerHome({
               Alla nyheter
             </Link>
           </div>
-          <ul className="mt-6 divide-y divide-line border-y border-line">
+          <ul className="mt-10 grid gap-4">
             {news.map((post) => (
               <li key={post.slug}>
-                <Link href={`/nyheter/${post.slug}`} className="grid gap-1 py-4 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-6">
+                <Link href={`/nyheter/${post.slug}`} className="grid gap-3 rounded-3xl border-l-4 border-[#1b1023] bg-white px-6 py-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8 sm:px-8">
                   <span className="text-xs font-semibold text-muted">
-                    <span className="uppercase tracking-wide">{post.kind}</span>
-                    <time dateTime={post.date} className="mt-1 block font-medium normal-case tracking-normal">
+                    <span className="uppercase tracking-[0.14em]">{post.kind}</span>
+                    <time dateTime={post.date} className="mt-2 block font-price text-sm font-medium normal-case tracking-normal text-ink">
                       {formatNewsDate(post.date)}
                     </time>
-                    {post.example ? <span className="mt-2 inline-flex rounded-full bg-gold px-2 py-0.5 text-[0.68rem] font-bold text-night">Exempeltext</span> : null}
+                    {post.example ? <span className="mt-3 inline-flex rounded-full bg-gold px-2 py-0.5 text-[0.68rem] font-bold text-night">Exempeltext</span> : null}
                   </span>
                   <span>
-                    <span className="block font-semibold">{post.title}</span>
-                    <span className="mt-1 block text-sm leading-6 text-muted">{post.lead}</span>
-                    <span className="mt-1 block text-sm leading-6 text-ink/80">{post.body.find((line) => !line.startsWith("Exempeltext"))}</span>
+                    <span className="block text-xl font-extrabold tracking-tight">{post.title}</span>
+                    <span className="mt-2 block text-sm leading-7 text-muted">{post.lead}</span>
+                    <span className="mt-2 block text-sm leading-7 text-ink/80">{post.body.find((line) => !line.startsWith("Exempeltext"))}</span>
                   </span>
                 </Link>
               </li>
@@ -413,8 +410,8 @@ export function CustomerHome({
         </div>
       </section>
 
-      <section id="fragor" aria-labelledby="fragor-rubrik" className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-        <h2 id="fragor-rubrik" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+      <section id="fragor" aria-labelledby="fragor-rubrik" className="mx-auto max-w-3xl px-4 py-16 sm:py-20">
+        <h2 id="fragor-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
           Vanliga frågor
         </h2>
         <p className="mt-2 text-sm leading-6 text-muted">Pris, aktualitet, format och vad som gäller när ni kontaktar bolagen.</p>
@@ -432,9 +429,9 @@ export function CustomerHome({
       </section>
 
       <section aria-labelledby="sista" className="border-t border-line bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-4 py-12 sm:flex-row sm:items-center sm:justify-between sm:py-14">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-16 sm:flex-row sm:items-center sm:justify-between sm:py-20">
           <div>
-            <h2 id="sista" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+            <h2 id="sista" className="max-w-xl text-4xl font-extrabold tracking-[-0.03em] text-ink sm:text-5xl">
               Alla Sveriges företag, i ett utdrag.
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-muted">

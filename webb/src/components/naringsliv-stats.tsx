@@ -17,37 +17,37 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
   const topIndustry = stats.byIndustry[0];
   const topCounty = stats.byCounty[0];
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      <article className="glass flex flex-col rounded-2xl p-4">
-        <p className="text-sm font-medium text-muted">Aktiva företag i dag</p>
-        <CountUp value={stats.total} className="font-display mt-1 text-4xl text-ink font-extrabold tracking-tight" />
-        <p className="mt-1 text-xs text-muted">som inte spärrat reklam</p>
-        {stats.source === "example" ? <p className="mt-1 text-xs leading-5 text-muted">Exempelsiffror. Registret är inte inkopplat.</p> : null}
-        <Link href="/#urval" className="mt-auto pt-3 text-sm font-bold text-ink hover:underline">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <article className="flex flex-col rounded-3xl bg-[#241820] p-6 text-[#f6efe6]">
+        <p className="text-sm font-medium text-[#f6efe6]/75">Aktiva företag i dag</p>
+        <CountUp value={stats.total} className="font-display mt-3 text-5xl font-extrabold tracking-[-0.04em] text-[#f6efe6]" />
+        <p className="mt-2 text-xs text-[#f6efe6]/70">som inte spärrat reklam</p>
+        {stats.source === "example" ? <p className="mt-1 text-xs leading-5 text-[#f6efe6]/70">Exempelsiffror. Registret är inte inkopplat.</p> : null}
+        <Link href="/#urval" className="mt-auto pt-4 text-sm font-bold text-[#f6efe6] hover:underline">
           Bygg utdrag på alla {formatCount(stats.total)} →
         </Link>
       </article>
-      <article className="glass flex flex-col rounded-2xl p-4">
+      <article className="glass flex flex-col rounded-3xl p-6">
         <p className="text-sm font-medium text-muted">Nya företag senaste månaden</p>
-        <CountUp value={stats.newLastMonth} className="font-display mt-1 text-4xl font-extrabold tracking-tight text-ink" />
+        <CountUp value={stats.newLastMonth} className="font-display mt-3 text-5xl font-extrabold tracking-[-0.04em] text-ink" />
         <Sparkline values={stats.monthly.map((item) => item.count)} />
-        <Link href="/statistik#nya-bolag" className="mt-auto pt-2 text-sm font-semibold text-ink hover:underline">
+        <Link href="/statistik#nya-bolag" className="mt-auto pt-3 text-sm font-semibold text-ink hover:underline">
           Se var de startar →
         </Link>
       </article>
-      <article className="glass flex flex-col rounded-2xl p-4">
+      <article className="glass flex flex-col rounded-3xl p-6">
         <p className="text-sm font-medium text-muted">Största branschen</p>
-        <p className="font-display mt-1 text-2xl leading-tight font-extrabold text-ink">{topIndustry?.label ?? "Okänd"}</p>
-        {topIndustry ? <CountUp value={topIndustry.count} suffix=" bolag" className="mt-1 text-lg font-semibold text-ink" /> : null}
+        <p className="font-display mt-3 text-2xl leading-tight font-extrabold tracking-tight text-ink">{topIndustry?.label ?? "Okänd"}</p>
+        {topIndustry ? <CountUp value={topIndustry.count} suffix=" bolag" className="mt-2 text-lg font-semibold text-[#8a5a00]" /> : null}
         {topIndustry ? (
           <Link href={builderHrefForSni(topIndustry.sni)} className="mt-auto pt-3 text-sm font-semibold text-ink hover:underline">
             Bygg ett utdrag på dem →
           </Link>
         ) : null}
       </article>
-      <article className="glass flex flex-col rounded-2xl p-4">
+      <article className="glass flex flex-col rounded-3xl p-6">
         <p className="text-sm font-medium text-muted">Flest företag</p>
-        <p className="font-display mt-1 text-2xl leading-tight font-extrabold">{topCounty?.label ?? "Okänt"}</p>
+        <p className="font-display mt-3 text-2xl leading-tight font-extrabold tracking-tight">{topCounty?.label ?? "Okänt"}</p>
         {topCounty ? <CountUp value={topCounty.count} suffix=" bolag" className="mt-1 text-lg font-semibold text-ink" /> : null}
         {topCounty ? (
           <Link href={builderHrefForCounty(topCounty.label)} className="mt-auto pt-3 text-sm font-bold text-ink hover:underline">
@@ -69,12 +69,12 @@ function Sparkline({ values }: { values: number[] }) {
     <svg viewBox="0 0 100 32" preserveAspectRatio="none" className="mt-2 h-10 w-full" role="img" aria-label="Nya företag per månad, senaste tolv månaderna">
       <defs>
         <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#1b1023" stopOpacity="0.2" />
-          <stop offset="1" stopColor="#1b1023" stopOpacity="0" />
+          <stop offset="0" stopColor="#c4892a" stopOpacity="0.35" />
+          <stop offset="1" stopColor="#c4892a" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={`0,32 ${points.join(" ")} 100,32`} fill="url(#spark-fill)" />
-      <polyline points={points.join(" ")} fill="none" stroke="#1b1023" strokeWidth="1.8" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+      <polyline points={points.join(" ")} fill="none" stroke="#c4892a" strokeWidth="1.8" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -87,7 +87,7 @@ export function BarList({
 }: {
   title: string;
   rows: { key: string; label: string; count: number; detail?: string }[];
-  tone?: "neon" | "magenta";
+  tone?: "neon" | "magenta" | "amber";
   kind: "sni" | "county";
 }) {
   const hrefFor = kind === "sni" ? builderHrefForSni : builderHrefForCounty;
@@ -95,21 +95,21 @@ export function BarList({
   const seen = useInView(ref);
   const max = Math.max(...rows.map((row) => row.count), 1);
   return (
-    <div ref={ref} className="glass rounded-2xl p-4">
-      <h3 className="text-lg font-bold">{title}</h3>
+    <div ref={ref} className="glass rounded-3xl p-6">
+      <h3 className="text-xl font-extrabold tracking-tight">{title}</h3>
       <ul className="mt-3 space-y-2.5">
         {rows.map((row) => (
           <li key={row.key}>
             <Link href={hrefFor(row.key)} className="group block" aria-label={`${row.label}, ${formatCount(row.count)} bolag. Bygg ett utdrag.`}>
               <span className="flex items-baseline justify-between gap-2 text-sm">
-                <span className="truncate font-medium group-hover:underline">
+                <span className="font-medium group-hover:underline">
                   {row.label}
                   {row.detail ? <span className="ml-1.5 text-xs text-muted">{row.detail}</span> : null}
                 </span>
                 <span className="shrink-0 font-semibold tabular-nums">{formatCount(row.count)}</span>
               </span>
               <span className="bar-track mt-1 block h-2 overflow-hidden rounded-full">
-                <span className={`bar-fill block h-full rounded-full ${tone === "magenta" ? "magenta" : ""}`} style={{ width: seen ? `${(row.count / max) * 100}%` : "0%" }} />
+                <span className={`bar-fill block h-full rounded-full ${tone === "magenta" ? "magenta" : ""} ${tone === "amber" ? "amber" : ""}`} style={{ width: seen ? `${(row.count / max) * 100}%` : "0%" }} />
               </span>
             </Link>
           </li>
@@ -122,8 +122,8 @@ export function BarList({
 
 export function Growing({ stats }: { stats: RegisterStats }) {
   return (
-    <div className="glass rounded-2xl p-4">
-      <h3 className="text-lg font-bold">Mest växande branscher</h3>
+    <div className="glass rounded-3xl p-6">
+      <h3 className="text-xl font-extrabold tracking-tight">Mest växande branscher</h3>
       <p className="text-xs text-muted">Nya bolag senaste tre månaderna jämfört med de tre månaderna innan.</p>
       {stats.growing.length === 0 ? (
         <p className="mt-3 text-sm text-muted">Det finns för få nya bolag i registret för att jämföra ännu.</p>
@@ -135,12 +135,12 @@ export function Growing({ stats }: { stats: RegisterStats }) {
               <li key={row.sni} className="flex items-baseline gap-3 border-t border-line py-2 first:border-t-0">
                 <span className="w-4 text-xs font-semibold text-muted">{index + 1}</span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-semibold">{row.label}</span>
+                  <span className="block text-sm font-semibold">{row.label}</span>
                   <Link href={builderHrefForSni(row.sni)} className="text-xs font-semibold text-ink hover:underline">
                     {size ? `Utdrag på ${formatCount(size)} bolag` : "Utdrag på branschen"}
                   </Link>
                 </span>
-                <span className="text-sm font-semibold text-ink tabular-nums">+{row.changePct}%</span>
+                <span className="text-sm font-semibold text-[#8a5a00] tabular-nums">+{row.changePct}%</span>
               </li>
             );
           })}
@@ -180,11 +180,11 @@ export function NaringslivSection({ stats, headingId = "siffror" }: { stats: Reg
       aria-labelledby={headingId}
       className="section-calm"
     >
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Ur registret</p>
-          <h2 id={headingId} className="mt-2 text-2xl font-extrabold tracking-tight text-balance sm:text-3xl">
+          <h2 id={headingId} className="mt-3 text-4xl font-extrabold tracking-[-0.03em] text-balance sm:text-5xl">
             Sveriges näringsliv i siffror
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
@@ -196,12 +196,12 @@ export function NaringslivSection({ stats, headingId = "siffror" }: { stats: Reg
           All statistik
         </Link>
       </div>
-      <div className="mt-6">
+      <div className="mt-10">
         <StatTiles stats={stats} />
       </div>
       <div className="mt-3 grid gap-3 lg:grid-cols-3">
         <BarList title="Per bransch (SNI)" rows={industryRows(stats.byIndustry.slice(0, 6))} kind="sni" />
-        <BarList title="Per län" rows={countyRows(stats.byCounty.slice(0, 6))} tone="magenta" kind="county" />
+        <BarList title="Per län" rows={countyRows(stats.byCounty.slice(0, 6))} tone="amber" kind="county" />
         <Growing stats={stats} />
       </div>
       </div>
