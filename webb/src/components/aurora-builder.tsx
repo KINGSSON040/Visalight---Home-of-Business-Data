@@ -169,7 +169,7 @@ export function AuroraBuilder({
               type="button"
               aria-expanded={more}
               onClick={() => setMore((value) => !value)}
-              className="text-xs font-semibold text-magenta underline-offset-4 hover:underline"
+              className="text-xs font-semibold text-ink underline-offset-4 hover:underline"
             >
               {more ? "Dölj fler filter" : "Fler filter"} <span aria-hidden="true">{more ? "▴" : "▾"}</span>
             </button>
@@ -268,7 +268,7 @@ function BrickSearch({
         {bricks.map((brick) => (
           <span key={brick.key} className={`brick ${tone === "magenta" ? "region" : ""} inline-flex max-w-full items-center gap-1 rounded-lg px-2 py-0.5 text-xs font-bold`}>
             <span className="truncate">{brick.text}</span>
-            <button type="button" onClick={() => onChange(brick.clear)} className="rounded px-0.5 leading-none hover:bg-black/10" aria-label={`Ta bort ${brick.text}`}>
+            <button type="button" onClick={() => onChange(brick.clear)} className="rounded px-0.5 leading-none hover:bg-white/20" aria-label={`Ta bort ${brick.text}`}>
               ×
             </button>
           </span>
@@ -425,9 +425,9 @@ function Result({
         <Link
           href={`/kassa?${selectionToQuery(counted)}`}
           aria-disabled={counts.companies === 0}
-          className={`inline-flex h-11 shrink-0 items-center gap-2 rounded-xl border border-ink bg-white px-4 text-sm font-bold text-ink hover:bg-[#fffdf4] ${counts.companies === 0 ? "pointer-events-none opacity-60" : ""}`}
+          className={`btn-neon inline-flex h-11 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold ${counts.companies === 0 ? "pointer-events-none opacity-60" : ""}`}
         >
-          Förhandsboka utdraget <span aria-hidden="true">→</span>
+          Köp utdrag <span aria-hidden="true">→</span>
         </Link>
       </div>
       <p className="mt-2 text-sm font-semibold">Ingen inloggning. Ingen prenumeration. Ingen bindningstid.</p>

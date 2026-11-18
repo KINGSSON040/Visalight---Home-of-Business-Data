@@ -20,7 +20,7 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <article className="glass flex flex-col rounded-2xl p-4">
         <p className="text-sm font-medium text-muted">Aktiva företag i dag</p>
-        <CountUp value={stats.total} className="font-display mt-1 text-4xl text-neon font-extrabold tracking-tight" />
+        <CountUp value={stats.total} className="font-display mt-1 text-4xl text-ink font-extrabold tracking-tight" />
         <p className="mt-1 text-xs text-muted">som går att sälja</p>
         <Link href="/#urval" className="mt-auto pt-3 text-sm font-bold text-magenta hover:underline">
           Bygg utdrag på alla {formatCount(stats.total)} →
@@ -28,7 +28,7 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
       </article>
       <article className="glass flex flex-col rounded-2xl p-4">
         <p className="text-sm font-medium text-muted">Nya företag senaste månaden</p>
-        <CountUp value={stats.newLastMonth} className="font-display mt-1 text-4xl font-extrabold tracking-tight text-neon" />
+        <CountUp value={stats.newLastMonth} className="font-display mt-1 text-4xl font-extrabold tracking-tight text-ink" />
         <Sparkline values={stats.monthly.map((item) => item.count)} />
         <Link href="/statistik#nya-bolag" className="mt-auto pt-2 text-sm font-semibold text-magenta hover:underline">
           Se var de startar →
@@ -37,7 +37,7 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
       <article className="glass flex flex-col rounded-2xl p-4">
         <p className="text-sm font-medium text-muted">Största branschen</p>
         <p className="font-display mt-1 text-2xl leading-tight font-extrabold text-ink">{topIndustry?.label ?? "Okänd"}</p>
-        {topIndustry ? <CountUp value={topIndustry.count} suffix=" bolag" className="mt-1 text-lg font-semibold text-neon" /> : null}
+        {topIndustry ? <CountUp value={topIndustry.count} suffix=" bolag" className="mt-1 text-lg font-semibold text-ink" /> : null}
         {topIndustry ? (
           <Link href={builderHrefForSni(topIndustry.sni)} className="mt-auto pt-3 text-sm font-semibold text-magenta hover:underline">
             Bygg ett utdrag på dem →
@@ -47,7 +47,7 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
       <article className="glass flex flex-col rounded-2xl p-4">
         <p className="text-sm font-medium text-muted">Flest företag</p>
         <p className="font-display mt-1 text-2xl leading-tight font-extrabold">{topCounty?.label ?? "Okänt"}</p>
-        {topCounty ? <CountUp value={topCounty.count} suffix=" bolag" className="mt-1 text-lg font-semibold text-neon" /> : null}
+        {topCounty ? <CountUp value={topCounty.count} suffix=" bolag" className="mt-1 text-lg font-semibold text-ink" /> : null}
         {topCounty ? (
           <Link href={builderHrefForCounty(topCounty.label)} className="mt-auto pt-3 text-sm font-bold text-magenta hover:underline">
             Bygg ett utdrag i länet →
@@ -68,12 +68,12 @@ function Sparkline({ values }: { values: number[] }) {
     <svg viewBox="0 0 100 32" preserveAspectRatio="none" className="mt-2 h-10 w-full" role="img" aria-label="Nya företag per månad, senaste tolv månaderna">
       <defs>
         <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#00a85e" stopOpacity="0.4" />
-          <stop offset="1" stopColor="#00a85e" stopOpacity="0" />
+          <stop offset="0" stopColor="#1b1023" stopOpacity="0.4" />
+          <stop offset="1" stopColor="#1b1023" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={`0,32 ${points.join(" ")} 100,32`} fill="url(#spark-fill)" />
-      <polyline points={points.join(" ")} fill="none" stroke="#00a85e" strokeWidth="1.8" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+      <polyline points={points.join(" ")} fill="none" stroke="#1b1023" strokeWidth="1.8" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -139,7 +139,7 @@ export function Growing({ stats }: { stats: RegisterStats }) {
                     {size ? `Utdrag på ${formatCount(size)} bolag` : "Utdrag på branschen"}
                   </Link>
                 </span>
-                <span className="text-sm font-semibold text-neon tabular-nums">+{row.changePct}%</span>
+                <span className="text-sm font-semibold text-ink tabular-nums">+{row.changePct}%</span>
               </li>
             );
           })}
@@ -161,7 +161,7 @@ export function MonthlyChart({ stats }: { stats: RegisterStats }) {
           <div key={item.month} className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1">
             <span className="text-[0.6rem] text-muted tabular-nums sm:text-[0.65rem]">{formatCount(item.count)}</span>
             <span
-              className="w-full rounded-t-sm bg-[#00a85e] transition-[height] duration-1000 ease-out motion-reduce:transition-none"
+              className="w-full rounded-t-sm bg-[#1b1023] transition-[height] duration-1000 ease-out motion-reduce:transition-none"
               style={{ height: seen ? `${(item.count / max) * 78}%` : "0%" }}
             />
             <span className="text-[0.65rem] text-muted">{monthLabel(item.month)}</span>

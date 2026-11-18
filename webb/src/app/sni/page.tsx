@@ -18,7 +18,7 @@ export default function SniIndexPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
-      <p className="text-sm uppercase tracking-[0.16em] text-green">SNI</p>
+      <p className="text-sm uppercase tracking-[0.16em] text-ink">SNI</p>
       <h1 className="mt-3 text-4xl tracking-tight sm:text-5xl">Företagsinformation per SNI-kod</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
         Söker ni en bransch via SNI-koden hamnar ni på sidan för den branschen. Både koden med punkt och koden utan punkt leder dit, även en äldre kod när SNI har bytts ut.

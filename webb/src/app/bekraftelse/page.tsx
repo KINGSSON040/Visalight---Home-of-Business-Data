@@ -57,7 +57,7 @@ export default function ConfirmationPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
-      <p className="text-sm uppercase tracking-[0.16em] text-green">Förhandsbokning</p>
+      <p className="text-sm uppercase tracking-[0.16em] text-ink">Förhandsbokning</p>
       <h1 className="mt-3 font-serif text-5xl tracking-tight">Förhandsbokningen är sparad i den här webbläsaren.</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
         Beställning öppnar snart. Ingen betalning har dragits och ingen fil har skickats. Det här är en förhandsbokning,

@@ -116,15 +116,15 @@ export function CustomerHome({
     <main>
       <section className="mx-auto grid max-w-6xl items-start gap-x-12 gap-y-8 px-4 pt-8 pb-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:pt-12">
         <div className="min-w-0 lg:pt-2">
-          <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Företagsdata</p>
+          <p className="text-xs font-semibold tracking-[0.14em] text-muted uppercase">Företagsdata</p>
           <h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] sm:text-5xl lg:text-6xl">
             Alla Sveriges företag.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-            VisaLight är ett svenskt företag och varumärke med säte i Malmö. Ni hämtar ett utdrag med de aktiva bolag ni vill nå: namn, adress, bransch och de kontaktfält ni väljer.
+            Ni hämtar ett utdrag med de aktiva bolag ni vill nå: namn, adress, bransch och de kontaktfält ni väljer. Antal och pris syns direkt.
           </p>
           <p className="mt-3 max-w-xl text-base leading-7 text-muted">
-            Det ska vara enkelt att ta ett utdrag. Därför finns ingen prenumeration. Välj <strong className="font-bold text-ink">bransch</strong>, <strong className="font-bold text-ink">ort</strong> och <strong className="font-bold text-ink">SNI</strong>, och se antal och pris innan ni bestämmer er.
+            Ingen prenumeration och ingen inloggning. Välj <strong className="font-bold text-ink">bransch</strong>, <strong className="font-bold text-ink">ort</strong> och <strong className="font-bold text-ink">SNI</strong>, och se vad utdraget kostar innan ni bestämmer er.
           </p>
           <p className="access-line mt-4 max-w-xl">{FREE_ACCESS}</p>
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -148,7 +148,7 @@ export function CustomerHome({
         <ol className="mt-6 grid gap-6 md:grid-cols-3">
           {STEPS.map((step) => (
             <li key={step.no} className="border-t border-line pt-4">
-              <p className="font-price text-xs font-bold text-magenta">{step.no}</p>
+              <p className="font-price text-xs font-bold text-ink">{step.no}</p>
               <h3 className="mt-2 text-lg font-bold">{step.title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted">{step.text}</p>
             </li>
@@ -183,7 +183,7 @@ export function CustomerHome({
             </div>
           </div>
           <p className="mt-6 text-sm">
-            <Link href="/kallor" className="soft-copy text-magenta hover:underline">
+            <Link href="/kallor" className="soft-copy text-ink hover:underline">
               Så hämtas uppgifterna
             </Link>
           </p>
@@ -215,18 +215,18 @@ export function CustomerHome({
                   >
                     <span className="font-semibold">{topic.nav}</span>
                     <span className="col-start-1 text-xs text-muted sm:col-start-auto sm:text-sm">SNI {topic.sni ? sniLabel(topic.sni) : ""}</span>
-                    <span className="text-right text-sm font-semibold text-neon tabular-nums">{count ? formatCount(count) : ""}</span>
-                    <span className="hidden text-sm font-semibold text-magenta sm:inline">Se pris</span>
+                    <span className="text-right text-sm font-semibold text-ink tabular-nums">{count ? formatCount(count) : ""}</span>
+                    <span className="hidden text-sm font-semibold text-ink sm:inline">Se pris</span>
                   </Link>
                 </li>
               );
             })}
           </ul>
           <p className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
-            <Link href="/bransch" className="text-magenta hover:underline">
+            <Link href="/bransch" className="text-ink hover:underline">
               Alla branscher
             </Link>
-            <Link href="/sni" className="text-magenta hover:underline">
+            <Link href="/sni" className="text-ink hover:underline">
               SNI-koder
             </Link>
           </p>
@@ -236,7 +236,7 @@ export function CustomerHome({
       <section id="pris" aria-labelledby="pris-rubrik" className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <div>
-            <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Innehåll och pris</p>
+            <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Innehåll och pris</p>
             <h2 id="pris-rubrik" className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">
               Ni betalar för det utdrag ni väljer.
             </h2>
@@ -256,7 +256,7 @@ export function CustomerHome({
               <div key={row.title} className="py-4">
                 <div className="flex items-baseline justify-between gap-3">
                   <dt className="font-semibold">{row.title}</dt>
-                  <dd className="font-price shrink-0 text-sm font-bold text-magenta">{row.price}</dd>
+                  <dd className="font-price shrink-0 text-sm font-bold text-ink">{row.price}</dd>
                 </div>
                 <dd className="mt-1 text-sm leading-6 text-muted">{row.text}</dd>
               </div>
@@ -273,14 +273,14 @@ export function CustomerHome({
                 <span className="mt-1 text-sm text-muted">{item.detail}</span>
                 <span className="font-price mt-4 text-2xl font-bold text-ink">{formatKronor(item.quote.totalOre)} kr</span>
                 <span className="text-xs text-muted">{item.quote.minimumApplied ? "Lägsta order. " : ""}Exkl. moms, engångspris.</span>
-                <span className="mt-4 text-sm font-semibold text-magenta">Öppna i byggaren</span>
+                <span className="mt-4 text-sm font-semibold text-ink">Öppna i byggaren</span>
               </Link>
             </li>
           ))}
         </ul>
         <p className="mt-4 text-sm text-muted">
           Filen har fasta kolumner.{" "}
-          <Link href="/smakprov" className="font-semibold text-magenta hover:underline">
+          <Link href="/smakprov" className="font-semibold text-ink hover:underline">
             Ladda ner ett smakprov
           </Link>{" "}
           om ni vill se formatet innan ni förhandsbokar.
@@ -298,7 +298,7 @@ export function CustomerHome({
                 Vad som ändrats i registret och sådant som påverkar hur ett utdrag ska läsas. Inlägg märkta exempeltext byts ut när underlaget finns.
               </p>
             </div>
-            <Link href="/nyheter" className="text-sm font-semibold text-magenta hover:underline">
+            <Link href="/nyheter" className="text-sm font-semibold text-ink hover:underline">
               Alla nyheter
             </Link>
           </div>

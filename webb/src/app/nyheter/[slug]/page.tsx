@@ -23,7 +23,7 @@ export default async function NyhetPage({ params }: { params: Promise<{ slug: st
   if (!post) notFound();
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 sm:py-14">
-      <Link href="/nyheter" className="text-sm font-bold text-neon hover:underline">
+      <Link href="/nyheter" className="text-sm font-bold text-ink hover:underline">
         ← Alla nyheter
       </Link>
       <p className="mt-6 flex flex-wrap items-center gap-2 text-sm font-semibold">

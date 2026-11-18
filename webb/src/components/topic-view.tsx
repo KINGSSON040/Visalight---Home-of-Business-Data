@@ -44,7 +44,7 @@ export function TopicIndex({ kind }: { kind: TopicKind }) {
   const isIndustry = kind === "bransch";
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
-      <p className="text-sm uppercase tracking-[0.16em] text-green">{isIndustry ? "Branscher" : "Ord"}</p>
+      <p className="text-sm uppercase tracking-[0.16em] text-ink">{isIndustry ? "Branscher" : "Ord"}</p>
       <h1 className="mt-3 font-serif text-5xl tracking-tight">
         {isIndustry ? "Företagsdata per bransch" : "Ord om företagsdata"}
       </h1>
