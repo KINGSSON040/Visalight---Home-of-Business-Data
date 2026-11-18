@@ -30,7 +30,7 @@ export default function StatistikPage() {
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
         {example
           ? "Registret är inte inkopplat. Antal per bransch, per område och per storlek visas när registret finns."
-          : "Talen är aktiva företag som inte spärrat reklam, och de följer den senaste uppdateringen. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Klicka på en rad för att bygga ett utdrag."}
+          : "Här ser ni hur många aktiva företag som finns i registret, uppdelat på bransch, län och antal anställda. Vilande, inaktiva, avregistrerade och reklamspärrade ingår inte. Siffrorna kommer från den senaste uppdateringen. Klicka på en rad för att öppna byggaren med det urvalet."}
       </p>
       {example ? null : (
         <>
