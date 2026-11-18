@@ -54,7 +54,6 @@ export default async function Home({
         initial={selection}
         initialUrval={initialUrval}
         updatedLabel={stamp.when}
-        exampleData={stamp.example}
         stats={stats}
         news={news}
       />

@@ -63,14 +63,12 @@ export function CustomerHome({
   initial,
   initialUrval,
   updatedLabel,
-  exampleData,
   stats,
   news,
 }: {
   initial: Selection;
   initialUrval: UrvalResult;
   updatedLabel: string;
-  exampleData: boolean;
   stats: RegisterStats;
   news: NewsPost[];
 }) {
@@ -126,7 +124,7 @@ export function CustomerHome({
             VisaLight arbetar med företagsdata. Ni hämtar ett utdrag med de aktiva bolag ni vill nå: namn, adress, bransch och de kontaktfält ni väljer.
           </p>
           <p className="mt-3 max-w-xl text-base leading-7 text-muted">
-            Det ska vara enkelt att ta ett utdrag. Därför finns ingen prenumeration. Ni hämtar filen när ni behöver den, och ser antal och pris innan ni bestämmer er.
+            Det ska vara enkelt att ta ett utdrag. Därför finns ingen prenumeration. Välj <strong className="font-bold text-ink">bransch</strong>, <strong className="font-bold text-ink">ort</strong> och <strong className="font-bold text-ink">SNI</strong>, och se antal och pris innan ni bestämmer er.
           </p>
           <p className="access-line mt-4 max-w-xl">{FREE_ACCESS}</p>
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -139,13 +137,13 @@ export function CustomerHome({
           </div>
         </div>
         <div className="min-w-0">
-          <AuroraBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} exampleData={exampleData} />
+          <AuroraBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} />
         </div>
       </section>
 
       <section id="sa-funkar-det" aria-labelledby="steg" className="mx-auto max-w-6xl px-4 pt-2 pb-12">
         <h2 id="steg" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Så funkar det
+          Så fungerar det
         </h2>
         <ol className="mt-6 grid gap-6 md:grid-cols-3">
           {STEPS.map((step) => (
@@ -174,8 +172,7 @@ export function CustomerHome({
             <div>
               <h3 className="text-sm font-semibold">Uppdatering</h3>
               <p className="soft-copy mt-2 text-sm text-muted">
-                Registret senast uppdaterat: {updatedLabel}
-                {exampleData ? " (exempeldata)" : ""}. Siffran på sidan följer den uppdateringen och räknar bara aktiva företag som går att sälja. Utdraget tas från samma uppdatering, inte från en fil från förra året. Det är inte en uppdatering varje minut.
+                Registret synkas en gång i veckan. Siffran på sidan följer den senaste uppdateringen och räknar bara aktiva företag som går att sälja. Utdraget tas från samma uppdatering, inte från en fil från förra året.
               </p>
             </div>
             <div>
@@ -206,7 +203,6 @@ export function CustomerHome({
                 Ett färdigt urval per bransch. Antalet är aktiva företag som går att sälja, och det följer den senaste uppdateringen. Öppna raden om ni vill se priset i byggaren.
               </p>
             </div>
-            {stats.source === "example" ? <span className="rounded-full bg-gold px-2.5 py-0.5 text-xs font-bold text-night">Antal: exempeldata</span> : null}
           </div>
           <ul className="mt-6 divide-y divide-line border-y border-line">
             {industries.map((topic) => {
@@ -353,7 +349,7 @@ export function CustomerHome({
               Alla Sveriges företag, i ett utdrag.
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-              {formatCount(stats.total)} aktiva företag i dag{stats.source === "example" ? ", ett märkt exempel" : ""}. Siffran följer den senaste uppdateringen. Välj vilka ni vill nå och se priset direkt.
+              {formatCount(stats.total)} aktiva företag i dag. Siffran följer den senaste uppdateringen. Välj vilka ni vill nå och se priset direkt.
             </p>
           </div>
           <a href="#urval" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">

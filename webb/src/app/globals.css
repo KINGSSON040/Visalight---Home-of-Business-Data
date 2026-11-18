@@ -319,9 +319,13 @@ body:has(.customer-site) {
 .glow-gold { box-shadow: 0 0 0 1px rgba(27, 16, 35, 0.06), 0 16px 36px -28px rgba(27, 16, 35, 0.35); }
 
 .builder-card {
-  background: #f3e6da;
-  border: 1px solid #e4d3c4;
+  background: #f3c3d8;
+  border: 1px solid #e3a4c2;
   box-shadow: 0 16px 40px -28px rgba(27, 16, 35, 0.35);
+}
+
+.price-figure {
+  color: #ffe08a;
 }
 
 .builder-card[data-lit="true"] {

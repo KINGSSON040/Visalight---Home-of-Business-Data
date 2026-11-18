@@ -43,16 +43,14 @@ export function AuroraBuilder({
   urval,
   loading,
   updatedLabel,
-  exampleData,
 }: {
   draft: Selection;
   onChange: Patch;
   urval: UrvalResult;
   loading: boolean;
   updatedLabel: string;
-  exampleData: boolean;
 }) {
-  const [more, setMore] = useState(Boolean(draft.forms.length || draft.employees));
+  const [more, setMore] = useState(Boolean(draft.forms.length));
   const [lit, setLit] = useState(false);
   const firstCount = useRef(true);
 
@@ -78,9 +76,8 @@ export function AuroraBuilder({
 
   return (
     <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-2xl">
-      <p className="border-b border-[#e4d3c4] px-4 pt-3 pb-2.5 text-xs leading-5 text-muted sm:px-5">
-        Registret senast uppdaterat: {updatedLabel}
-        {exampleData ? " (exempeldata)" : ""}. Siffran följer den senaste uppdateringen.
+      <p className="border-b border-[#e3a4c2] px-4 pt-3 pb-2.5 text-xs leading-5 text-muted sm:px-5">
+        Registret senast uppdaterat: {updatedLabel}. Siffran följer den senaste uppdateringen.
       </p>
       <div className="space-y-3 p-4 sm:p-5">
         <Step no="01" title="Bransch">
@@ -148,6 +145,22 @@ export function AuroraBuilder({
           </div>
         </Step>
 
+        <label className="block text-xs font-semibold">
+          Antal anställda
+          <select
+            value={draft.employees}
+            onChange={(event) => onChange({ employees: event.target.value })}
+            className="field-box mt-1 h-10 w-full rounded-xl px-3 text-sm font-medium"
+          >
+            <option value="">Alla storlekar</option>
+            {EMPLOYEE_BANDS.map((band) => (
+              <option key={band} value={band}>
+                {band}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <Step
           no="03"
           title="Kontaktuppgifter"
@@ -176,7 +189,7 @@ export function AuroraBuilder({
         </Step>
       </div>
 
-      <Result draft={draft} urval={urval} loading={loading} exampleData={exampleData} />
+      <Result draft={draft} urval={urval} loading={loading} />
     </section>
   );
 }
@@ -351,17 +364,6 @@ function MoreFilters({ draft, onChange }: { draft: Selection; onChange: Patch })
           ))}
         </select>
       </label>
-      <label className="min-w-0 text-xs font-semibold">
-        Anställda
-        <select value={draft.employees} onChange={(event) => onChange({ employees: event.target.value })} className={field}>
-          <option value="">Alla storlekar</option>
-          {EMPLOYEE_BANDS.map((band) => (
-            <option key={band} value={band}>
-              {band}
-            </option>
-          ))}
-        </select>
-      </label>
     </div>
   );
 }
@@ -370,12 +372,10 @@ function Result({
   draft,
   urval,
   loading,
-  exampleData,
 }: {
   draft: Selection;
   urval: UrvalResult;
   loading: boolean;
-  exampleData: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const counts = pricedCounts(urval, draft);
@@ -384,7 +384,6 @@ function Result({
   const shownPrice = useCountUp(price.totalOre, { fromZero: true, duration: 1100 });
   const [flare, setFlare] = useState(false);
   const counted = selectionForCount(draft) ?? draft;
-  const example = exampleData || urval.source === "example";
   const parts = [
     { label: "Grund", ore: counts.companies * BASE_ORE },
     ...(draft.phones ? [{ label: "Telefon", ore: counts.phones * PHONE_ORE }] : []),
@@ -404,7 +403,6 @@ function Result({
         <p className="font-price text-[0.7rem] font-bold tracking-[0.14em] text-white/90 uppercase">
           {selectionForCount(draft) ? "Aktiva i ert urval" : "Aktiva företag i dag"}
         </p>
-        {example ? <span className="rounded-full bg-gold px-2 py-0.5 text-[0.68rem] font-bold text-night">Exempeldata</span> : null}
       </div>
       <div className="mt-0.5 flex flex-wrap items-end justify-between gap-x-4 gap-y-2" aria-live="polite" aria-busy={loading}>
         <div className="min-w-0">
@@ -418,7 +416,7 @@ function Result({
             <span className="font-display text-lg font-bold">företag</span>
           </p>
           <p className="mt-1 text-sm font-semibold">
-            <span data-urval-price className="font-price text-base font-bold">
+            <span data-urval-price className="price-figure font-price text-base font-bold">
               {formatKronor(shownPrice)} kr
             </span>{" "}
             <span className="text-white/85">exkl. moms · Excel eller CSV</span>
@@ -463,7 +461,7 @@ function MobileBar({ watch, companies, priceOre }: { watch: React.RefObject<HTML
   return (
     <a href="#urval" className="result-field fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-2xl px-4 py-2.5 shadow-xl lg:hidden">
       <span className="font-display text-xl font-extrabold tabular-nums">{companies.toLocaleString("sv-SE")}</span>
-      <span className="font-price text-xs">företag · {Math.round(priceOre / 100).toLocaleString("sv-SE")} kr</span>
+      <span className="price-figure font-price text-xs">företag · {Math.round(priceOre / 100).toLocaleString("sv-SE")} kr</span>
       <span className="rounded-lg bg-white px-3 py-1 text-sm font-bold text-magenta">Ändra</span>
     </a>
   );

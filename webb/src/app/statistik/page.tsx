@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BarList, ExampleBadge, Growing, MonthlyChart, StatTiles } from "@/components/naringsliv-stats";
+import { BarList, Growing, MonthlyChart, StatTiles } from "@/components/naringsliv-stats";
 import { countyRows, industryRows } from "@/lib/naringsliv";
 import { loadStats } from "@/lib/register-stats";
-import { registerStamp } from "@/lib/register-status";
 
 export const dynamic = "force-dynamic";
 
@@ -15,8 +14,6 @@ export const metadata: Metadata = {
 
 export default function StatistikPage() {
   const stats = loadStats();
-  const stamp = registerStamp();
-  const example = stats.source === "example";
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
       <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Statistik</p>
@@ -26,16 +23,7 @@ export default function StatistikPage() {
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
         Talen är aktiva företag som går att sälja, och de följer den senaste uppdateringen. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Klicka på en bransch eller ett län för att bygga ett utdrag på just de bolagen.
       </p>
-      <p className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">
-        <span>
-          Registret senast uppdaterat: {stamp.when}
-          {stamp.example ? " (exempeldata)" : ""}. Siffran följer den senaste uppdateringen.
-        </span>
-        <ExampleBadge show={example} />
-      </p>
-      {example ? (
-        <p className="mt-2 text-sm font-semibold text-muted">Registret är inte inkopplat i den här körningen. Talen är ett märkt exempel på aktiva företag som går att sälja, inte hela registret.</p>
-      ) : null}
+      <p className="mt-3 text-sm text-muted">Siffran följer den senaste uppdateringen.</p>
       <div className="mt-8">
         <StatTiles stats={stats} />
       </div>

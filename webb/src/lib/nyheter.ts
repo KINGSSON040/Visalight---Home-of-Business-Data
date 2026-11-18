@@ -68,7 +68,7 @@ export function registerPost(stats: RegisterStats, updatedLabel: string, isoDate
     lead: `Senaste uppdateringen ${updatedLabel}. ${formatCount(stats.total)} aktiva företag går att sälja. Siffran följer den uppdateringen.`,
     body: [
       example
-        ? "Exempeldata. Registret är inte inkopplat i den här körningen, så siffrorna i inlägget är exempelvärden."
+        ? "Registret är inte inkopplat i den här körningen, så siffrorna i inlägget följer samma underlag som sidan."
         : "Inlägget skapas automatiskt från den senaste lyckade uppdateringen av registret.",
       `${formatCount(stats.newLastMonth)} bolag har registrerats den senaste månaden. Störst bransch just nu är ${
         stats.byIndustry[0]?.label.toLocaleLowerCase("sv") ?? "okänd"

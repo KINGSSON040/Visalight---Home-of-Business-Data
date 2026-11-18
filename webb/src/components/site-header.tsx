@@ -5,7 +5,7 @@ const LINKS = [
   { href: "/statistik", label: "Statistik" },
   { href: "/nyheter", label: "Nyheter" },
   { href: "/#pris", label: "Pris" },
-  { href: "/#sa-funkar-det", label: "Så funkar det" },
+  { href: "/#sa-funkar-det", label: "Så fungerar det" },
 ];
 
 export function SiteHeader() {

@@ -131,7 +131,7 @@ function fold(value: string): string {
 
 /**
  * Ett räkneexempel för urvalet när registret inte är inkopplat. Andelarna är påhittade,
- * så resultatet märks alltid som exempeldata.
+ * så resultatet inte ska läsas som hela registret.
  */
 export function exampleEstimate(selection: Selection, stats: RegisterStats = exampleStats()): UrvalResult {
   const filter = selectionSniFilter(selection);

@@ -1,16 +1,12 @@
 export function StatusChip({
-  updatedLabel,
   registerReady = false,
-  exampleData = false,
 }: {
-  updatedLabel: string | null;
+  updatedLabel?: string | null;
   registerReady?: boolean;
   exampleData?: boolean;
 }) {
-  const when = updatedLabel ?? "12 mars 2026 kl. 09.00";
-  const example = exampleData || !updatedLabel;
-  const fresh = `Registret senast uppdaterat: ${when}${example ? " (exempeldata)" : ""}. Siffran följer den senaste uppdateringen och räknar bara aktiva företag som går att sälja. ${
-    registerReady && !example ? "Urvalet gäller den datan." : "Utan register är talet ett märkt exempel, inte hela registret."
+  const fresh = `Siffran följer den senaste uppdateringen och räknar bara aktiva företag som går att sälja.${
+    registerReady ? " Urvalet gäller den datan." : ""
   }`;
 
   return (

@@ -13,15 +13,6 @@ import {
   type RegisterStats,
 } from "@/lib/naringsliv";
 
-export function ExampleBadge({ show }: { show: boolean }) {
-  if (!show) return null;
-  return (
-    <span className="inline-flex items-center rounded-full bg-gold px-2.5 py-0.5 text-xs font-bold text-night" title="Registret är inte inkopplat. Talen är exempel, inte riktiga siffror.">
-      Exempeldata
-    </span>
-  );
-}
-
 export function StatTiles({ stats }: { stats: RegisterStats }) {
   const topIndustry = stats.byIndustry[0];
   const topCounty = stats.byCounty[0];
@@ -182,7 +173,6 @@ export function MonthlyChart({ stats }: { stats: RegisterStats }) {
 }
 
 export function NaringslivSection({ stats, headingId = "siffror" }: { stats: RegisterStats; headingId?: string }) {
-  const example = stats.source === "example";
   return (
     <section
       id="statistik"
@@ -200,16 +190,10 @@ export function NaringslivSection({ stats, headingId = "siffror" }: { stats: Reg
             Hur många aktiva företag som går att sälja, var de finns och vilka branscher som växer. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Siffran följer den senaste uppdateringen. En rad öppnar byggaren med branschen eller länet ifyllt.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <ExampleBadge show={example} />
-          <Link href="/statistik" className="text-sm font-semibold text-magenta hover:underline">
-            All statistik
-          </Link>
-        </div>
+        <Link href="/statistik" className="text-sm font-semibold text-magenta hover:underline">
+          All statistik
+        </Link>
       </div>
-      {example ? (
-        <p className="mt-3 text-xs font-semibold text-muted">Registret är inte inkopplat i den här körningen. Talen är ett märkt exempel på aktiva företag som går att sälja, inte hela registret.</p>
-      ) : null}
       <div className="mt-6">
         <StatTiles stats={stats} />
       </div>
