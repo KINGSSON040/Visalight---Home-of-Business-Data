@@ -8,7 +8,6 @@ import {
   FORM_GROUPS,
   INDUSTRIES,
   selectionIndustries,
-  describeSelection,
   listParts,
   selectionForCount,
   selectionToQuery,
@@ -17,7 +16,7 @@ import {
   type Selection,
   type Suggestion,
 } from "@/lib/catalog";
-import { BASE_ORE, EMAIL_ORE, formatKronor, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
+import { EMAIL_ORE, formatKronor, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import { priceForUrval, pricedCounts, type UrvalResult } from "@/lib/urval";
 
 const QUICK_BRANSCH = [
@@ -475,12 +474,6 @@ function Result({
   const shownPrice = useCountUp(price.totalOre, { fromZero: true, duration: 1100 });
   const [flare, setFlare] = useState(false);
   const counted = selectionForCount(draft) ?? draft;
-  const parts = [
-    { label: "Grund", ore: counts.companies * BASE_ORE },
-    ...(draft.phones ? [{ label: "Telefon", ore: counts.phones * PHONE_ORE }] : []),
-    ...(draft.emails ? [{ label: "E-post", ore: counts.emails * EMAIL_ORE }] : []),
-    ...(draft.signatory ? [{ label: "Beslutsfattare", ore: counts.signatoryPhones * SIGNATORY_ORE }] : []),
-  ];
 
   useEffect(() => {
     setFlare(true);
@@ -521,20 +514,17 @@ function Result({
           Köp utdrag <span aria-hidden="true">→</span>
         </Link>
       </div>
-      {urval.source === "example" ? (
-        <p className="mt-2 text-xs leading-5 text-muted">Exempelsiffror. Registret är inte inkopplat.</p>
-      ) : null}
-      <p className="mt-2 text-xs leading-5 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
-      <p className="mt-2 text-sm font-semibold">Ingen inloggning. Ingen prenumeration. Ingen bindningstid.</p>
-      <p className="mt-1.5 truncate text-xs text-muted">{describeSelection(counted)}</p>
-      {urval.companies === 0 ? (
-        <p className="mt-1 text-xs font-semibold">{urval.note || "Inget bolag matchar."} Ta bort ett filter så kommer de tillbaka.</p>
-      ) : (
-        <p className="font-price mt-1 text-[0.66rem] leading-5 text-muted">
-          {parts.map((part) => `${part.label} ${Math.round(part.ore / 100).toLocaleString("sv-SE")} kr`).join(" + ")}
-          {price.minimumApplied ? " · lägsta order 399 kr" : ""}
-        </p>
-      )}
+      <div className="mt-4 space-y-2">
+        {urval.source === "example" ? (
+          <p className="text-xs leading-5 text-muted">Exempelsiffror. Registret är inte inkopplat.</p>
+        ) : null}
+        <p className="text-sm leading-6">Ingen inloggning, prenumeration eller bindningstid.</p>
+        <p className="text-sm leading-6 text-muted">Bara aktiva företag som inte spärrat reklam. Uppdateras en gång i veckan.</p>
+        <p className="text-xs leading-5 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
+        {urval.companies === 0 ? (
+          <p className="text-xs font-semibold">{urval.note || "Inget bolag matchar."} Ta bort ett filter så kommer de tillbaka.</p>
+        ) : null}
+      </div>
       <MobileBar watch={ref} companies={urval.companies} priceOre={price.totalOre} />
     </div>
   );
