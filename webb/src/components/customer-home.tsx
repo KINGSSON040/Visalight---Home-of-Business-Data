@@ -332,7 +332,7 @@ export function CustomerHome({
               Grunddata ingår alltid: namn, organisationsnummer, adress, ort, bransch och SNI. Lägg till telefon, e-post och beslutsfattare när ni vill nå kunden. Ett tomt fält kostar inget.
             </p>
             <p className="mt-3 max-w-md text-sm leading-6 text-muted">
-              Priset är ett engångspris per utdrag, exklusive moms. Lägsta order {formatKronor(MINIMUM_ORE).replace(",00", "")} kr. Samma styckpris oavsett om urvalet är en bransch i en stad eller hela landet.
+              Priset är ett engångspris per utdrag, exklusive moms. Lägsta order {formatKronor(MINIMUM_ORE).replace(",00", "")} kr. Samma styckpris oavsett om urvalet är en bransch i en stad eller hela landet. Från 30 000 bolag räknas priset inte här. Ni behöver talas vid för rabatt.
             </p>
             <p className="mt-4 max-w-md text-sm text-ink/80">Inget konto krävs. Ingen prenumeration. Ingen bindningstid.</p>
             <a href="#urval" className="btn-neon mt-5 inline-flex h-11 items-center rounded-lg px-5 text-sm font-semibold">

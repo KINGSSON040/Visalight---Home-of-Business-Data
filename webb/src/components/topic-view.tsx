@@ -206,7 +206,7 @@ function IndustryArticle({
         <article className="rounded-2xl border border-line bg-white p-4">
           <h2 className="text-lg tracking-tight">Pris</h2>
           <p className="mt-2 text-sm leading-6 text-muted">
-            Grunduppgifter {ore(BASE_ORE)} per bolag. Telefon {ore(PHONE_ORE)}, e-post {ore(EMAIL_ORE)} och beslutsfattare {ore(SIGNATORY_ORE)}. Lägsta order {(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr. Priset visas innan ni köper.
+            Grunduppgifter {ore(BASE_ORE)} per bolag. Telefon {ore(PHONE_ORE)}, e-post {ore(EMAIL_ORE)} och beslutsfattare {ore(SIGNATORY_ORE)}. Lägsta order {(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr. Priset visas innan ni köper. Från 30 000 bolag räknas priset inte här. Ni behöver talas vid för rabatt.
           </p>
         </article>
       </section>

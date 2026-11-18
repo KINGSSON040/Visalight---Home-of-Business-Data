@@ -9,6 +9,7 @@ import {
   MINIMUM_ORE,
   PHONE_ORE,
   SIGNATORY_ORE,
+  VOLUME_TALK_LINE,
   formatKronor,
 } from "@/lib/pricing";
 import { priceForUrval, pricedCounts, type UrvalResult } from "@/lib/urval";
@@ -79,6 +80,16 @@ export function PricePanel({
       empty: "Ingen e-post i urvalet",
     },
   ];
+
+  if (price.talk) {
+    return (
+      <aside className="rounded-3xl bg-sea-deep p-5 text-white shadow-sm" aria-live="polite">
+        <p className="text-xs uppercase tracking-[0.16em] text-white/60">Pris</p>
+        <p className="mt-3 text-lg leading-7">{VOLUME_TALK_LINE}</p>
+        <p className="mt-3 text-sm leading-6 text-white/70">Ingen summa räknas för det här urvalet.</p>
+      </aside>
+    );
+  }
 
   return (
     <aside className="rounded-3xl bg-sea-deep p-5 text-white shadow-sm" aria-live="polite">

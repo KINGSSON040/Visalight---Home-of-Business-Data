@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { selectionIndustries } from "@/lib/catalog";
 import { countNewCompanies, freshQuery } from "@/lib/nystartade";
-import { formatKronor } from "@/lib/pricing";
+import { formatKronor, VOLUME_TALK_LINE } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Nystartade bolag — VisaLight",
@@ -74,10 +74,14 @@ export default async function NewCompaniesPage({
             <span className="font-display text-lg font-bold">bolag</span>
           </p>
           <p className="mt-2 text-xs leading-5 text-muted">{count.note}</p>
-          <p className="mt-3 text-sm font-semibold">
-            <span className="price-figure font-price text-base font-bold">{formatKronor(count.price.totalOre)} kr</span>{" "}
-            <span className="text-muted">exkl. moms för grunduppgifterna. Priset syns innan betalning.</span>
-          </p>
+          {count.price.talk ? (
+            <p className="mt-3 text-sm font-semibold">{VOLUME_TALK_LINE}</p>
+          ) : (
+            <p className="mt-3 text-sm font-semibold">
+              <span className="price-figure font-price text-base font-bold">{formatKronor(count.price.totalOre)} kr</span>{" "}
+              <span className="text-muted">exkl. moms för grunduppgifterna. Priset syns innan betalning.</span>
+            </p>
+          )}
           {count.price.minimumApplied ? <p className="mt-1 text-xs text-muted">Lägsta order 399 kr.</p> : null}
           <p className="mt-2 text-xs leading-5 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
           <div className="mt-5 flex flex-wrap gap-3">

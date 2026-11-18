@@ -16,7 +16,7 @@ import {
   type Selection,
   type Suggestion,
 } from "@/lib/catalog";
-import { EMAIL_ORE, formatKronor, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
+import { EMAIL_ORE, formatKronor, PHONE_ORE, SIGNATORY_ORE, VOLUME_TALK_LINE } from "@/lib/pricing";
 import { priceForUrval, pricedCounts, type UrvalResult } from "@/lib/urval";
 
 const QUICK_SNI = ["56110", "96210", "41200", "69201", "62010"];
@@ -496,7 +496,11 @@ function Result({
     <div ref={ref} className="result-field rounded-b-3xl px-4 pt-2 pb-2 sm:px-5">
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1" aria-live="polite" aria-busy={loading}>
         <div className="min-w-0">
-          {connected ? (
+          {connected && price.talk ? (
+            <p data-urval-price className="max-w-sm text-sm font-semibold leading-5">
+              {VOLUME_TALK_LINE}
+            </p>
+          ) : connected ? (
             <p className="text-sm font-semibold">
               <span data-urval-price className="price-figure font-price text-lg font-bold">
                 {formatKronor(shownPrice)} kr
@@ -525,12 +529,12 @@ function Result({
           <p className="text-xs font-semibold">{urval.note || "Inget bolag matchar."} Ta bort ett filter så kommer de tillbaka.</p>
         ) : null}
       </div>
-      {connected ? <MobileBar watch={ref} companies={urval.companies} priceOre={price.totalOre} /> : null}
+      {connected ? <MobileBar watch={ref} companies={urval.companies} priceOre={price.totalOre} talk={price.talk} /> : null}
     </div>
   );
 }
 
-function MobileBar({ watch, companies, priceOre }: { watch: React.RefObject<HTMLDivElement | null>; companies: number; priceOre: number }) {
+function MobileBar({ watch, companies, priceOre, talk }: { watch: React.RefObject<HTMLDivElement | null>; companies: number; priceOre: number; talk: boolean }) {
   const [hidden, setHidden] = useState(true);
   useEffect(() => {
     const node = watch.current;
@@ -546,7 +550,7 @@ function MobileBar({ watch, companies, priceOre }: { watch: React.RefObject<HTML
   return (
     <a href="#urval" className="result-field fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-2xl px-4 py-2.5 shadow-xl lg:hidden">
       <span className="font-display text-xl font-extrabold text-ink tabular-nums">{companies.toLocaleString("sv-SE")}</span>
-      <span className="price-figure font-price text-xs">företag · {Math.round(priceOre / 100).toLocaleString("sv-SE")} kr</span>
+      <span className="price-figure font-price text-xs">{talk ? "Talas vid för rabatt" : `företag · ${Math.round(priceOre / 100).toLocaleString("sv-SE")} kr`}</span>
       <span className="rounded-lg border border-ink bg-white px-3 py-1 text-sm font-bold text-ink">Ändra</span>
     </a>
   );

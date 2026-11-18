@@ -4,7 +4,7 @@ import { SELLER } from "@/lib/seller";
 export const PUBLIC_FAQ = [
   {
     q: "Vad kostar utdraget?",
-    a: `Grunduppgifter kostar ${formatKronor(BASE_ORE)} kr per bolag. Kontaktnummer kostar ${formatKronor(PHONE_ORE)} kr per nummer, e-postkontakt ${formatKronor(EMAIL_ORE)} kr per adress och beslutsfattare ${formatKronor(SIGNATORY_ORE)} kr per nummer. Ni betalar bara när uppgiften finns. Lägsta order är 399 kr exklusive moms, och priset visas alltid innan ni köper.`,
+    a: `Grunduppgifter kostar ${formatKronor(BASE_ORE)} kr per bolag. Kontaktnummer kostar ${formatKronor(PHONE_ORE)} kr per nummer, e-postkontakt ${formatKronor(EMAIL_ORE)} kr per adress och beslutsfattare ${formatKronor(SIGNATORY_ORE)} kr per nummer. Ni betalar bara när uppgiften finns. Lägsta order är 399 kr exklusive moms, och priset visas innan ni köper. Från 30 000 bolag räknas priset inte på sidan. Ni behöver talas vid för rabatt.`,
   },
   {
     q: "Ingår moms?",
