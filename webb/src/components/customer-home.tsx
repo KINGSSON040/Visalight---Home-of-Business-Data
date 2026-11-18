@@ -259,14 +259,15 @@ export function CustomerHome({
                   För företag och personer som säljer till nya bolag. Bolagen kommer in från Bolagsverket, och filen uppdateras varje vecka. Många behöver bank, redovisning, försäkring, telefoni, webb och lokal.
                 </p>
                 {fresh.example || exampleDate ? (
-                  <p className="mt-3 text-sm font-semibold">Registret är inte inkopplat.</p>
+                  <p className="mt-4 text-sm font-semibold">Bolagsregistret är inte inkopplat.</p>
                 ) : (
-                  <>
-                    <p className="mt-3 text-sm font-semibold">
-                      <span className="font-display text-4xl font-extrabold tracking-tight text-ink">{fresh.companies.toLocaleString("sv-SE")}</span> bolag de senaste 30 dagarna.
+                  <div className="mt-6">
+                    <p className="font-display text-6xl leading-none font-extrabold tracking-[-0.04em] text-ink sm:text-7xl">
+                      {fresh.companies.toLocaleString("sv-SE")}
                     </p>
-                    <p className="fresh-stamp mt-2 text-xs leading-5 text-muted">Från registret. Senast uppdaterat {updatedLabel}.</p>
-                  </>
+                    <p className="mt-2 text-sm font-semibold">Bolag de senaste 30 dagarna</p>
+                    <p className="fresh-stamp mt-2 text-xs leading-5 text-muted">Från bolagsregistret. Senast uppdaterat {updatedLabel}.</p>
+                  </div>
                 )}
               </div>
               <Link href="/nystartade-bolag" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">

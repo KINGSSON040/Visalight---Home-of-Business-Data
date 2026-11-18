@@ -36,7 +36,7 @@ export function countNewCompanies(input: { days: 7 | 30; sni: string; city: stri
       days: input.days,
       companies: 0,
       price: quote({ companies: 0, phones: 0, signatoryPhones: 0, emails: 0 }),
-      note: "Registret är inte inkopplat.",
+      note: "Bolagsregistret är inte inkopplat.",
     };
   }
   const companies = countInDatabase(file, input);
@@ -45,7 +45,7 @@ export function countNewCompanies(input: { days: 7 | 30; sni: string; city: stri
     days: input.days,
     companies,
     price: quote({ companies, phones: 0, signatoryPhones: 0, emails: 0 }),
-    note: "Antalet kommer från registret på den här datorn.",
+    note: "Antalet kommer från bolagsregistret.",
   };
 }
 

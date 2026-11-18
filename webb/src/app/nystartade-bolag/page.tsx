@@ -90,7 +90,7 @@ export default async function NewCompaniesPage({
           </div>
         </>
       ) : (
-        <p className="mt-8 text-sm font-semibold">Registret är inte inkopplat.</p>
+        <p className="mt-8 text-sm font-semibold">Bolagsregistret är inte inkopplat.</p>
       )}
     </main>
   );
