@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Figtree, Inter, Schibsted_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 import { SiteFrame } from "@/components/site-frame";
 import { registerDatabasePath } from "@/lib/register-path";
@@ -7,15 +6,27 @@ import { registerStamp } from "@/lib/register-status";
 import { siteOrigin } from "@/lib/topics";
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: [
+    { path: "../fonts/Inter-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Inter-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/Inter-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/Inter-Bold.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-inter",
+  display: "swap",
 });
 
-const schibsted = Schibsted_Grotesk({
-  subsets: ["latin"],
+const schibsted = localFont({
+  src: [
+    { path: "../fonts/SchibstedGrotesk-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/SchibstedGrotesk-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/SchibstedGrotesk-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/SchibstedGrotesk-Bold.woff2", weight: "700", style: "normal" },
+    { path: "../fonts/SchibstedGrotesk-ExtraBold.woff2", weight: "800", style: "normal" },
+  ],
   variable: "--font-schibsted",
-  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 const jbmono = localFont({
@@ -27,10 +38,15 @@ const jbmono = localFont({
   display: "swap",
 });
 
-const figtree = Figtree({
-  subsets: ["latin"],
+const figtree = localFont({
+  src: [
+    { path: "../fonts/Figtree-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Figtree-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/Figtree-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/Figtree-Bold.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-figtree",
-  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
