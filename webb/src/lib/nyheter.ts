@@ -21,13 +21,13 @@ export const NEWS_POSTS: NewsPost[] = [
     slug: "fler-datakonsulter-startar-bolag",
     date: "2026-11-10",
     kind: "Statistik",
-    title: "Datakonsulterna startar flest nya bolag i höst",
-    lead: "Bland branscherna i registret växer datakonsulter snabbast det senaste kvartalet.",
+    title: "Dataprogrammering startar flest nya bolag i höst",
+    lead: "Bland branscherna i registret växer dataprogrammering snabbast det senaste kvartalet.",
     body: [
       "Exempeltext. När registret är inkopplat skrivs den här texten om med riktiga siffror från den senaste uppdateringen.",
       "Nya bolag är ofta små och har färre kontaktuppgifter. Därför syns det tydligt i utdraget hur många som har telefon och e-post innan ni köper.",
     ],
-    cta: { label: "Bygg ett utdrag på datakonsulter", href: "/?sni=62010#urval" },
+    cta: { label: "Bygg ett utdrag på dataprogrammering", href: "/?sni=62010#urval" },
     example: true,
   },
   {
@@ -38,7 +38,7 @@ export const NEWS_POSTS: NewsPost[] = [
     lead: "Branschkoderna följer SCB:s nya indelning. Gamla koder översätts automatiskt i sökrutan.",
     body: [
       "Exempeltext. Skriver ni en äldre SNI-kod hittar sökrutan den nya koden åt er, och antalet räknas på samma sätt.",
-      "Frisörer har till exempel gått från 96.021 till 96.210. Båda koderna ger samma urval.",
+      "Frisörer och barberare har till exempel gått från 96.021 till 96.210. Båda koderna ger samma urval.",
     ],
     cta: { label: "Sök på en SNI-kod", href: "/#urval" },
     example: true,

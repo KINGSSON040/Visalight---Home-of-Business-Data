@@ -94,7 +94,7 @@ export const INDUSTRIES: Industry[] = [
     label: "Frisörer och barberare",
     words: ["frisör", "frisörsalong", "frisörsalonger", "hårvård", "barberare"],
     legacy: ["96021"],
-    note: "frisörsalonger",
+    note: "skilt från Skönhetsvård och andra skönhetsbehandlingar",
   },
   {
     sni: "96220",
@@ -102,7 +102,7 @@ export const INDUSTRIES: Industry[] = [
     label: "Skönhetsvård och andra skönhetsbehandlingar",
     words: ["skönhet", "skönhetssalong", "skönhetssalonger", "skönhetsbehandling"],
     legacy: ["96022"],
-    note: "skönhetssalonger, inte frisörer",
+    note: "skilt från Frisörer och barberare",
   },
   {
     sni: "69201",
@@ -115,7 +115,7 @@ export const INDUSTRIES: Industry[] = [
     code: "69.202",
     label: "Revision",
     words: ["revisor", "revisionsbyrå", "revisorbyrå", "revision"],
-    note: "revisionsbyråer, skilt från redovisning",
+    note: "skilt från Redovisning och bokföring; skatterådgivning",
   },
 ];
 

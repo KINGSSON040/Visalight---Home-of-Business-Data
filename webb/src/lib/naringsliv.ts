@@ -230,13 +230,13 @@ export function builderHrefForCounty(label: string): string {
 
 export const PRICE_EXAMPLES = [
   {
-    title: "Frisörer i en stad",
+    title: "Frisörer och barberare i en stad",
     detail: "300 bolag, bara grunduppgifter",
     counts: { companies: 300, phones: 0, signatoryPhones: 0, emails: 0 },
     href: "/?sni=96210&tel=0&epost=0&firma=0#urval",
   },
   {
-    title: "Byggbolag i ett län",
+    title: "Byggande av bostadshus och andra byggnader i ett län",
     detail: "4 000 bolag med 2 500 telefonnummer",
     counts: { companies: 4000, phones: 2500, signatoryPhones: 0, emails: 0 },
     href: "/?sni=41200&tel=1&epost=0&firma=0#urval",

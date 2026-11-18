@@ -19,13 +19,7 @@ import {
 import { EMAIL_ORE, formatKronor, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import { priceForUrval, pricedCounts, type UrvalResult } from "@/lib/urval";
 
-const QUICK_BRANSCH = [
-  { label: "Restauranger", sni: "56110" },
-  { label: "Frisörer", sni: "96210" },
-  { label: "Bygg", sni: "41200" },
-  { label: "Redovisning", sni: "69201" },
-  { label: "Datakonsulter", sni: "62010" },
-];
+const QUICK_SNI = ["56110", "96210", "41200", "69201", "62010"];
 
 const QUICK_PLACES = [
   { label: "Stockholm", county: "Stockholms län" },
@@ -110,7 +104,7 @@ export function AuroraBuilder({
         <Step no="01" title="Bransch">
           <BrickSearch
             kinds={["bransch"]}
-            placeholder={industryBricks.length ? "Lägg till bransch…" : "Skriv bransch eller SNI, t.ex. frisör"}
+            placeholder={industryBricks.length ? "Lägg till bransch…" : "Skriv bransch eller SNI, t.ex. 96.210"}
             label="Bransch eller SNI-kod"
             bricks={industryBricks}
             tone="green"
@@ -118,18 +112,19 @@ export function AuroraBuilder({
             pick={(item) => onChange({ ...withIndustry(draft, item.apply.sni ?? "", item.apply.bransch ?? item.title), query: "" })}
           />
           <div className="mt-1.5 flex flex-wrap gap-1.5">
-            {QUICK_BRANSCH.map((item) => {
-              const on = listParts(draft.sni).includes(item.sni);
-              const industry = INDUSTRIES.find((row) => row.sni === item.sni);
+            {QUICK_SNI.map((sni) => {
+              const industry = INDUSTRIES.find((row) => row.sni === sni);
+              if (!industry) return null;
+              const on = listParts(draft.sni).includes(sni);
               return (
                 <button
-                  key={item.sni}
+                  key={sni}
                   type="button"
                   aria-pressed={on}
-                  onClick={() => onChange(withIndustry(draft, item.sni, industry?.label ?? item.label))}
+                  onClick={() => onChange(withIndustry(draft, sni, industry.label))}
                   className="chip rounded-full px-2.5 py-1 text-xs font-semibold"
                 >
-                  {item.label}
+                  {industry.label}
                 </button>
               );
             })}
