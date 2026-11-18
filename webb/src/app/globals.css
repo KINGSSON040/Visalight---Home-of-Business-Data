@@ -333,9 +333,12 @@ body:has(.customer-site) {
 .glow-gold { box-shadow: 0 0 0 1px rgba(27, 16, 35, 0.06), 0 16px 36px -28px rgba(27, 16, 35, 0.35); }
 
 .builder-card {
-  background: #faf6f1;
-  border: 1px solid #e6ddd4;
-  box-shadow: 0 16px 40px -28px rgba(27, 16, 35, 0.35);
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(15, 107, 69, 0.05), transparent 46%),
+    radial-gradient(90% 70% at 0% 100%, rgba(27, 16, 35, 0.035), transparent 42%),
+    #fffcf8;
+  border: 1px solid rgba(27, 16, 35, 0.06);
+  box-shadow: 0 16px 40px -28px rgba(27, 16, 35, 0.28);
   color: #1b1023;
 }
 
@@ -354,9 +357,9 @@ body:has(.customer-site) {
 }
 
 .result-field {
-  background: #faf6f1;
+  background: transparent;
   color: #1b1023;
-  border-top: 1px solid #e6ddd4;
+  border-top: 1px solid rgba(27, 16, 35, 0.06);
 }
 
 .big-count {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { BuilderLink } from "@/components/builder-link";
 import { BarList, Growing, MonthlyChart, StatTiles } from "@/components/naringsliv-stats";
 import { countyRows, industryRows, sizeRows } from "@/lib/naringsliv";
 import { loadStats } from "@/lib/register-stats";
@@ -50,9 +50,9 @@ export default function StatistikPage() {
       )}
       <div className="builder-card mt-10 flex flex-col items-start gap-4 rounded-[2rem] p-6 sm:flex-row sm:items-center sm:justify-between">
         <p className="font-display text-2xl font-bold">Hittat en bransch som växer? Se vad ett utdrag kostar.</p>
-        <Link href="/#urval" className="btn-neon inline-flex h-12 shrink-0 items-center rounded-full px-6 font-bold">
-          Öppna listbyggaren
-        </Link>
+        <BuilderLink className="btn-neon inline-flex h-12 shrink-0 items-center rounded-full px-6 font-bold">
+          Till listbyggaren
+        </BuilderLink>
       </div>
     </main>
   );

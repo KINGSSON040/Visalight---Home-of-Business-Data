@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BuilderLink } from "@/components/builder-link";
 import { BrandLockup } from "@/components/logo-mark";
 import { StatusChip } from "@/components/status-chip";
 import { SELLER } from "@/lib/seller";
@@ -7,7 +8,7 @@ const GROUPS = [
   {
     title: "Utdrag",
     links: [
-      { href: "/#urval", label: "Skapa utdrag" },
+      { href: "/#urval", label: "Till listbyggaren" },
       { href: "/statistik", label: "Statistik" },
       { href: "/nystartade-bolag", label: "Nystartade bolag" },
       { href: "/nyheter", label: "Nyheter" },
@@ -80,9 +81,13 @@ export function SiteFooter({
             <ul className="mt-4 space-y-2.5">
               {group.links.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="hover:text-ink hover:underline">
-                    {link.label}
-                  </Link>
+                  {link.href === "/#urval" ? (
+                    <BuilderLink className="hover:text-ink hover:underline">{link.label}</BuilderLink>
+                  ) : (
+                    <Link href={link.href} className="hover:text-ink hover:underline">
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

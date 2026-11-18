@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BuilderLink } from "@/components/builder-link";
 import { selectionIndustries } from "@/lib/catalog";
 import { countNewCompanies, freshQuery } from "@/lib/nystartade";
 import { formatKronor, VOLUME_TALK_LINE } from "@/lib/pricing";
@@ -76,11 +77,13 @@ export default async function NewCompaniesPage({
           <p className="mt-2 text-xs leading-5 text-muted">{count.note}</p>
           {count.price.talk ? (
             <p className="mt-3 text-sm font-semibold">{VOLUME_TALK_LINE}</p>
-          ) : (
+          ) : count.price.totalOre > 0 ? (
             <p className="mt-3 text-sm font-semibold">
               <span className="price-figure font-price text-base font-bold">{formatKronor(count.price.totalOre)} kr</span>{" "}
               <span className="text-muted">exkl. moms för grunduppgifterna. Priset syns innan betalning.</span>
             </p>
+          ) : (
+            <p className="mt-3 text-sm font-semibold">Urvalet har inget pris ännu.</p>
           )}
           {count.price.minimumApplied ? <p className="mt-1 text-xs text-muted">Lägsta order 399 kr.</p> : null}
           <p className="mt-2 text-xs leading-5 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
@@ -88,13 +91,19 @@ export default async function NewCompaniesPage({
             <Link href={checkout} className="btn-neon inline-flex h-11 items-center rounded-xl px-4 text-sm font-bold">
               Köp utdrag
             </Link>
-            <Link href="/#urval" className="inline-flex h-11 items-center text-sm font-semibold text-ink underline-offset-4 hover:underline">
-              Öppna byggaren
-            </Link>
+            <BuilderLink className="inline-flex h-11 items-center text-sm font-semibold text-ink underline-offset-4 hover:underline">
+              Till listbyggaren
+            </BuilderLink>
           </div>
         </>
       ) : (
-        <p className="mt-8 text-sm font-semibold">Bolagsregistret är inte inkopplat.</p>
+        <>
+          <p className="mt-8 text-sm font-semibold">Bolagsregistret är inte inkopplat.</p>
+          <p className="mt-3 text-sm font-semibold">Priset visas när bolagsregistret är inkopplat.</p>
+          <BuilderLink className="mt-5 inline-flex h-11 items-center text-sm font-semibold text-ink underline-offset-4 hover:underline">
+            Till listbyggaren
+          </BuilderLink>
+        </>
       )}
     </main>
   );

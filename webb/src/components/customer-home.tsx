@@ -132,6 +132,11 @@ export function CustomerHome({
     window.history.replaceState(null, "", `/?${share}${window.location.hash}`);
   }, [share]);
 
+  useEffect(() => {
+    if (window.location.hash !== "#urval") return;
+    document.getElementById("urval")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   function patch(next: Partial<Selection>) {
     setDraft((current) => ({ ...current, ...next }));
   }
@@ -151,9 +156,13 @@ export function CustomerHome({
             Välj bransch. Se priset. Köp direkt.
           </p>
           <p className="mt-3 max-w-xl text-base leading-7 text-muted">
-            {stats.source === "register"
-              ? `För företag och personer som vill sälja och hitta kunder. Registret innehåller ${formatCount(stats.total)} aktiva företag. Välj vilka ni vill nå idag. Ingen prenumeration. Inga dolda avgifter.`
-              : "För företag och personer som vill sälja och hitta kunder. Välj vilka ni vill nå idag. Ingen prenumeration. Inga dolda avgifter."}
+            För företag och personer som vill sälja och hitta kunder.{" "}
+            {urval.source === "register" ? (
+              <>Bolagsregistret innehåller {urval.companies.toLocaleString("sv-SE")} aktiva företag.</>
+            ) : (
+              <>Bolagsregistret är inte inkopplat.</>
+            )}{" "}
+            Välj vilka ni vill nå idag. Ingen prenumeration. Inga dolda avgifter.
           </p>
           <ul className="mt-4 space-y-1 text-sm text-ink/80">
             {ACCESS_POINTS.map((point) => (

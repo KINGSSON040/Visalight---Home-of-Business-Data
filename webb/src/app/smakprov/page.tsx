@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { BuilderLink } from "@/components/builder-link";
 import { SampleForm } from "@/components/sample-form";
 import { registerDatabasePath } from "@/lib/register-path";
 
@@ -20,9 +20,7 @@ export default function SamplePage() {
       {connected ? null : <p className="mt-4 text-sm font-semibold">Bolagsregistret är inte inkopplat. Ingen fil skapas förrän det är det.</p>}
       <SampleForm />
       <p className="mt-6 text-sm">
-        <Link href="/#urval" className="font-semibold text-ink underline-offset-4 hover:underline">
-          Bygg ett utdrag
-        </Link>
+        <BuilderLink className="font-semibold text-ink underline-offset-4 hover:underline">Till listbyggaren</BuilderLink>
       </p>
     </main>
   );

@@ -500,15 +500,17 @@ function Result({
             <p data-urval-price className="max-w-sm text-sm font-semibold leading-5">
               {VOLUME_TALK_LINE}
             </p>
-          ) : connected ? (
+          ) : connected && price.totalOre > 0 ? (
             <p className="text-sm font-semibold">
               <span data-urval-price className="price-figure font-price text-lg font-bold">
                 {formatKronor(shownPrice)} kr
               </span>{" "}
               <span className="text-muted">exkl. moms · Excel eller CSV</span>
             </p>
+          ) : connected ? (
+            <p className="text-sm font-semibold">Urvalet har inget pris ännu.</p>
           ) : (
-            <p className="text-sm font-semibold">Registret är inte inkopplat.</p>
+            <p className="text-sm font-semibold">Priset visas när bolagsregistret är inkopplat.</p>
           )}
         </div>
         {connected ? (
@@ -550,7 +552,7 @@ function MobileBar({ watch, companies, priceOre, talk }: { watch: React.RefObjec
   return (
     <a href="#urval" className="result-field fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-2xl px-4 py-2.5 shadow-xl lg:hidden">
       <span className="font-display text-xl font-extrabold text-ink tabular-nums">{companies.toLocaleString("sv-SE")}</span>
-      <span className="price-figure font-price text-xs">{talk ? "Talas vid för rabatt" : `företag · ${Math.round(priceOre / 100).toLocaleString("sv-SE")} kr`}</span>
+      <span className="price-figure font-price text-xs">{talk ? "Talas vid för rabatt" : priceOre > 0 ? `företag · ${Math.round(priceOre / 100).toLocaleString("sv-SE")} kr` : "företag"}</span>
       <span className="rounded-lg border border-ink bg-white px-3 py-1 text-sm font-bold text-ink">Ändra</span>
     </a>
   );

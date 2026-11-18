@@ -81,6 +81,17 @@ export function PricePanel({
     },
   ];
 
+  if (data.source !== "register" || (price.totalOre === 0 && !price.talk)) {
+    return (
+      <aside className="rounded-3xl bg-sea-deep p-5 text-white shadow-sm" aria-live="polite">
+        <p className="text-xs uppercase tracking-[0.16em] text-white/60">Pris</p>
+        <p className="mt-3 text-lg leading-7">
+          {data.source !== "register" ? "Priset visas när bolagsregistret är inkopplat." : "Urvalet har inget pris ännu."}
+        </p>
+      </aside>
+    );
+  }
+
   if (price.talk) {
     return (
       <aside className="rounded-3xl bg-sea-deep p-5 text-white shadow-sm" aria-live="polite">

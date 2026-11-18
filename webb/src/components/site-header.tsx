@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BuilderLink } from "@/components/builder-link";
 import { BrandLockup } from "@/components/logo-mark";
 
 const LINKS = [
@@ -21,9 +22,7 @@ export function SiteHeader() {
               {link.label}
             </Link>
           ))}
-          <Link href="/#urval" className="btn-neon whitespace-nowrap rounded-full px-4 py-2 font-semibold">
-            Skapa utdrag
-          </Link>
+          <BuilderLink className="btn-neon whitespace-nowrap rounded-full px-4 py-2 font-semibold">Till listbyggaren</BuilderLink>
         </nav>
       </div>
       <nav aria-label="Genvägar" className="flex gap-1 overflow-x-auto px-3 pb-2 text-sm font-medium md:hidden">
