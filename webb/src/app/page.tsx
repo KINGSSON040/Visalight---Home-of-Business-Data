@@ -13,15 +13,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const example = registerStamp().example || loadStats().source === "example";
   return {
     alternates: { canonical: "/" },
-    title: "Hitta er nästa kund redan idag — VisaLight",
+    title: "Hitta er nästa kund idag — VisaLight",
     description: example
-      ? `${EXAMPLE_FIGURES_LINE} Hitta er nästa kund redan idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.`
-      : "Hitta er nästa kund redan idag. Det går för att uppgifterna är verifierade, uppdaterade och färska. Välj bransch, se antal och pris.",
+      ? `${EXAMPLE_FIGURES_LINE} Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.`
+      : "Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska. Välj bransch, se antal och pris.",
     openGraph: {
-      title: "Hitta er nästa kund redan idag",
+      title: "Hitta er nästa kund idag",
       description: example
-        ? `${EXAMPLE_FIGURES_LINE} Hitta er nästa kund redan idag.`
-        : "Hitta er nästa kund redan idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.",
+        ? `${EXAMPLE_FIGURES_LINE} Hitta er nästa kund idag.`
+        : "Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.",
     },
   };
 }
@@ -47,8 +47,8 @@ export default async function Home({
         url: origin,
         inLanguage: "sv-SE",
         description: stamp.example
-          ? `${EXAMPLE_FIGURES_LINE} Hitta er nästa kund redan idag. Uppgifterna är verifierade och färska, utan abonnemang.`
-          : "Hitta er nästa kund redan idag. Uppgifterna är verifierade och färska, utan abonnemang.",
+          ? `${EXAMPLE_FIGURES_LINE} Hitta er nästa kund idag. Uppgifterna är verifierade och färska, utan abonnemang.`
+          : "Hitta er nästa kund idag. Uppgifterna är verifierade och färska, utan abonnemang.",
       },
       {
         "@type": "FAQPage",

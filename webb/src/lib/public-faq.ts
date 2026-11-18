@@ -12,7 +12,7 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Hur aktuellt är utdraget?",
-    a: "När ni ska nå nästa kund behöver listan vara aktuell. När registret är inkopplat följer siffran och filen den senaste uppdateringen, så informationen är färsk. Filen är inte från förra året. Bara aktiva företag som inte spärrat reklam ingår. Vilande, inaktiva, avregistrerade och reklamspärrade bolag är redan borta. Det är inte en uppdatering varje minut. Tills registret är inkopplat visas inga antal.",
+    a: "Nå er nästa kund med en aktuell lista. När registret är inkopplat följer siffran och filen den senaste uppdateringen, så informationen är färsk. Filen är inte från förra året. Bara aktiva företag som inte spärrat reklam ingår. Vilande, inaktiva, avregistrerade och reklamspärrade bolag är redan borta. Det är inte en uppdatering varje minut. Tills registret är inkopplat visas inga antal.",
   },
   {
     q: "Hur betalar vi?",
@@ -20,11 +20,11 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Får vi kontakta bolagen?",
-    a: "Ni använder listan för att kontakta er nästa kund redan idag. Reklamspärrade bolag är borttagna. Ni ansvarar för ert eget utskick, inklusive NIX-Telefon och de regler som gäller just den kanalen.",
+    a: "Kontakta er nästa kund idag. Reklamspärrade bolag är borttagna. Ni ansvarar för ert eget utskick, inklusive NIX-Telefon och de regler som gäller just den kanalen.",
   },
   {
     q: "Hur skiljer sig ett utdrag från ett gratis uppslag eller ett årsabonnemang?",
-    a: "Ni väljer listan själva, så ni kan hitta er nästa kund redan idag. Antal och pris syns innan köp, och det finns ingen prenumeration. Ett gratis uppslag gäller ett bolag i taget. Ett årsabonnemang bevakar och kräver inloggning. Listan är ingen kreditupplysning och ingen bevakning varje dag. När registret är inkopplat synkas det en gång i veckan, så uppgifterna är färska.",
+    a: "Välj listan själva och hitta er nästa kund idag. Antal och pris syns innan ni köper, och det finns ingen prenumeration. Ett gratis uppslag gäller ett bolag i taget. Ett årsabonnemang bevakar och kräver inloggning. Listan är ingen kreditupplysning och ingen bevakning varje dag. När registret är inkopplat synkas den en gång i veckan, så uppgifterna är färska.",
   },
   {
     q: "Vilket format får jag?",
