@@ -21,9 +21,6 @@ export function SiteHeader() {
               {link.label}
             </Link>
           ))}
-          <Link href="/crm" className="hidden px-2 py-2 text-xs font-normal text-muted/75 hover:text-muted lg:inline">
-            Kundlogin
-          </Link>
           <Link href="/#urval" className="btn-neon whitespace-nowrap rounded-full px-4 py-2 font-semibold">
             Skapa utdrag
           </Link>

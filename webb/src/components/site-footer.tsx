@@ -41,6 +41,11 @@ export function SiteFooter({
           <Link href="/bransch">Branscher</Link>
           <Link href="/kassa">Förhandsboka</Link>
         </nav>
+        <p className="text-xs text-muted/70">
+          <Link href="/crm" className="underline-offset-4 hover:text-muted hover:underline" title="För anställda">
+            Logga in
+          </Link>
+        </p>
       </div>
     </footer>
   );
