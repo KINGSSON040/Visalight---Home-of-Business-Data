@@ -13,6 +13,7 @@ const GROUPS = [
       { href: "/nyheter", label: "Nyheter" },
       { href: "/smakprov", label: "Smakprov" },
       { href: "/bransch", label: "Branscher" },
+      { href: "/konto", label: "Köphistorik" },
     ],
   },
   {

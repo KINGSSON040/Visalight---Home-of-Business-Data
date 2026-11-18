@@ -39,7 +39,7 @@ const STEPS = [
   },
 ] as const;
 
-const ACCESS_POINTS = ["Ingen inloggning.", "Ingen prenumeration.", "Ingen bindningstid."];
+const ACCESS_POINTS = ["Inget konto krävs.", "Ingen prenumeration.", "Ingen bindningstid."];
 
 function StepIcon({ name }: { name: (typeof STEPS)[number]["icon"] }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -163,6 +163,11 @@ export function CustomerHome({
               </li>
             ))}
           </ul>
+          <p className="mt-2 text-xs text-muted">
+            <Link href="/konto" className="underline-offset-4 hover:underline">
+              Skapa konto för köphistorik
+            </Link>
+          </p>
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
             <a href="#urval" className="btn-neon inline-flex h-11 items-center rounded-lg px-5 text-sm font-semibold">
               Skapa utdrag
@@ -320,7 +325,7 @@ export function CustomerHome({
             <p className="mt-3 max-w-md text-sm leading-6 text-muted">
               Priset är ett engångspris per utdrag, exklusive moms. Lägsta order {formatKronor(MINIMUM_ORE).replace(",00", "")} kr. Samma styckpris oavsett om urvalet är en bransch i en stad eller hela landet.
             </p>
-            <p className="mt-4 max-w-md text-sm text-ink/80">Ingen inloggning. Ingen prenumeration. Ingen bindningstid.</p>
+            <p className="mt-4 max-w-md text-sm text-ink/80">Inget konto krävs. Ingen prenumeration. Ingen bindningstid.</p>
             <a href="#urval" className="btn-neon mt-5 inline-flex h-11 items-center rounded-lg px-5 text-sm font-semibold">
               Räkna på ert urval
             </a>

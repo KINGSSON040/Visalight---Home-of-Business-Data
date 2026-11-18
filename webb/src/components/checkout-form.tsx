@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ORDER_STORAGE_KEY, type OrderDraft, type Selection } from "@/lib/catalog";
 import { SELLER } from "@/lib/seller";
@@ -55,6 +56,12 @@ export function CheckoutForm({ selection }: { selection: Selection }) {
       <button type="submit" className="btn-fade-sea mt-6 h-12 w-full rounded-full bg-sea font-medium text-white">
         Förhandsboka
       </button>
+      <p className="mt-3 text-xs leading-5 text-muted">
+        Köpet går utan konto.{" "}
+        <Link href="/konto" className="underline-offset-4 hover:underline">
+          Skapa konto för köphistorik
+        </Link>
+      </p>
     </form>
   );
 }

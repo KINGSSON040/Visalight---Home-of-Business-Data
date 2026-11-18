@@ -15,8 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: { canonical: "/" },
     title: "Företagslista och utdrag utan prenumeration — VisaLight",
     description: example
-      ? `${EXAMPLE_FIGURES_LINE} Företagslista och utdrag utan prenumeration. Ingen inloggning.`
-      : "Företagslista och utdrag utan prenumeration. Välj bransch, se antal och pris, och köp utan inloggning.",
+      ? `${EXAMPLE_FIGURES_LINE} Företagslista och utdrag utan prenumeration. Inget konto krävs.`
+      : "Företagslista och utdrag utan prenumeration. Välj bransch, se antal och pris, och köp utan konto.",
     openGraph: {
       title: "Företagslista och utdrag utan prenumeration",
       description: example

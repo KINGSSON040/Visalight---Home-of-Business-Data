@@ -405,7 +405,7 @@ function BrickSearch({
         />
       </div>
       {visible.length > 0 ? (
-        <ul id={listId} role="listbox" aria-label={`Förslag: ${label}`} className="suggest-list absolute z-30 mt-1.5 max-h-60 w-full overflow-y-auto rounded-2xl p-1">
+        <ul id={listId} role="listbox" aria-label={`Förslag: ${label}`} className={`suggest-list absolute z-30 mt-1.5 max-h-60 overflow-y-auto rounded-2xl p-1 ${kinds.includes("bransch") ? "w-max min-w-full max-w-[min(40rem,calc(100vw-1.5rem))]" : "w-full"}`}>
           {visible.map((suggestion, index) => (
             <li key={suggestion.id} role="presentation">
               <button
@@ -418,9 +418,9 @@ function BrickSearch({
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => choose(suggestion)}
                 onMouseEnter={() => setActive(index)}
-                className={`flex w-full items-baseline justify-between gap-3 rounded-xl px-3 py-2 text-left ${index === active ? "bg-foam" : ""}`}
+                className={`flex w-full items-baseline justify-between gap-3 rounded-xl px-2.5 text-left ${kinds.includes("bransch") ? "py-1.5 text-xs leading-4" : "px-3 py-2"} ${index === active ? "bg-foam" : ""}`}
               >
-                <span className="font-semibold">
+                <span className={suggestion.kind === "bransch" ? "font-medium whitespace-nowrap" : "font-semibold"}>
                   {suggestion.kind === "bransch" ? `${suggestion.title}, SNI ${dotted(suggestion.apply.sni ?? "")}` : suggestion.title}
                 </span>
                 {suggestion.kind === "bransch" ? null : (
@@ -518,7 +518,7 @@ function Result({
         ) : null}
       </div>
       <div className="mt-2 space-y-0.5">
-        <p className="text-xs leading-4">Ingen inloggning, prenumeration eller bindningstid.</p>
+        <p className="text-xs leading-4">Inget konto krävs. Ingen prenumeration eller bindningstid.</p>
         <p className="text-xs leading-4 text-muted">Bara aktiva företag som inte spärrat reklam. Uppdateras en gång i veckan.</p>
         <p className="text-xs leading-4 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
         {connected && urval.companies === 0 ? (
