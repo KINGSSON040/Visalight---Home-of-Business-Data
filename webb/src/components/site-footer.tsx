@@ -23,6 +23,14 @@ export function SiteFooter({
         <p className="text-sm leading-6 text-muted">
           {SELLER.line}
         </p>
+        <p className="text-sm leading-6 text-muted">
+          Telefon: numret läggs in när det finns. Vill ni inte köpa själva kan ni{" "}
+          <Link href="/demo?arende=meddelande" className="font-semibold text-ink hover:underline">skriva ett meddelande</Link>,{" "}
+          <Link href="/demo?arende=tid" className="font-semibold text-ink hover:underline">boka tid</Link>{" "}
+          eller{" "}
+          <Link href="/demo?arende=mote" className="font-semibold text-ink hover:underline">boka möte</Link>.
+          Inget skickas förrän en inkorg finns.
+        </p>
         <nav className="flex flex-wrap gap-x-4 gap-y-2">
           <Link href="/#urval">Skapa utdrag</Link>
           <Link href="/statistik">Statistik</Link>
@@ -40,11 +48,6 @@ export function SiteFooter({
           <Link href="/bransch">Branscher</Link>
           <Link href="/kassa">Förhandsboka</Link>
         </nav>
-        <p className="text-xs text-muted/70">
-          <Link href="/crm" className="underline-offset-4 hover:text-muted hover:underline" title="För anställda">
-            Logga in
-          </Link>
-        </p>
       </div>
     </footer>
   );

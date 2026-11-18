@@ -43,12 +43,14 @@ export function AuroraBuilder({
   urval,
   loading,
   updatedLabel,
+  exampleDate = false,
 }: {
   draft: Selection;
   onChange: Patch;
   urval: UrvalResult;
   loading: boolean;
   updatedLabel: string;
+  exampleDate?: boolean;
 }) {
   const [more, setMore] = useState(Boolean(draft.forms.length));
   const [lit, setLit] = useState(false);
@@ -77,7 +79,9 @@ export function AuroraBuilder({
   return (
     <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-2xl">
       <p className="register-stamp ml-auto w-max max-w-[15rem] px-4 pt-2.5 text-right text-[0.6rem] leading-[1.35] sm:px-5">
-        Registret senast uppdaterat: {updatedLabel}. Siffran följer den senaste uppdateringen.
+        {exampleDate
+          ? `Exempelsiffror. Registret är inte inkopplat. Datumet ${updatedLabel} är ett exempel.`
+          : `Registret senast uppdaterat: ${updatedLabel}. Siffran följer den senaste uppdateringen.`}
       </p>
       <div className="space-y-3 px-4 pt-2 pb-4 sm:px-5 sm:pb-5">
         <Step no="01" title="Bransch">
@@ -185,6 +189,9 @@ export function AuroraBuilder({
               price={`+${formatKronor(SIGNATORY_ORE)} kr/nr`}
             />
           </div>
+          <p className="mt-2 max-w-xl text-xs leading-5 text-muted">
+            Ett direktnummer till en person, eller en enskild firma, kan samtidigt vara en personuppgift. Ni ansvarar för utskicket, inklusive NIX och de regler som gäller just den kanalen.
+          </p>
           {more ? <MoreFilters draft={draft} onChange={onChange} /> : null}
         </Step>
       </div>
@@ -430,12 +437,16 @@ function Result({
           Köp utdrag <span aria-hidden="true">→</span>
         </Link>
       </div>
+      {urval.source === "example" ? (
+        <p className="mt-2 text-xs leading-5 text-muted">Exempelsiffror. Registret är inte inkopplat.</p>
+      ) : null}
+      <p className="mt-2 text-xs leading-5 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
       <p className="mt-2 text-sm font-semibold">Ingen inloggning. Ingen prenumeration. Ingen bindningstid.</p>
       <p className="mt-1.5 truncate text-xs text-muted">{describeSelection(counted)}</p>
       {urval.companies === 0 ? (
         <p className="mt-1 text-xs font-semibold">{urval.note || "Inget bolag matchar."} Ta bort ett filter så kommer de tillbaka.</p>
       ) : (
-        <p className="font-price mt-1 hidden truncate text-[0.66rem] text-muted sm:block">
+        <p className="font-price mt-1 text-[0.66rem] leading-5 text-muted">
           {parts.map((part) => `${part.label} ${Math.round(part.ore / 100).toLocaleString("sv-SE")} kr`).join(" + ")}
           {price.minimumApplied ? " · lägsta order 399 kr" : ""}
         </p>

@@ -6,11 +6,17 @@ import { registerStamp } from "@/lib/register-status";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/nyheter" },
-  title: "Nyheter och uppdateringar — VisaLight",
-  description: "Uppdateringar av registret, statistik och nyheter om Sveriges näringsliv.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const example = registerStamp().example || loadStats().source === "example";
+  return {
+    alternates: { canonical: "/nyheter" },
+    title: "Nyheter och uppdateringar — VisaLight",
+    description: example
+      ? "Exempeltexter. Registret är inte inkopplat. Uppdateringar av registret, statistik och nyheter om Sveriges näringsliv."
+      : "Uppdateringar av registret, statistik och nyheter om Sveriges näringsliv.",
+    robots: example ? { index: false, follow: true } : undefined,
+  };
+}
 
 export default function NyheterPage() {
   const stamp = registerStamp();

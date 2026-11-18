@@ -5,15 +5,25 @@ import { PUBLIC_FAQ } from "@/lib/public-faq";
 import { allPosts } from "@/lib/nyheter";
 import { loadStats } from "@/lib/register-stats";
 import { loadUrval } from "@/lib/register-urval";
-import { registerStamp } from "@/lib/register-status";
+import { EXAMPLE_FIGURES_LINE, registerStamp } from "@/lib/register-status";
 import { siteOrigin } from "@/lib/topics";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/" },
-  title: "VisaLight — Alla Sveriges företag i ett utdrag",
-  description:
-    "Alla Sveriges företag. VisaLight tar fram utdrag med företagsdata. Ingen prenumeration, just för att det ska vara enkelt. Ingen inloggning och ingen bindningstid.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const example = registerStamp().example || loadStats().source === "example";
+  return {
+    alternates: { canonical: "/" },
+    title: "Företagslista och utdrag utan prenumeration — VisaLight",
+    description: example
+      ? `${EXAMPLE_FIGURES_LINE} Företagslista och utdrag utan prenumeration. Ingen inloggning.`
+      : "Företagslista och utdrag utan prenumeration. Välj bransch, se antal och pris, och köp utan inloggning.",
+    openGraph: {
+      title: "Företagslista och utdrag utan prenumeration",
+      description: example
+        ? `${EXAMPLE_FIGURES_LINE} Företagslista och utdrag utan prenumeration.`
+        : "Företagslista och utdrag utan prenumeration. Antal och pris syns innan köp.",
+    },
+  };
+}
 
 export default async function Home({
   searchParams,
@@ -34,7 +44,9 @@ export default async function Home({
         name: "VisaLight",
         url: origin,
         inLanguage: "sv-SE",
-        description: "Färsk företagsdata för svenska bolag, utan abonnemang.",
+        description: stamp.example
+          ? `${EXAMPLE_FIGURES_LINE} Färsk företagsdata för svenska bolag, utan abonnemang.`
+          : "Färsk företagsdata för svenska bolag, utan abonnemang.",
       },
       {
         "@type": "FAQPage",
@@ -54,6 +66,7 @@ export default async function Home({
         initial={selection}
         initialUrval={initialUrval}
         updatedLabel={stamp.when}
+        exampleDate={stamp.example}
         stats={stats}
         news={news}
       />

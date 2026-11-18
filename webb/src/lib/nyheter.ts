@@ -65,7 +65,9 @@ export function registerPost(stats: RegisterStats, updatedLabel: string, isoDate
     date: isoDate,
     kind: "Uppdatering",
     title: `Registret uppdaterat, ${formatCount(stats.newLastMonth)} nya bolag`,
-    lead: `Senaste uppdateringen ${updatedLabel}. ${formatCount(stats.total)} aktiva företag går att sälja. Siffran följer den uppdateringen.`,
+    lead: example
+      ? `Exempelsiffror. Registret är inte inkopplat. Datumet ${updatedLabel} och antalet ${formatCount(stats.total)} är exempel.`
+      : `Senaste uppdateringen ${updatedLabel}. ${formatCount(stats.total)} aktiva företag som inte spärrat reklam. Siffran följer den uppdateringen.`,
     body: [
       example
         ? "Registret är inte inkopplat i den här körningen, så siffrorna i inlägget följer samma underlag som sidan."

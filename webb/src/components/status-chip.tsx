@@ -5,7 +5,7 @@ export function StatusChip({
   registerReady?: boolean;
   exampleData?: boolean;
 }) {
-  const fresh = `Siffran följer den senaste uppdateringen och räknar bara aktiva företag som går att sälja.${
+  const fresh = `Siffran följer den senaste uppdateringen och räknar bara aktiva företag som inte spärrat reklam.${
     registerReady ? " Urvalet gäller den datan." : ""
   }`;
 

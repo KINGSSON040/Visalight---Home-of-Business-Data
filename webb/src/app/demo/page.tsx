@@ -1,22 +1,38 @@
 import type { Metadata } from "next";
-import { DemoForm } from "@/components/demo-form";
+import { DemoForm, type ContactKind } from "@/components/demo-form";
 
 export const metadata: Metadata = {
-  title: "Boka 15 minuter — VisaLight",
-  description: "En kvarts samtal om filformat, återkommande uttag eller en senare koppling mot affärssystemet.",
+  title: "Kontakt — VisaLight",
+  description: "Skriv ett meddelande, boka tid eller boka möte. Telefonnumret läggs in när det finns. Inget skickas förrän en inkorg finns.",
 };
 
-export default function DemoPage() {
+function kindFrom(value: string | string[] | undefined): ContactKind {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (raw === "meddelande" || raw === "mote" || raw === "tid") return raw;
+  return "tid";
+}
+
+const HEADING: Record<ContactKind, string> = {
+  meddelande: "Skriv ett meddelande.",
+  tid: "Boka en tid.",
+  mote: "Boka ett möte.",
+};
+
+export default async function DemoPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const kind = kindFrom((await searchParams).arende);
   return (
     <main className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-      <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">För större urval</p>
-      <h1 className="mt-3 text-4xl tracking-tight sm:text-5xl">15 minuter, utan abonnemang.</h1>
+      <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Kontakt</p>
+      <h1 className="mt-3 text-4xl tracking-tight sm:text-5xl">{HEADING[kind]}</h1>
       <p className="mt-4 text-lg leading-8 text-muted">
-        De flesta köper listan direkt i kassan. Boka ett kort samtal om ni ska läsa in filen i ett CRM, ta ut samma
-        urval igen, eller prata om en senare koppling.
+        De flesta köper utdraget direkt. Telefon: numret läggs in när det finns. Meddelande och mötesönskemål sparas i den här webbläsaren tills en inkorg finns. Inget skickas ännu.
       </p>
       <div className="mt-8">
-        <DemoForm />
+        <DemoForm kind={kind} />
       </div>
     </main>
   );

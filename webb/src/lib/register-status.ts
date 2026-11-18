@@ -4,6 +4,9 @@ import { registerDatabasePath } from "@/lib/register-path";
 /** Exempelvärde när registret inte är inkopplat. Ska aldrig se ut som en riktig import. */
 export const EXAMPLE_REGISTER_WHEN = "12 mars 2026 kl. 09.00";
 
+/** Syns bredvid exempelsiffror och exempeldatumet tills registret är inkopplat. */
+export const EXAMPLE_FIGURES_LINE = "Exempelsiffror. Registret är inte inkopplat.";
+
 /** En tidpunkt för kundsidan. example är true när siffran inte kommer från registret. */
 export function registerStamp(): { when: string; example: boolean; isoDate: string } {
   const at = registerUpdatedAt();

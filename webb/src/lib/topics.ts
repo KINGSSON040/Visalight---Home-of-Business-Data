@@ -68,8 +68,8 @@ function bransch(slug: string, nav: string, sni: string | undefined, lead: strin
     slug,
     kind: "bransch",
     nav,
-    title: `Företagsdata om ${nav.toLowerCase()}`,
-    description: `${lead} VisaLight arbetar med verifierad, uppdaterad och färsk företagsdata. Verktyget visar exempel tills registret är kopplat.`,
+    title: `Företagslista: ${nav}`,
+    description: `${lead} Priset visas innan köp. Tills registret är kopplat är siffrorna i verktyget exempel.`,
     lead,
     sni,
   };
@@ -81,7 +81,7 @@ function ord(slug: string, nav: string, lead: string): Topic {
     kind: "ord",
     nav,
     title: nav,
-    description: `${lead} Uppgifterna är verifierade, uppdaterade och färska från officiella register. Exempelbolagen i verktyget är exempel.`,
+    description: `${lead} Priset visas innan köp. Tills registret är kopplat är siffrorna i verktyget exempel.`,
     lead,
   };
 }
@@ -173,6 +173,7 @@ export function topicBuilderHref(topic: Topic): string {
   if (topic.sni && INDUSTRIES.some((item) => item.sni === topic.sni)) {
     return `/?sni=${topic.sni}#urval`;
   }
+  if (topic.kind === "bransch") return `/?bransch=${encodeURIComponent(topic.nav)}#urval`;
   return "/#urval";
 }
 

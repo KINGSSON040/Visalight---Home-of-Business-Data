@@ -68,28 +68,13 @@ export default function ConfirmationPage() {
       </p>
       <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <article className="rounded-3xl border border-line bg-card p-5 sm:p-6">
-          <p className="font-mono text-sm text-muted">{order.id}</p>
-          <h2 className="mt-2 font-serif text-3xl">{order.email}</h2>
-          <dl className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
-            <div>
-              <dt className="text-muted">E-post</dt>
-              <dd className="mt-1">{order.email}</dd>
-            </div>
-            <div>
-              <dt className="text-muted">Skapad</dt>
-              <dd className="mt-1">{when}</dd>
-            </div>
-            <div className="sm:col-span-2">
-              <dt className="text-muted">Urval</dt>
-              <dd className="mt-1">{describeSelection(order.selection)}</dd>
-            </div>
-            {order.contact ? (
-              <div>
-                <dt className="text-muted">Namn</dt>
-                <dd className="mt-1">{order.contact}</dd>
-              </div>
-            ) : null}
-          </dl>
+          <h2 className="font-serif text-3xl">Sparat här, inte hos VisaLight</h2>
+          <p className="mt-4 text-sm leading-6 text-muted">
+            E-postadressen {order.email} ligger bara kvar i den här webbläsaren. Det finns inget ordernummer och ingen
+            faktura. Urvalet: {describeSelection(order.selection)}.
+          </p>
+          {order.contact ? <p className="mt-2 text-sm text-muted">Namn som skrevs in: {order.contact}.</p> : null}
+          <p className="mt-2 text-sm text-muted">Sparat {when}.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href={`/?${selectionToQuery(order.selection)}`}

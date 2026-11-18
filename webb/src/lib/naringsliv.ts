@@ -19,7 +19,7 @@ export type RegisterStats = {
 };
 
 /**
- * Märkt exempel på aktiva företag som går att sälja, när registret inte är inkopplat.
+ * Märkt exempel på aktiva företag som inte spärrat reklam, när registret inte är inkopplat.
  * Talen ska inte se ut som hela SCB-registret. Vilande, inaktiva, avregistrerade
  * och reklamspärrade ingår inte. Länets tal summerar till 420 000.
  */
@@ -164,7 +164,7 @@ export function exampleEstimate(selection: Selection, stats: RegisterStats = exa
     withEmail,
     withSignatory,
     preview: [],
-    note: "Exempel på aktiva företag som går att sälja. Registret är inte inkopplat, så antalet är ett märkt exempel, inte hela registret.",
+    note: "Exempelsiffror. Registret är inte inkopplat. Antalet är aktiva företag som inte spärrat reklam, inte hela registret.",
   };
 }
 

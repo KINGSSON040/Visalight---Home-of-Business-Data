@@ -1,9 +1,10 @@
+import { BASE_ORE, EMAIL_ORE, formatKronor, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import { SELLER } from "@/lib/seller";
 
 export const PUBLIC_FAQ = [
   {
     q: "Vad kostar utdraget?",
-    a: "Grunduppgifter kostar 10 öre per bolag. Kontaktnummer kostar 30 öre per nummer, e-postkontakt 40 öre per adress och beslutsfattare 40 öre per nummer. Ni betalar bara när uppgiften finns. Lägsta order är 399 kr exklusive moms, och priset visas alltid innan ni köper.",
+    a: `Grunduppgifter kostar ${formatKronor(BASE_ORE)} kr per bolag. Kontaktnummer kostar ${formatKronor(PHONE_ORE)} kr per nummer, e-postkontakt ${formatKronor(EMAIL_ORE)} kr per adress och beslutsfattare ${formatKronor(SIGNATORY_ORE)} kr per nummer. Ni betalar bara när uppgiften finns. Lägsta order är 399 kr exklusive moms, och priset visas alltid innan ni köper.`,
   },
   {
     q: "Ingår moms?",
@@ -11,7 +12,7 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Hur aktuellt är utdraget?",
-    a: "Siffran och filen följer den senaste uppdateringen av företagsregistret. Vi säljer inte en fil från förra året. Bara aktiva företag som går att sälja ingår. Vilande, inaktiva, avregistrerade och reklamspärrade bolag är redan borta. Det är inte en uppdatering varje minut.",
+    a: "När registret är inkopplat följer siffran och filen den senaste uppdateringen. Vi säljer inte en fil från förra året. Bara aktiva företag som inte spärrat reklam ingår. Vilande, inaktiva, avregistrerade och reklamspärrade bolag är redan borta. Det är inte en uppdatering varje minut. Tills registret är inkopplat är siffrorna på sidan exempel.",
   },
   {
     q: "Hur betalar vi?",
@@ -20,6 +21,10 @@ export const PUBLIC_FAQ = [
   {
     q: "Får vi kontakta bolagen?",
     a: "Utdraget är till för att ett företag ska kunna kontakta ett annat företag. Reklamspärrade bolag är borttagna. Ni ansvarar för ert eget utskick, inklusive NIX-Telefon och de regler som gäller just den kanalen.",
+  },
+  {
+    q: "Hur skiljer sig ett utdrag från ett gratis uppslag eller ett årsabonnemang?",
+    a: "Ett utdrag är en lista ni väljer själva. Antal och pris syns innan köp, och det finns ingen prenumeration. Ett gratis uppslag gäller ett bolag i taget. Ett årsabonnemang bevakar och kräver inloggning. Utdraget är ingen kreditupplysning och ingen bevakning varje dag. När registret är inkopplat synkas det en gång i veckan.",
   },
   {
     q: "Vilket format får jag?",

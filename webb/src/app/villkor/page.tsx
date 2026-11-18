@@ -25,8 +25,8 @@ export default function TermsPage() {
       <section>
         <h2 className="text-2xl tracking-tight">Pris och moms</h2>
         <p className="mt-2 leading-7 text-muted">
-          Priset ni ser i utdraget är exklusive moms. Grunduppgifter kostar 10 öre per bolag. Kontaktnummer kostar 30
-          öre per nummer, e-postkontakt 40 öre per adress och beslutsfattare 40 öre per nummer. Ett tomt fält kostar
+          Priset ni ser i utdraget är exklusive moms. Grunduppgifter kostar 0,10 kr per bolag. Kontaktnummer kostar 0,30
+          kr per nummer, e-postkontakt 0,40 kr per adress och beslutsfattare 0,40 kr per nummer. Ett tomt fält kostar
           inget. Lägsta order är 399 kr exklusive moms.
         </p>
       </section>

@@ -25,8 +25,10 @@ export function topicMetadata(kind: TopicKind, slug: string): Metadata {
   const industry = INDUSTRIES.find((item) => item.sni === topic.sni);
   const code = industry ? dottedSni(industry.sni) : "";
   const title = industry
-    ? `Företagsinformation om ${industry.label.toLowerCase()} (SNI ${code})`
-    : topic.title;
+    ? `Företagslista för ${industry.label.toLowerCase()} (SNI ${code})`
+    : topic.kind === "bransch"
+      ? `Företagslista: ${topic.nav}`
+      : topic.title;
   const description = industry
     ? `Företagsdata för ${industry.label.toLowerCase()}, SNI ${code}. Namn, organisationsnummer, adress och bransch. Telefon och e-post där uppgiften finns. Priset visas innan köp.`
     : topic.description;

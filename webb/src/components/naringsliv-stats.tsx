@@ -21,7 +21,8 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
       <article className="glass flex flex-col rounded-2xl p-4">
         <p className="text-sm font-medium text-muted">Aktiva företag i dag</p>
         <CountUp value={stats.total} className="font-display mt-1 text-4xl text-ink font-extrabold tracking-tight" />
-        <p className="mt-1 text-xs text-muted">som går att sälja</p>
+        <p className="mt-1 text-xs text-muted">som inte spärrat reklam</p>
+        {stats.source === "example" ? <p className="mt-1 text-xs leading-5 text-muted">Exempelsiffror. Registret är inte inkopplat.</p> : null}
         <Link href="/#urval" className="mt-auto pt-3 text-sm font-bold text-magenta hover:underline">
           Bygg utdrag på alla {formatCount(stats.total)} →
         </Link>
@@ -187,7 +188,8 @@ export function NaringslivSection({ stats, headingId = "siffror" }: { stats: Reg
             Sveriges näringsliv i siffror
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-            Hur många aktiva företag som går att sälja, var de finns och vilka branscher som växer. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Siffran följer den senaste uppdateringen. En rad öppnar byggaren med branschen eller länet ifyllt.
+            {stats.source === "example" ? "Exempelsiffror. Registret är inte inkopplat. " : ""}
+            Hur många aktiva företag som inte spärrat reklam, var de finns och vilka branscher som växer. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. {stats.source === "example" ? "Talen är exempel tills registret är inkopplat." : "Siffran följer den senaste uppdateringen."} En rad öppnar byggaren med branschen eller länet ifyllt.
           </p>
         </div>
         <Link href="/statistik" className="text-sm font-semibold text-magenta hover:underline">

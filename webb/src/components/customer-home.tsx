@@ -18,7 +18,7 @@ const STEPS = [
   {
     no: "01",
     title: "Ange sökord",
-    text: "Skriv bransch, ort eller SNI-kod i byggaren. Sökningen gäller aktiva företag som går att sälja.",
+    text: "Skriv bransch, ort eller SNI-kod i byggaren. Sökningen gäller aktiva företag som inte spärrat reklam.",
   },
   {
     no: "02",
@@ -63,12 +63,14 @@ export function CustomerHome({
   initial,
   initialUrval,
   updatedLabel,
+  exampleDate = false,
   stats,
   news,
 }: {
   initial: Selection;
   initialUrval: UrvalResult;
   updatedLabel: string;
+  exampleDate?: boolean;
   stats: RegisterStats;
   news: NewsPost[];
 }) {
@@ -137,7 +139,7 @@ export function CustomerHome({
           </div>
         </div>
         <div className="min-w-0">
-          <AuroraBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} />
+          <AuroraBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} exampleDate={exampleDate} />
         </div>
       </section>
 
@@ -172,7 +174,9 @@ export function CustomerHome({
             <div>
               <h3 className="text-sm font-semibold">Uppdatering</h3>
               <p className="soft-copy mt-2 text-sm text-muted">
-                Registret synkas en gång i veckan. Siffran på sidan följer den senaste uppdateringen och räknar bara aktiva företag som går att sälja. Utdraget tas från samma uppdatering, inte från en fil från förra året.
+                {exampleDate
+                  ? "När registret är inkopplat synkas det en gång i veckan. Siffrorna ni ser nu är exempel och räknar aktiva företag som inte spärrat reklam."
+                  : "Registret synkas en gång i veckan. Siffran på sidan följer den senaste uppdateringen och räknar bara aktiva företag som inte spärrat reklam. Utdraget tas från samma uppdatering, inte från en fil från förra året."}
               </p>
             </div>
             <div>
@@ -200,7 +204,7 @@ export function CustomerHome({
                 Vanliga urval
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-                Ett färdigt urval per bransch. Antalet är aktiva företag som går att sälja, och det följer den senaste uppdateringen. Öppna raden om ni vill se priset i byggaren.
+                Ett färdigt urval per bransch. Antalet är aktiva företag som inte spärrat reklam, och det följer den senaste uppdateringen. Öppna raden om ni vill se priset i byggaren.
               </p>
             </div>
           </div>
@@ -349,7 +353,8 @@ export function CustomerHome({
               Alla Sveriges företag, i ett utdrag.
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-              {formatCount(stats.total)} aktiva företag i dag. Siffran följer den senaste uppdateringen. Välj vilka ni vill nå och se priset direkt.
+              {stats.source === "example" ? "Exempelsiffror. Registret är inte inkopplat. " : ""}
+              {formatCount(stats.total)} aktiva företag i dag. {stats.source === "example" ? "Antalet är ett exempel." : "Siffran följer den senaste uppdateringen."} Välj vilka ni vill nå och se priset direkt.
             </p>
           </div>
           <a href="#urval" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">

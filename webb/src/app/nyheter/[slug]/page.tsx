@@ -15,7 +15,12 @@ function findPost(slug: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const post = findPost((await params).slug);
   if (!post) return { title: "Nyheter — VisaLight" };
-  return { title: `${post.title} — VisaLight`, description: post.lead, alternates: { canonical: `/nyheter/${post.slug}` } };
+  return {
+    title: `${post.title} — VisaLight`,
+    description: post.example ? `Exempeltext. Registret är inte inkopplat. ${post.lead}` : post.lead,
+    alternates: { canonical: `/nyheter/${post.slug}` },
+    robots: post.example ? { index: false, follow: true } : undefined,
+  };
 }
 
 export default async function NyhetPage({ params }: { params: Promise<{ slug: string }> }) {

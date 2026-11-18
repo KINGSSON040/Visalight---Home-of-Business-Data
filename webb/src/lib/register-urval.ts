@@ -42,11 +42,20 @@ const SIZE_VALUES: Record<string, string[]> = {
 const NOT_A_COMPANY =
   "Vi säljer inte enskilda företag. Välj bransch, ort, län, bolagsform eller storlek i förslagen.";
 
+const NO_SNI_YET =
+  "Branschen är ifylld, men den har ingen SNI-kod i urvalet ännu. Antalet kan inte räknas.";
+
+function emptyNote(selection: Selection): string {
+  const name = (selection.bransch ?? "").trim();
+  if (name && selectionSniFilter(selection).kind === "none") return NO_SNI_YET;
+  return NOT_A_COMPANY;
+}
+
 const CITY_SQL =
   "lower(replace(replace(replace(replace(replace(replace(c.city, 'Ö', 'o'), 'ö', 'o'), 'Ä', 'a'), 'ä', 'a'), 'Å', 'a'), 'å', 'a'))";
 
 /**
- * Bara aktiva företag som går att sälja.
+ * Bara aktiva företag som inte spärrat reklam.
  * SCB FtgStat 1 (och exempelvärdet "verksam") betyder verksamt.
  * 0 har aldrig varit verksamt, 9 är inte längre verksamt. De, liksom
  * avregistrerade, vilande, inaktiva och reklamspärrade, räknas inte och följer inte med i utdraget.
@@ -192,7 +201,7 @@ function fromDatabase(selection: Selection): UrvalResult | null {
       0,
       0,
       [],
-      NOT_A_COMPANY,
+      emptyNote(selection),
     );
   }
   return countWhere(file, built.sql, built.args, true);
@@ -205,7 +214,7 @@ function wholeRegister(file: string): UrvalResult {
   const key = `${file}:${fs.statSync(file).mtimeMs}`;
   if (wholeCache?.key === key) return wholeCache.result;
   const result = countWhere(file, SELLABLE, {}, false);
-  result.note = "Aktiva företag i dag som går att sälja. Vilande, inaktiva, avregistrerade och reklamspärrade ingår inte. Siffran följer den senaste uppdateringen. Välj bransch eller ort för att smalna av.";
+  result.note = "Aktiva företag i dag som inte spärrat reklam. Vilande, inaktiva, avregistrerade och reklamspärrade ingår inte. Siffran följer den senaste uppdateringen. Välj bransch eller ort för att smalna av.";
   wholeCache = { key, result };
   return result;
 }
@@ -303,11 +312,11 @@ function exampleUrval(selection: Selection): UrvalResult {
   if (filter.kind === "any" && !narrowed) {
     return {
       ...exampleEstimate(selection),
-      note: "Exempel på aktiva företag som går att sälja. Registret är inte inkopplat, så antalet är ett märkt exempel, inte hela registret.",
+      note: "Exempelsiffror. Registret är inte inkopplat. Antalet är aktiva företag som inte spärrat reklam, inte hela registret.",
     };
   }
   if (filter.kind === "none") {
-    return ready("example", 0, 0, 0, 0, [], NOT_A_COMPANY);
+    return ready("example", 0, 0, 0, 0, [], emptyNote(selection));
   }
   const rows = COMPANIES.filter((company) => {
     if (forms.length > 0 && !forms.includes(company.form)) return false;

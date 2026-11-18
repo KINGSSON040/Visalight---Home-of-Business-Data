@@ -3,17 +3,24 @@ import Link from "next/link";
 import { BarList, Growing, MonthlyChart, StatTiles } from "@/components/naringsliv-stats";
 import { countyRows, industryRows } from "@/lib/naringsliv";
 import { loadStats } from "@/lib/register-stats";
+import { EXAMPLE_FIGURES_LINE, registerStamp } from "@/lib/register-status";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/statistik" },
-  title: "Sveriges näringsliv i siffror — VisaLight",
-  description: "Antal företag i Sverige, nya företag per månad, fördelning per bransch och län, och de branscher som växer mest.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const example = registerStamp().example || loadStats().source === "example";
+  return {
+    alternates: { canonical: "/statistik" },
+    title: "Sveriges näringsliv i siffror — VisaLight",
+    description: example
+      ? `${EXAMPLE_FIGURES_LINE} Antal företag i Sverige, nya företag per månad, fördelning per bransch och län.`
+      : "Antal företag i Sverige, nya företag per månad, fördelning per bransch och län, och de branscher som växer mest.",
+  };
+}
 
 export default function StatistikPage() {
   const stats = loadStats();
+  const example = stats.source === "example" || registerStamp().example;
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
       <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Statistik</p>
@@ -21,9 +28,11 @@ export default function StatistikPage() {
         Sveriges näringsliv <span className="aurora-text">i siffror</span>
       </h1>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
-        Talen är aktiva företag som går att sälja, och de följer den senaste uppdateringen. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Klicka på en bransch eller ett län för att bygga ett utdrag på just de bolagen.
+        Talen är aktiva företag som inte spärrat reklam{example ? "" : ", och de följer den senaste uppdateringen"}. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Klicka på en bransch eller ett län för att bygga ett utdrag på just de bolagen.
       </p>
-      <p className="mt-3 text-sm text-muted">Siffran följer den senaste uppdateringen.</p>
+      <p className="mt-3 text-sm text-muted">
+        {example ? `${EXAMPLE_FIGURES_LINE} Datumet ${registerStamp().when} är ett exempel.` : "Siffran följer den senaste uppdateringen."}
+      </p>
       <div className="mt-8">
         <StatTiles stats={stats} />
       </div>

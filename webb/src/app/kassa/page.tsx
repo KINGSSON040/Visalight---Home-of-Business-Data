@@ -12,6 +12,7 @@ import { pricedCounts } from "@/lib/urval";
 
 export const metadata: Metadata = {
   title: "Förhandsboka — VisaLight",
+  robots: { index: false, follow: false },
 };
 
 export default async function CheckoutPage({
