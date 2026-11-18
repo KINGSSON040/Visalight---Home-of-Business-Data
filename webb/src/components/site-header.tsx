@@ -13,7 +13,7 @@ export function SiteHeader() {
     <header className="site-header sticky top-0 z-40">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2.5">
         <Link href="/" className="min-w-0">
-          <BrandLockup subtitle="Företagsdata i listor. Se priset innan köp." compact />
+          <BrandLockup subtitle="Kontakta er nästa kund idag" compact />
         </Link>
         <nav aria-label="Huvudmeny" className="flex shrink-0 items-center gap-1 text-sm font-medium sm:gap-2">
           {LINKS.map((link) => (
