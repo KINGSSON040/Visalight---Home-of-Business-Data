@@ -1,0 +1,12 @@
+- slug: salj
+  name: Sälj
+  summary: Roller inom försäljning, från säljare till säljledare.
+  href: /roller/salj
+- slug: it
+  name: IT
+  summary: Roller inom utveckling, drift och andra IT-funktioner.
+  href: /roller/it
+- slug: ekonomi
+  name: Ekonomi
+  summary: Roller inom redovisning, controlling och ekonomi.
+  href: /roller/ekonomi
