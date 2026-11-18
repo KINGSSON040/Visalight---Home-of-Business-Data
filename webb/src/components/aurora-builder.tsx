@@ -421,10 +421,12 @@ function BrickSearch({
                 onMouseEnter={() => setActive(index)}
                 className={`flex w-full items-baseline justify-between gap-3 rounded-xl px-3 py-2 text-left ${index === active ? "bg-foam" : ""}`}
               >
-                <span className="font-semibold">{suggestion.title}</span>
-                <span className="font-price shrink-0 text-[0.7rem] text-muted">
-                  {suggestion.kind === "bransch" ? `SNI ${dotted(suggestion.apply.sni ?? "")}` : suggestion.kind === "lan" ? "Län" : "Ort"}
+                <span className="font-semibold">
+                  {suggestion.kind === "bransch" ? `${suggestion.title}, SNI ${dotted(suggestion.apply.sni ?? "")}` : suggestion.title}
                 </span>
+                {suggestion.kind === "bransch" ? null : (
+                  <span className="font-price shrink-0 text-[0.7rem] text-muted">{suggestion.kind === "lan" ? "Län" : "Ort"}</span>
+                )}
               </button>
             </li>
           ))}
