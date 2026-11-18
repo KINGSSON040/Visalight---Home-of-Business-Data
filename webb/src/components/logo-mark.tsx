@@ -46,7 +46,7 @@ export function BrandLockup({
           Visa<span className="text-neon">Light</span>
         </span>
         {subtitle ? (
-          <span className={`mt-0.5 block truncate text-[0.62rem] uppercase tracking-[0.18em] sm:text-[0.68rem] ${light ? "text-white/80" : "text-ink/70"}`}>
+          <span className={`mt-0.5 block truncate text-[0.62rem] uppercase tracking-[0.18em] sm:text-[0.68rem] ${light ? "text-white/80" : "text-magenta"}`}>
             {subtitle}
           </span>
         ) : null}

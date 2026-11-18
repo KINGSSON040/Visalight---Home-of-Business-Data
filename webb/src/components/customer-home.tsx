@@ -20,18 +20,27 @@ const STEPS = [
     title: "Ange sökord",
     text: "Skriv bransch, ort eller SNI-kod i byggaren. Sökningen gäller aktiva företag som inte spärrat reklam.",
     icon: "search",
+    tone: "text-[#a67c00]",
+    wash: "bg-[#fff6d6]",
+    rule: "border-[#ffc400]",
   },
   {
     no: "02",
     title: "Välj filter",
     text: "Begränsa med län, bolagsform eller storlek. Lägg till telefon, e-post eller beslutsfattare om ni behöver det.",
     icon: "filter",
+    tone: "text-magenta",
+    wash: "bg-[#fdeef7]",
+    rule: "border-[#d6007a]",
   },
   {
     no: "03",
     title: "Se pris direkt",
     text: "Antal och pris står under urvalet, exklusive moms, innan ni förhandsbokar. Ingen prenumeration krävs.",
     icon: "price",
+    tone: "text-[#00a85e]",
+    wash: "bg-[#e8f8ef]",
+    rule: "border-[#00c26e]",
   },
 ] as const;
 
@@ -134,10 +143,11 @@ export function CustomerHome({
 
   return (
     <main>
-      <section className="mx-auto grid max-w-6xl items-start gap-x-12 gap-y-8 px-4 pt-8 pb-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:pt-12">
+      <section className="border-b border-line bg-white">
+        <div className="mx-auto grid max-w-6xl items-start gap-x-12 gap-y-8 px-4 pt-8 pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:pt-12 lg:pb-14">
         <div className="min-w-0 lg:pt-2">
-          <p className="text-xs font-semibold tracking-[0.14em] text-muted uppercase">Företagsdata</p>
-          <h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] text-magenta sm:text-5xl lg:text-6xl">
+          <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Företagsdata</p>
+          <h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] text-[#b8860b] sm:text-5xl lg:text-6xl">
             Alla Sveriges företag.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-muted">
@@ -167,6 +177,7 @@ export function CustomerHome({
         <div className="min-w-0">
           <AuroraBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} exampleDate={exampleDate} />
         </div>
+        </div>
       </section>
 
       <section id="sa-funkar-det" aria-labelledby="steg" className="mx-auto max-w-6xl px-4 pt-6 pb-16">
@@ -180,8 +191,8 @@ export function CustomerHome({
               className="step-card rounded-2xl bg-white px-6 py-7 ring-1 ring-ink/10"
               style={{ animationDelay: `${index * 90}ms` }}
             >
-              <div className="flex items-center gap-3 text-magenta">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#fdeef7]">
+              <div className={`flex items-center gap-3 border-t-4 pt-4 ${step.tone} ${step.rule}`}>
+                <span className={`inline-flex h-9 w-9 items-center justify-center rounded-full ${step.wash}`}>
                   <StepIcon name={step.icon} />
                 </span>
                 <p className="font-price text-xs font-bold tracking-[0.14em]">{step.no}</p>
@@ -322,17 +333,28 @@ export function CustomerHome({
             ))}
           </dl>
         </div>
-        <h3 className="mt-10 text-lg font-bold">Räkneexempel</h3>
-        <p className="mt-1 text-sm text-muted">Så ser priset ut för tre vanliga urval. Ert eget tal räknas i byggaren.</p>
-        <ul className="mt-4 grid gap-px overflow-hidden rounded-xl border border-line bg-line md:grid-cols-3">
+        <h3 className="mt-12 text-lg font-bold">Så räknas priset</h3>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+          Tre vanliga urval, räknade med styckpriset. Det är en förklaring, inte en offert. Ert eget pris räknas i byggaren.
+        </p>
+        <ul className="mt-5 grid gap-4 md:grid-cols-3">
           {PRICE_EXAMPLES.map((item) => (
-            <li key={item.title} className="bg-white">
-              <Link href={item.href} className="flex h-full flex-col p-5">
-                <span className="font-semibold">{item.title}</span>
-                <span className="mt-1 text-sm text-muted">{item.detail}</span>
-                <span className="font-price mt-4 text-2xl font-bold text-ink">{formatKronor(item.quote.totalOre)} kr</span>
-                <span className="text-xs text-muted">{item.quote.minimumApplied ? "Lägsta order. " : ""}Exkl. moms, engångspris.</span>
-                <span className="mt-4 text-sm font-semibold text-ink">Öppna i byggaren</span>
+            <li key={item.title} className="rounded-2xl bg-[#fffdf8] px-5 py-5">
+              <p className="font-semibold">{item.title}</p>
+              <p className="mt-1 text-sm text-muted">{item.detail}</p>
+              <ul className="mt-3 space-y-1 text-sm leading-6">
+                <li>{item.counts.companies.toLocaleString("sv-SE")} bolag × {formatKronor(BASE_ORE)} kr</li>
+                {item.counts.phones > 0 ? <li>{item.counts.phones.toLocaleString("sv-SE")} nummer × {formatKronor(PHONE_ORE)} kr</li> : null}
+                {item.counts.emails > 0 ? <li>{item.counts.emails.toLocaleString("sv-SE")} e-post × {formatKronor(EMAIL_ORE)} kr</li> : null}
+                {item.counts.signatoryPhones > 0 ? <li>{item.counts.signatoryPhones.toLocaleString("sv-SE")} beslutsfattare × {formatKronor(SIGNATORY_ORE)} kr</li> : null}
+              </ul>
+              <p className="mt-2 text-sm leading-6 text-ink/80">
+                {item.quote.minimumApplied
+                  ? `Summan ligger under lägsta order, så priset blir ${formatKronor(item.quote.totalOre)} kr exkl. moms.`
+                  : `${formatKronor(item.quote.totalOre)} kr exkl. moms.`}
+              </p>
+              <Link href={item.href} className="mt-3 inline-flex text-sm font-semibold text-ink underline-offset-4 hover:underline">
+                Räkna samma urval
               </Link>
             </li>
           ))}
@@ -375,6 +397,7 @@ export function CustomerHome({
                   <span>
                     <span className="block font-semibold">{post.title}</span>
                     <span className="mt-1 block text-sm leading-6 text-muted">{post.lead}</span>
+                    <span className="mt-1 block text-sm leading-6 text-ink/80">{post.body.find((line) => !line.startsWith("Exempeltext"))}</span>
                   </span>
                 </Link>
               </li>

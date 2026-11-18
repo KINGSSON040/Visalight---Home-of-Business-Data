@@ -387,9 +387,9 @@ body:has(.customer-site) {
 .chip:hover { background: #faf7f8; }
 
 .chip[aria-pressed="true"] {
-  border-color: #3dcc8a;
-  background: #3dcc8a;
-  color: #1b1023;
+  border-color: #d6007a;
+  background: #d6007a;
+  color: #fff;
 }
 
 .addon-chip {
@@ -402,19 +402,19 @@ body:has(.customer-site) {
 .addon-chip:hover { background: #faf7f8; }
 
 .addon-chip[aria-pressed="true"] {
-  border-color: #3dcc8a;
-  background: #3dcc8a;
-  color: #1b1023;
+  border-color: #d6007a;
+  background: #d6007a;
+  color: #fff;
 }
 
 .addon-chip[aria-pressed="true"] .font-price {
-  color: #1b1023;
+  color: #fff;
 }
 
 .brick,
 .brick.region {
-  background: #3dcc8a;
-  color: #1b1023;
+  background: #d6007a;
+  color: #fff;
   box-shadow: inset 0 0 0 1px #fff;
 }
 
