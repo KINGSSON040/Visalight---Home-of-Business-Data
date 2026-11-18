@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Figtree, Inter, JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
+import { Figtree, Inter, Schibsted_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import { SiteFrame } from "@/components/site-frame";
 import { registerDatabasePath } from "@/lib/register-path";
 import { registerStamp } from "@/lib/register-status";
@@ -17,10 +18,13 @@ const schibsted = Schibsted_Grotesk({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const jbmono = JetBrains_Mono({
-  subsets: ["latin"],
+const jbmono = localFont({
+  src: [
+    { path: "../fonts/JetBrainsMono-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/JetBrainsMono-Bold.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-jbmono",
-  weight: ["500", "700"],
+  display: "swap",
 });
 
 const figtree = Figtree({
