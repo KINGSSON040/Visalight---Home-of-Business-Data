@@ -179,21 +179,50 @@ export function AuroraBuilder({
           </div>
         </Step>
 
-        <label className="block text-xs font-semibold">
-          Antal anställda
-          <select
-            value={draft.employees}
-            onChange={(event) => onChange({ employees: event.target.value })}
-            className="field-box mt-1 h-10 w-full rounded-xl px-3 text-sm font-medium"
-          >
-            <option value="">Alla storlekar</option>
-            {EMPLOYEE_RANGES.map((range) => (
-              <option key={range.label} value={range.label}>
-                {range.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div>
+          <p className="text-xs font-semibold">Antal anställda</p>
+          {listParts(draft.employees).length > 0 ? (
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {listParts(draft.employees).map((label) => (
+                <span key={label} className="brick inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-xs font-bold">
+                  <span>{label}</span>
+                  <button
+                    type="button"
+                    onClick={() => onChange({ employees: togglePart(draft.employees, label) })}
+                    className="rounded px-0.5 leading-none hover:bg-white/20"
+                    aria-label={`Ta bort ${label}`}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          ) : null}
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              aria-pressed={listParts(draft.employees).length === 0}
+              onClick={() => onChange({ employees: "" })}
+              className="chip rounded-full px-2.5 py-1 text-xs font-semibold"
+            >
+              Alla storlekar
+            </button>
+            {EMPLOYEE_RANGES.map((range) => {
+              const on = listParts(draft.employees).includes(range.label);
+              return (
+                <button
+                  key={range.label}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => onChange({ employees: togglePart(draft.employees, range.label) })}
+                  className="chip rounded-full px-2.5 py-1 text-xs font-semibold"
+                >
+                  {range.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         <div>
           <p className="text-xs font-semibold">Nystartade</p>

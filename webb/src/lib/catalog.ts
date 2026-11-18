@@ -231,12 +231,17 @@ export function countyCode(label: string): string | null {
 /** Storleksklasser i samma indelning som SCB brukar redovisa anställda. */
 export const EMPLOYEE_BANDS = ["0", "1–4", "5–9", "10–19", "20–49", "50–99", "100–199", "200 eller fler"];
 
-/** Intervall som täcker flera storleksklasser. Byggaren väljer ett intervall, inte en enda klass. */
+/**
+ * Intervall utan överlapp. Flera kan väljas samtidigt.
+ * Registrets klass slutar vid 199 och fortsätter med 200 eller fler, så 200–249 följer med 250+.
+ */
 export const EMPLOYEE_RANGES: { label: string; bands: string[] }[] = [
+  { label: "0", bands: ["0"] },
   { label: "1–9", bands: ["1–4", "5–9"] },
   { label: "10–49", bands: ["10–19", "20–49"] },
   { label: "50–99", bands: ["50–99"] },
-  { label: "1–99", bands: ["1–4", "5–9", "10–19", "20–49", "50–99"] },
+  { label: "100–249", bands: ["100–199"] },
+  { label: "250+", bands: ["200 eller fler"] },
 ];
 
 export function listParts(value: string): string[] {
@@ -249,10 +254,14 @@ export function togglePart(current: string, value: string): string {
   return next.join(",");
 }
 
-export function employeeBands(label: string): string[] {
-  const range = EMPLOYEE_RANGES.find((item) => item.label === label);
-  if (range) return range.bands;
-  return EMPLOYEE_BANDS.includes(label) ? [label] : [];
+export function employeeBands(value: string): string[] {
+  const bands = listParts(value).flatMap((part) => {
+    if (part === "1–99" || part === "1-99") return ["1–4", "5–9", "10–19", "20–49", "50–99"];
+    const range = EMPLOYEE_RANGES.find((item) => item.label === part);
+    if (range) return range.bands;
+    return EMPLOYEE_BANDS.includes(part) ? [part] : [];
+  });
+  return [...new Set(bands)];
 }
 
 /** Påhittade bolag. Tomma kontaktfält är tomma med flit. */
@@ -725,6 +734,18 @@ function industryToken(token: string): { sni: string; label: string } | null {
   return hit ? { sni: hit.sni, label: hit.label } : null;
 }
 
+function employeeSelection(value: string): string {
+  const labels: string[] = [];
+  for (const part of listParts(value)) {
+    if (part === "1–99" || part === "1-99") {
+      labels.push("1–9", "10–49", "50–99");
+      continue;
+    }
+    if (EMPLOYEE_RANGES.some((item) => item.label === part) || EMPLOYEE_BANDS.includes(part)) labels.push(part);
+  }
+  return [...new Set(labels)].join(",");
+}
+
 export function selectionFromQuery(params: URLSearchParams): Selection {
   const resolved = new Map<string, string>();
   for (const token of [...listParts(params.get("bransch") ?? ""), ...sniTokens(params.get("sni") ?? "")]) {
@@ -745,7 +766,7 @@ export function selectionFromQuery(params: URLSearchParams): Selection {
     bransch: resolved.size ? [...resolved.values()].join(",") : listParts(params.get("bransch") ?? "").join(","),
     sni: [...resolved.keys()].join(","),
     forms,
-    employees: EMPLOYEE_RANGES.some((item) => item.label === anst) || EMPLOYEE_BANDS.includes(anst) ? anst : "",
+    employees: employeeSelection(anst),
     founded: ["3", "6", "12"].includes(params.get("nya") ?? "") ? (params.get("nya") ?? "") : "",
     phones: params.get("tel") !== "0",
     signatory: params.get("firma") !== "0",
@@ -871,7 +892,7 @@ export function describeSelection(selection: Selection): string {
     places.join(", ") || "Alla områden",
     branscher.join(", ") || (selection.sni ? listParts(selection.sni).map(industryLabel).join(", ") : "Alla branscher"),
     forms.length ? forms.join(", ") : "Alla bolagsformer",
-    (selection.employees ?? "").trim() ? `${selection.employees.trim()} anställda` : "",
+    listParts(selection.employees ?? "").length ? `${listParts(selection.employees ?? "").join(", ")} anställda` : "",
     (selection.founded ?? "").trim() ? `Nystartade ${selection.founded.trim()} månader` : "",
   ].filter(Boolean);
   if (selection.query.trim()) parts.push(`"${selection.query.trim()}"`);
