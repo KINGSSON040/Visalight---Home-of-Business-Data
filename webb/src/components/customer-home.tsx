@@ -192,16 +192,16 @@ export function CustomerHome({
           {STEPS.map((step, index) => (
             <li
               key={step.no}
-              className={`step-card rounded-3xl px-6 py-8 ${step.wash}`}
+              className="step-card flex flex-col rounded-3xl bg-white px-7 py-8 shadow-[0_18px_40px_-32px_rgba(27,16,35,0.45)] ring-1 ring-ink/8"
               style={{ animationDelay: `${index * 90}ms` }}
             >
-              <p className={`font-display text-5xl leading-none font-extrabold tracking-[-0.04em] ${step.tone}`}>{step.no}</p>
-              <div className="mt-8 flex items-center gap-3 text-ink">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/80">
+              <div className="flex items-start justify-between gap-4">
+                <span className={`inline-flex h-11 w-11 items-center justify-center rounded-2xl ${step.wash} ${step.tone}`}>
                   <StepIcon name={step.icon} />
                 </span>
-                <h3 className="text-xl font-extrabold tracking-tight">{step.title}</h3>
+                <p className={`font-display text-4xl leading-none font-extrabold tracking-[-0.04em] ${step.tone}`}>{step.no}</p>
               </div>
+              <h3 className="mt-8 text-xl font-extrabold tracking-tight text-ink">{step.title}</h3>
               <p className="mt-3 text-sm leading-7 text-ink/80">{step.text}</p>
             </li>
           ))}
