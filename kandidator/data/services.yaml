@@ -1,0 +1,12 @@
+- slug: rekrytering
+  name: Rekrytering
+  summary: Kandidator söker kandidater till en anställning hos kunden. Kunden är arbetsgivare.
+  href: /tjanster/rekrytering
+- slug: headhunting
+  name: Headhunting
+  summary: Uppsökande sök mot en definierad målgrupp, ofta en specialist eller en ledande roll. Kunden är arbetsgivare.
+  href: /tjanster/headhunting
+- slug: bemanning
+  name: Bemanning
+  summary: Personal hyrs in till ett uppdrag hos kunden. Anställningsform anges inte generellt, den bekräftas i varje uppdrag.
+  href: /tjanster/bemanning

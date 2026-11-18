@@ -1,0 +1,18 @@
+arbetsgivare:
+  - title: Avstämning
+    text: "Exempel. Vi går igenom roll, krav och hur uppdraget ska se ut. Texten är en platshållare."
+  - title: Sök
+    text: "Exempel. Vi söker kandidater mot den målgrupp som är överenskommen. Texten är en platshållare."
+  - title: Urval
+    text: "Exempel. Vi presenterar ett urval och kunden träffar kandidaterna. Texten är en platshållare."
+  - title: Start
+    text: "Exempel. Rollen tillsätts och introduktionen planeras med kunden. Texten är en platshållare."
+jobbsokande:
+  - title: Skicka in
+    text: "Exempel. Du söker via en annons eller lämnar en spontanansökan med CV. Texten är en platshållare."
+  - title: Avstämning
+    text: "Exempel. Vi hör av oss om profilen matchar ett uppdrag. Texten är en platshållare."
+  - title: Intervju hos kund
+    text: "Exempel. Kunden träffar dig om båda vill gå vidare. Texten är en platshållare."
+  - title: Besked
+    text: "Exempel. Du får besked om rollen. Ingen svarstid är utlovad. Texten är en platshållare."

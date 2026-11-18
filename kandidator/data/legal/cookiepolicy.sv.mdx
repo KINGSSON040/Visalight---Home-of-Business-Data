@@ -1,0 +1,29 @@
+---
+title: Cookiepolicy
+seoTitle: Cookiepolicy
+seoDescription: Utkast om nödvändiga cookies, analys efter samtycke, Calendly och Turnstile.
+---
+
+> Utkast. Texten beskriver de cookies och skript som sajten kan använda. Den är inte juridiskt granskad.
+
+## Nödvändigt val
+
+Sajten sätter en egen cookie, `kandidator-samtycke`, när du väljer **Godkänn analys** eller **Endast nödvändiga**. Värdet är `analys` eller `nodvandiga`. Cookien sparas i 180 dagar, med sökväg `/` och SameSite Lax. Den markeras Secure när sidan hämtas över https. Den är inte HttpOnly, eftersom webbläsaren måste kunna läsa valet.
+
+Innan du har valt sätts ingen sådan cookie, och inget analysscript laddas. Valet kan göras i bannern. Första valet laddar inte om sidan. Om du senare byter ett val som redan finns laddas sidan om, så att ett script som redan har startat inte ligger kvar.
+
+## Plausible
+
+Plausible är analys och laddas bara när värdet är `analys` och en domän är konfigurerad. Scriptet är `https://plausible.io/js/script.js`. Väljer du endast nödvändiga laddas det inte. Tack-sidorna kan skicka en händelse, `forfragan`, `ansokan` eller `spontanansokan`, en gång per flik, och bara efter analysval.
+
+## Calendly
+
+Calendlys inbäddade kalender och script sätter cookies. Därför laddas både script och iframe bara efter analysval. Länken till bokningen, när en adress är satt, fungerar utan det valet. Saknas adressen visas en text och ingen iframe.
+
+## Turnstile
+
+Cloudflare Turnstile är en robotkontroll på formulären. Den behandlas som nödvändig för att formuläret ska kunna skickas, och laddas tillsammans med formuläret även om du valt endast nödvändiga. Utan den kan en ansökan eller förfrågan inte skickas. Cloudflare kan sätta cookies som hör till kontrollen. De används inte som besöksstatistik.
+
+## Så ändrar du valet
+
+Längst ned på varje sida finns **Cookie-inställningar**. Där öppnas samma val igen. Du kan också radera cookien i webbläsaren. Då visas bannern på nytt efter nästa besök.

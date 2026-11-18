@@ -1,0 +1,54 @@
+- id: tjanster
+  audience: arbetsgivare
+  question: Vilka tjänster ingår?
+  answer: |
+    Kandidator arbetar med rekrytering, headhunting och bemanning. Konsultuthyrning ingår inte.
+
+    Läs mer på [tjänster](/tjanster).
+- id: efter-forfragan
+  audience: arbetsgivare
+  question: Vad händer efter en förfrågan?
+  answer: |
+    Exempel. Nästa steg beskrivs som avstämning, sök, urval och start. Det är en platshållare, inte ett löfte om tid eller resultat.
+
+    Formuläret finns på [för arbetsgivare](/for-arbetsgivare).
+- id: personuppgifter-arbetsgivare
+  audience: arbetsgivare
+  question: Hur hanteras uppgifterna i en förfrågan?
+  answer: |
+    Enligt utkastet till integritetspolicyn sparas en förfrågan i 12 månader och raderas sedan. Utkastet är inte granskat.
+
+    Läs [integritetspolicyn](/integritetspolicy).
+- id: sok-annons
+  audience: jobbsokande
+  question: Hur söker jag ett jobb?
+  answer: |
+    Öppna annonser ligger under [lediga jobb](/lediga-jobb). Där finns ett formulär när annonsen är öppen.
+
+    Saknas en passande annons kan du lämna en [spontanansökan](/for-jobbsokande).
+- id: cv-format
+  audience: jobbsokande
+  question: Vilket CV kan jag skicka?
+  answer: |
+    PDF eller DOCX, högst 5 MB. DOC och DOCM tas inte emot.
+
+    Filen laddas upp till ett privat lager, bifogas mejlet och raderas från lagret när mejlet har tagits emot.
+- id: lagring-ansokan
+  audience: jobbsokande
+  question: Hur länge sparas en ansökan?
+  answer: |
+    Enligt utkastet till integritetspolicyn sparas ansökningar och CV i 24 månader och raderas sedan. Det finns ingen kandidatbank och ingen ruta för längre sparande.
+
+    Utkastet är inte granskat. Läs [integritetspolicyn](/integritetspolicy).
+- id: geografi
+  audience: allmant
+  question: Var finns Kandidator?
+  answer: |
+    Uppdrag tas i hela Sverige. Utgångspunkten är Malmö. Besöksadress och telefon publiceras när de är bekräftade.
+- id: cookies
+  audience: allmant
+  question: Vilka cookies används?
+  answer: |
+    En nödvändig cookie sparar om du valt analys eller endast nödvändiga cookies. Plausible laddas bara efter analysval.
+
+    Läs [cookiepolicyn](/cookiepolicy). Valet kan ändras i sidfoten.
