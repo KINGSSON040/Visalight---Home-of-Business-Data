@@ -326,12 +326,9 @@ body:has(.customer-site) {
 }
 
 .register-stamp {
-  background: #fffdfb;
-  border: 1px solid #e6ddd4;
+  background: transparent;
+  border: 0;
   color: #574862;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .price-figure {

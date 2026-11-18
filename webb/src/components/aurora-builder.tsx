@@ -76,10 +76,10 @@ export function AuroraBuilder({
 
   return (
     <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-2xl">
-      <p className="register-stamp mx-3 mt-2.5 rounded-md px-2.5 py-1 text-[0.68rem] leading-none sm:mx-4">
+      <p className="register-stamp ml-auto w-max max-w-[15rem] px-4 pt-2.5 text-right text-[0.6rem] leading-[1.35] sm:px-5">
         Registret senast uppdaterat: {updatedLabel}. Siffran följer den senaste uppdateringen.
       </p>
-      <div className="space-y-3 p-4 sm:p-5">
+      <div className="space-y-3 px-4 pt-2 pb-4 sm:px-5 sm:pb-5">
         <Step no="01" title="Bransch">
           <BrickSearch
             kinds={["bransch"]}
