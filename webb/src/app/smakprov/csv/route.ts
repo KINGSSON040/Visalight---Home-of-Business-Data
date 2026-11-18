@@ -1,12 +1,6 @@
-import { selectionFromQuery } from "@/lib/catalog";
-import { sampleCsv } from "@/lib/sample-file";
-
-export function GET(request: Request) {
-  const selection = selectionFromQuery(new URL(request.url).searchParams);
-  return new Response(sampleCsv(selection), {
-    headers: {
-      "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": 'attachment; filename="visalight-smakprov.csv"',
-    },
+export function GET() {
+  return new Response("Smakprovet beställs på sidan /smakprov.", {
+    status: 410,
+    headers: { "Content-Type": "text/plain; charset=utf-8" },
   });
 }
