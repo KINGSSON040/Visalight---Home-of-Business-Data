@@ -77,7 +77,7 @@ export function AuroraBuilder({
   ];
 
   return (
-    <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-[1.75rem]">
+    <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-2xl">
       <div className="space-y-3 p-4 sm:p-5">
         <Step no="01" title="Bransch">
           <BrickSearch
@@ -397,7 +397,7 @@ function Result({
   }, [urval.companies]);
 
   return (
-    <div ref={ref} className="result-field rounded-b-[1.75rem] px-4 pt-3.5 pb-3 sm:px-5">
+    <div ref={ref} className="result-field rounded-b-2xl px-4 pt-3.5 pb-3 sm:px-5">
       <div className="flex items-center justify-between gap-2">
         <p className="font-price text-[0.7rem] font-bold tracking-[0.14em] text-white/90 uppercase">
           {selectionForCount(draft) ? "Ert urval" : "Hela registret, alla Sveriges företag"}
@@ -430,7 +430,7 @@ function Result({
           Förhandsboka utdraget <span aria-hidden="true">→</span>
         </Link>
       </div>
-      <p className="mt-2 text-sm font-extrabold tracking-tight text-white">Ingen inloggning. Ingen prenumeration. Ingen bindningstid.</p>
+      <p className="mt-2 text-sm font-semibold text-white">Ingen inloggning. Ingen prenumeration. Ingen bindningstid.</p>
       <p className="mt-1.5 truncate text-xs text-white/90">{describeSelection(counted)}</p>
       {urval.companies === 0 ? (
         <p className="mt-1 text-xs font-semibold">{urval.note || "Inget bolag matchar."} Ta bort ett filter så kommer de tillbaka.</p>
@@ -440,8 +440,7 @@ function Result({
           {price.minimumApplied ? " · lägsta order 399 kr" : ""}
         </p>
       )}
-      <p className="mt-2 flex items-center gap-2 border-t border-white/25 pt-2 text-[0.72rem] text-white/95">
-        <span className="h-2 w-2 shrink-0 rounded-full bg-gold shadow-[0_0_8px_#ffcc00]" aria-hidden="true" />
+      <p className="mt-2 border-t border-white/25 pt-2 text-[0.72rem] text-white/95">
         Registret senast uppdaterat: {updatedLabel}
         {exampleData ? " (exempeldata)" : ""}
       </p>

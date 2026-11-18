@@ -19,11 +19,11 @@ export default function StatistikPage() {
   const example = stats.source === "example";
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
-      <p className="text-sm font-semibold tracking-[0.18em] text-magenta uppercase">Statistik</p>
-      <h1 className="mt-2 text-5xl font-extrabold tracking-tight text-balance sm:text-6xl">
+      <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Statistik</p>
+      <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">
         Sveriges näringsliv <span className="aurora-text">i siffror</span>
       </h1>
-      <p className="mt-3 max-w-2xl text-lg text-muted">
+      <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
         Talen räknas fram ur registret vid varje uppdatering. Klicka på en bransch eller ett län för att bygga ett utdrag på just de bolagen.
       </p>
       <p className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">

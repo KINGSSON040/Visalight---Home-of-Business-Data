@@ -223,11 +223,11 @@ body:has(.customer-site) {
   background: #fbf7f1;
 }
 
-/* Norrskenet: en mjuk glöd högst upp, inte färgstråk. Rörelsen är kvar. */
+/* Norrskenet: en svag glöd bara högst upp. Rörelsen är kvar, men diskret. */
 .aurora {
   position: absolute;
   inset: 0 0 auto 0;
-  height: 680px;
+  height: 420px;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
@@ -245,7 +245,7 @@ body:has(.customer-site) {
   left: -8%;
   width: 62%;
   height: 460px;
-  background: radial-gradient(closest-side, rgba(31, 224, 138, 0.22), transparent 72%);
+  background: radial-gradient(closest-side, rgba(31, 224, 138, 0.1), transparent 72%);
   animation: aurora-a 24s ease-in-out infinite alternate;
 }
 
@@ -254,7 +254,7 @@ body:has(.customer-site) {
   right: -10%;
   width: 58%;
   height: 420px;
-  background: radial-gradient(closest-side, rgba(255, 61, 187, 0.16), transparent 74%);
+  background: radial-gradient(closest-side, rgba(214, 0, 122, 0.07), transparent 74%);
   animation: aurora-b 30s ease-in-out infinite alternate;
 }
 
@@ -263,7 +263,7 @@ body:has(.customer-site) {
   left: 28%;
   width: 46%;
   height: 280px;
-  background: radial-gradient(closest-side, rgba(31, 224, 138, 0.1), transparent 74%);
+  background: radial-gradient(closest-side, rgba(31, 224, 138, 0.05), transparent 74%);
   animation: aurora-c 36s ease-in-out infinite alternate;
 }
 
@@ -293,27 +293,18 @@ body:has(.customer-site) {
   border-bottom: 1px solid rgba(27, 16, 35, 0.04);
 }
 
-.promise-row {
-  border: 1.5px solid #f0b6d6;
-  border-left: 4px solid #d6007a;
-  border-radius: 1rem;
-  background: #fff;
-  padding: 0.8rem 1rem;
-  color: #9a0058;
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.35;
-  text-align: center;
-  box-shadow: 0 14px 30px -24px rgba(214, 0, 122, 0.7);
+.access-line {
+  color: #1b1023;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.86);
+  background: #fff;
   border: 1px solid var(--line);
-  backdrop-filter: blur(14px) saturate(1.2);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  box-shadow: 0 1px 0 #fff inset, 0 10px 30px -22px rgba(27, 16, 35, 0.35);
+  box-shadow: none;
 }
 
 .glow-neon { box-shadow: 0 0 0 1px rgba(27, 16, 35, 0.06), 0 16px 36px -28px rgba(27, 16, 35, 0.35); }
@@ -322,29 +313,21 @@ body:has(.customer-site) {
 
 .builder-card {
   background: #ffffff;
-  border: 1px solid #f0e2ec;
-  box-shadow:
-    0 28px 60px -36px rgba(27, 16, 35, 0.28),
-    0 18px 40px -30px rgba(214, 0, 122, 0.28);
-  transition: box-shadow 0.5s ease;
+  border: 1px solid #eadfe6;
+  box-shadow: 0 16px 40px -28px rgba(27, 16, 35, 0.35);
 }
 
 .builder-card[data-lit="true"] {
-  box-shadow:
-    0 32px 70px -32px rgba(214, 0, 122, 0.42),
-    0 18px 40px -30px rgba(27, 16, 35, 0.2);
+  box-shadow: 0 16px 40px -28px rgba(27, 16, 35, 0.35);
 }
 
 .result-field {
-  background:
-    radial-gradient(90% 80% at 100% 0%, rgba(255, 255, 255, 0.16), transparent 46%),
-    linear-gradient(165deg, #e21890 0%, #c40078 52%, #a10068 100%);
+  background: #c40078;
   color: #fff;
 }
 
 .big-count {
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 24px rgba(255, 255, 255, 0.35);
 }
 
 .big-count.flare {
@@ -352,20 +335,19 @@ body:has(.customer-site) {
 }
 
 @keyframes count-flare {
-  0% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.95), 0 0 60px rgba(255, 230, 120, 0.8); }
-  100% { text-shadow: 0 0 24px rgba(255, 255, 255, 0.35); }
+  0% { opacity: 0.72; }
+  100% { opacity: 1; }
 }
 
 .btn-neon {
-  background: linear-gradient(120deg, #c8007a 0%, #e8008a 55%, #ff2fa6 100%);
+  background: #d6007a;
   color: #fff;
-  box-shadow: 0 12px 28px -12px rgba(214, 0, 122, 0.8);
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: none;
+  transition: background 0.15s ease;
 }
 
 .btn-neon:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 16px 34px -12px rgba(214, 0, 122, 0.95);
+  background: #b80069;
 }
 
 .btn-ghost {
@@ -380,30 +362,29 @@ body:has(.customer-site) {
   border: 1px solid #e6d6e2;
   background: #fff;
   color: #1b1023;
-  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.chip:hover { background: #fdf3fa; transform: translateY(-1px); }
+.chip:hover { background: #faf7f8; }
 
 .chip[aria-pressed="true"] {
   border-color: #00a85e;
-  background: #dcfbe9;
-  box-shadow: 0 0 0 1px #00a85e, 0 6px 18px -8px rgba(0, 168, 94, 0.8);
+  background: #e7f6ee;
+  color: #046b3a;
 }
 
 .addon-chip {
-  border: 1.5px solid #e6d6e2;
+  border: 1px solid #e6d6e2;
   background: #fff;
   color: #1b1023;
-  transition: background 0.15s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.addon-chip:hover { transform: translateY(-1px); }
+.addon-chip:hover { background: #faf7f8; }
 
 .addon-chip[aria-pressed="true"] {
   border-color: #00a85e;
-  background: linear-gradient(120deg, #c9fbe0, #e9fff3);
-  box-shadow: 0 8px 20px -10px rgba(0, 168, 94, 0.9);
+  background: #e7f6ee;
 }
 
 .brick,
@@ -467,10 +448,10 @@ body:has(.customer-site) {
 
 /* Övriga sidor på kundsidan använder de äldre klasserna. */
 .customer-site .site-header {
-  background: rgba(251, 247, 241, 0.78);
+  background: #fffcf8;
   background-image: none;
-  backdrop-filter: blur(14px) saturate(1.3);
-  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border-bottom: 1px solid rgba(27, 16, 35, 0.08);
   box-shadow: none;
   color: var(--ink);
@@ -479,7 +460,8 @@ body:has(.customer-site) {
 .customer-site .bg-sea,
 .customer-site .btn-fade-sea,
 .customer-site .btn-fade-green {
-  background-image: linear-gradient(120deg, #c8007a 0%, #e8008a 55%, #ff2fa6 100%);
+  background: #d6007a;
+  background-image: none;
   color: #fff;
 }
 
