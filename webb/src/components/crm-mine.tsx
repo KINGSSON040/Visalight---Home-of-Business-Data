@@ -42,19 +42,19 @@ export function MyCustomers() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/crm/sok" className="btn-fade-amber inline-flex h-11 items-center rounded-full bg-amber px-5 text-sm font-semibold text-ink">
+          <Link href="/crm/sok" className="inline-flex h-11 items-center rounded-full border border-line bg-white px-5 text-sm font-semibold text-ink hover:border-[#1c1917]">
             Sök fler bolag
           </Link>
-          <Link href="/crm/ring" className="btn-fade-green inline-flex h-11 items-center rounded-full bg-green px-5 text-sm font-semibold text-white">
+          <Link href="/crm/ring" className="inline-flex h-11 items-center rounded-full bg-[#d6007a] px-5 text-sm font-semibold text-white hover:bg-[#b80068]">
             Ring mina kunder
           </Link>
         </div>
       </div>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        <Stat label="Mina kunder" value={mineCount} tone="bg-amber-soft" />
-        <Stat label="Uppföljningar att göra" value={tasks.length} tone="bg-foam" href="/crm/aktivitet" />
-        <Stat label="Försenade uppföljningar" value={late} tone={late ? "bg-rust/10" : "bg-green-soft"} href="/crm/aktivitet" />
+      <div className="mt-8 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
+        <Stat label="Mina kunder" value={mineCount} />
+        <Stat label="Uppföljningar att göra" value={tasks.length} href="/crm/aktivitet" />
+        <Stat label="Försenade uppföljningar" value={late} href="/crm/aktivitet" />
       </div>
 
       {tasks.length ? (
@@ -68,7 +68,7 @@ export function MyCustomers() {
                     <span className="block font-medium">{task.companyName}</span>
                     <span className="text-sm text-muted">{task.note || "Uppföljning"}</span>
                   </span>
-                  <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${task.dueAt < now ? "bg-rust text-white" : "bg-amber text-ink"}`}>
+                  <span className={`shrink-0 text-xs font-semibold tabular-nums ${task.dueAt < now ? "text-[#d6007a]" : "text-muted"}`}>
                     {task.dueAt < now ? "Försenad " : ""}
                     {formatStamp(task.dueAt)}
                   </span>
@@ -137,7 +137,7 @@ export function MyCustomers() {
                   <>
                     <span className="rounded-full bg-paper px-2 py-0.5">Stjärna sedan {formatStamp(claim.at)}</span>
                     {due ? (
-                      <span className={`rounded-full px-2 py-0.5 font-semibold ${due.dueAt < now ? "bg-rust text-white" : "bg-amber text-ink"}`}>
+                      <span className={`text-xs font-semibold tabular-nums ${due.dueAt < now ? "text-[#d6007a]" : "text-muted"}`}>
                         Uppföljning {formatStamp(due.dueAt)}
                       </span>
                     ) : null}
@@ -152,14 +152,14 @@ export function MyCustomers() {
   );
 }
 
-function Stat({ label, value, tone, href }: { label: string; value: number; tone: string; href?: string }) {
+function Stat({ label, value, href }: { label: string; value: number; href?: string }) {
   const body = (
     <>
-      <span className="block text-3xl font-semibold tracking-tight">{value}</span>
-      <span className="mt-1 block text-sm font-medium">{label}</span>
+      <span className="block text-[clamp(2.25rem,4vw,3.25rem)] font-semibold leading-none tracking-tight tabular-nums">{value}</span>
+      <span className="mt-3 block text-sm text-muted">{label}</span>
     </>
   );
-  const cls = `rounded-3xl border border-line p-4 shadow-sm ${tone}`;
+  const cls = "bg-white px-5 py-6 hover:bg-[#fafaf9]";
   return href ? (
     <Link href={href} className={cls}>
       {body}

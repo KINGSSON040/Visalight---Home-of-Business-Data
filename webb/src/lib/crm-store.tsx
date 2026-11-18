@@ -150,12 +150,12 @@ export type CallList = {
 };
 
 export const STAGES = [
-  { id: "ny", label: "Ny", chip: "bg-foam text-ink" },
-  { id: "kontaktad", label: "Kontaktad", chip: "bg-sea text-white" },
-  { id: "intresserad", label: "Intresserad", chip: "bg-amber text-ink" },
-  { id: "offert", label: "Offert", chip: "bg-amber-soft text-ink ring-1 ring-amber" },
-  { id: "kund", label: "Kund", chip: "bg-green text-white" },
-  { id: "ej-intresserad", label: "Ej intresserad", chip: "bg-rust/10 text-rust" },
+  { id: "ny", label: "Ny", chip: "bg-white text-ink ring-1 ring-inset ring-line" },
+  { id: "kontaktad", label: "Kontaktad", chip: "bg-white text-ink ring-1 ring-inset ring-line" },
+  { id: "intresserad", label: "Intresserad", chip: "bg-white text-[#d6007a] ring-1 ring-inset ring-[#d6007a]/40" },
+  { id: "offert", label: "Offert", chip: "bg-white text-ink ring-1 ring-inset ring-line" },
+  { id: "kund", label: "Kund", chip: "bg-[#1c1917] text-white" },
+  { id: "ej-intresserad", label: "Ej intresserad", chip: "bg-white text-muted ring-1 ring-inset ring-line" },
 ] as const;
 
 export type StageId = (typeof STAGES)[number]["id"];
@@ -265,14 +265,14 @@ export type Draft = {
 
 
 export const OPP_STAGES = [
-  { id: "ny", label: "Ny", head: "bg-foam text-ink", closed: "" },
-  { id: "kontaktad", label: "Kontaktad", head: "bg-sea text-white", closed: "" },
-  { id: "behov", label: "Behov klarlagt", head: "bg-sea-deep text-white", closed: "" },
-  { id: "offert", label: "Offert skickad", head: "bg-amber text-ink", closed: "" },
-  { id: "forhandling", label: "Förhandling", head: "bg-amber-soft text-ink ring-1 ring-amber", closed: "" },
-  { id: "muntligt", label: "Muntligt ja", head: "bg-green-soft text-green ring-1 ring-green", closed: "" },
-  { id: "signerad", label: "Signerad (vunnen)", head: "bg-green text-white", closed: "won" },
-  { id: "forlorad", label: "Förlorad", head: "bg-rust text-white", closed: "lost" },
+  { id: "ny", label: "Ny", head: "bg-white text-ink", closed: "" },
+  { id: "kontaktad", label: "Kontaktad", head: "bg-white text-ink", closed: "" },
+  { id: "behov", label: "Behov klarlagt", head: "bg-white text-ink", closed: "" },
+  { id: "offert", label: "Offert skickad", head: "bg-white text-ink", closed: "" },
+  { id: "forhandling", label: "Förhandling", head: "bg-white text-ink", closed: "" },
+  { id: "muntligt", label: "Muntligt ja", head: "bg-white text-ink", closed: "" },
+  { id: "signerad", label: "Signerad (vunnen)", head: "bg-white text-[#d6007a]", closed: "won" },
+  { id: "forlorad", label: "Förlorad", head: "bg-white text-muted", closed: "lost" },
 ] as const;
 
 export type OppStageId = (typeof OPP_STAGES)[number]["id"];
@@ -288,9 +288,9 @@ export function isOppClosed(stage: string): boolean {
 export type Temperature = "varm" | "ljummen" | "kall";
 
 export const TEMPERATURES: { id: Temperature; label: string; chip: string }[] = [
-  { id: "varm", label: "Varm", chip: "bg-rust text-white" },
-  { id: "ljummen", label: "Ljummen", chip: "bg-amber text-ink" },
-  { id: "kall", label: "Kall", chip: "bg-foam text-sea" },
+  { id: "varm", label: "Varm", chip: "bg-white text-[#d6007a] ring-1 ring-inset ring-[#d6007a]/40" },
+  { id: "ljummen", label: "Ljummen", chip: "bg-white text-ink ring-1 ring-inset ring-line" },
+  { id: "kall", label: "Kall", chip: "bg-white text-muted ring-1 ring-inset ring-line" },
 ];
 
 export const OPP_SOURCES = ["Kallringning", "Inkommande", "Referens", "Mejl", "Sociala medier", "Event", "Annat"];

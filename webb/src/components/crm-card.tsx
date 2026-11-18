@@ -68,12 +68,12 @@ export function CrmCard({ company, focus }: { company: Company; focus?: FocusMod
   return (
     <article>
       {focus ? (
-        <div className="btn-fade-sea mt-1 rounded-2xl bg-sea px-4 py-3 text-white">
+        <div className="mt-1 rounded-2xl border border-line bg-white px-4 py-3">
           <p className="text-sm font-semibold">
             Bolag {Math.min(focus.index + 1, focus.total)} av {focus.total} · {focus.listName}
           </p>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/30" aria-hidden="true">
-            <div className="btn-fade-amber h-full rounded-full bg-amber" style={{ width: `${(focus.index / Math.max(1, focus.total)) * 100}%` }} />
+          <div className="mt-2 h-1 overflow-hidden rounded-full bg-[#f1efec]" aria-hidden="true">
+            <div className="h-full rounded-full bg-[#d6007a]" style={{ width: `${(focus.index / Math.max(1, focus.total)) * 100}%` }} />
           </div>
         </div>
       ) : (
@@ -99,7 +99,7 @@ export function CrmCard({ company, focus }: { company: Company; focus?: FocusMod
             <StageChip stage={meta.stage} />
             <OwnerChip orgNr={company.orgNr} />
             {openOpps.length ? (
-              <a href="#mojligheter" className="rounded-full bg-green px-2.5 py-0.5 text-xs font-semibold text-white">
+              <a href="#mojligheter" className="rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-[#d6007a] ring-1 ring-inset ring-[#d6007a]/40">
                 {openOpps.length} öppen möjlighet
               </a>
             ) : null}
@@ -175,7 +175,7 @@ function DuplicateWarning({ company }: { company: Company }) {
   });
   if (similar.length === 0) return null;
   return (
-    <p className="mt-3 rounded-2xl border-2 border-amber bg-amber-soft px-3 py-2 text-sm leading-6">
+    <p className="mt-3 rounded-2xl border border-line bg-white px-3 py-2 text-sm leading-6">
       <span className="font-semibold">Möjlig dubblett:</span> liknande bolag eller delat telefonnummer med{" "}
       {similar.map((item, index) => (
         <span key={item.orgNr}>
@@ -195,7 +195,7 @@ function DueBanner({ orgNr }: { orgNr: string }) {
   const due = store.openTasks().filter((item) => item.orgNr === orgNr && new Date(item.dueAt).getTime() <= store.now);
   if (due.length === 0) return null;
   return (
-    <p className="mt-3 rounded-2xl bg-rust px-3 py-2 text-sm font-semibold leading-6 text-white">
+    <p className="mt-3 rounded-2xl border border-line bg-white px-3 py-2 text-sm font-semibold leading-6 shadow-[inset_3px_0_0_#d6007a]">
       {due.length === 1 ? "En uppgift är förfallen" : `${due.length} uppgifter är förfallna`}: {due[0].note || "Uppföljning"} ({formatStamp(due[0].dueAt)}, {due[0].assigneeName})
     </p>
   );
@@ -206,7 +206,7 @@ export function TaskRow({ task, showCompany = false }: { task: Task; showCompany
   const overdue = !task.doneAt && new Date(task.dueAt).getTime() < store.now;
   const kind = TASK_KINDS.find((item) => item.id === task.kind)?.label ?? "";
   return (
-    <li className={`flex flex-wrap items-center justify-between gap-2 rounded-2xl px-3 py-2.5 text-sm ${overdue ? "bg-rust/10 ring-1 ring-rust" : "bg-paper"}`}>
+    <li className={`flex flex-wrap items-center justify-between gap-2 rounded-2xl px-3 py-2.5 text-sm ${overdue ? "bg-white shadow-[inset_3px_0_0_#d6007a] ring-1 ring-line" : "bg-white ring-1 ring-line"}`}>
       <div className="min-w-0">
         <p className={`font-medium ${task.doneAt ? "line-through opacity-70" : ""}`}>
           {kind} · {formatStamp(task.dueAt)}
@@ -230,7 +230,7 @@ export function TaskRow({ task, showCompany = false }: { task: Task; showCompany
           Öppna igen
         </button>
       ) : (
-        <button type="button" onClick={() => store.completeTask(task.id)} className="btn-fade-green h-9 rounded-full bg-green px-4 text-sm font-semibold text-white">
+        <button type="button" onClick={() => store.completeTask(task.id)} className="h-9 rounded-full border border-line bg-white px-4 text-sm font-semibold text-ink hover:border-[#1c1917]">
           Klar
         </button>
       )}

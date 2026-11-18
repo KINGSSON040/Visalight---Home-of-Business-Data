@@ -32,12 +32,14 @@ export function OppFlagBadges({ opp }: { opp: Opportunity }) {
   const flags = oppFlags(opp, store.now, store.staleDays);
   return (
     <>
-      {flags.overdue ? <span className="rounded-full bg-rust px-2 py-0.5 text-xs font-semibold text-white">Nästa steg förfallet</span> : null}
+      {flags.overdue ? (
+        <span className="rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-[#d6007a] ring-1 ring-inset ring-[#d6007a]/40">Nästa steg förfallet</span>
+      ) : null}
       {flags.stale ? (
-        <span className="rounded-full bg-amber px-2 py-0.5 text-xs font-semibold text-ink">Stillastående {store.staleDays}+ dagar</span>
+        <span className="rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-ink ring-1 ring-inset ring-line">Stillastående {store.staleDays}+ dagar</span>
       ) : null}
       {flags.noFollowUp && !flags.overdue ? (
-        <span className="rounded-full border-2 border-amber px-2 py-0.5 text-xs font-semibold">Ingen uppföljning inom {store.staleDays} dagar</span>
+        <span className="rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-ink ring-1 ring-inset ring-line">Ingen uppföljning inom {store.staleDays} dagar</span>
       ) : null}
     </>
   );

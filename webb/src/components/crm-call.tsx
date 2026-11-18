@@ -237,10 +237,10 @@ function ListCard({ list }: { list: CallList }) {
         </span>
       </div>
       <div className="mt-3 h-2 overflow-hidden rounded-full bg-foam" aria-hidden="true">
-        <div className="btn-fade-green h-full rounded-full bg-green" style={{ width: `${percent}%` }} />
+        <div className="h-full rounded-full bg-[#d6007a]" style={{ width: `${percent}%` }} />
       </div>
       <div className="mt-3 flex items-center gap-4 text-sm">
-        <Link href={`/crm/ring?lista=${list.id}`} className="btn-fade-green inline-flex h-10 items-center rounded-full bg-green px-4 font-semibold text-white">
+        <Link href={`/crm/ring?lista=${list.id}`} className="inline-flex h-10 items-center rounded-full bg-[#d6007a] px-4 text-sm font-semibold text-white hover:bg-[#b80068]">
           {done === 0 ? "Börja ringa" : done >= list.orgNrs.length ? "Öppna" : "Fortsätt ringa"}
         </Link>
         <button type="button" className="text-muted underline" onClick={() => store.setCallListArchived(list.id, !list.archived)}>
@@ -282,7 +282,7 @@ function ListRun({ list }: { list: CallList }) {
               <button
                 type="button"
                 onClick={() => setPicked(org)}
-                className={`block w-full border-l-4 px-3 py-2.5 text-left ${active ? "border-amber bg-amber-soft" : "border-transparent bg-white hover:bg-paper"}`}
+                className={`block w-full border-l-4 px-3 py-2.5 text-left ${active ? "border-[#d6007a] bg-white" : "border-transparent bg-white hover:bg-[#fafaf9]"}`}
               >
                 <span className={`block text-sm font-medium ${result ? "text-muted" : ""}`}>{company.name}</span>
                 <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-muted">

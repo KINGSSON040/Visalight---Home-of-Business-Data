@@ -26,15 +26,15 @@ export function StarButton({
       title={label}
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex ${box} shrink-0 items-center justify-center rounded-full border-2 ${
-        filled ? "border-amber bg-amber-soft text-amber" : "border-line bg-white text-muted hover:border-amber hover:text-amber"
+      className={`inline-flex ${box} shrink-0 items-center justify-center rounded-full border ${
+        filled ? "border-[#1c1917] bg-[#1c1917] text-white" : "border-line bg-white text-muted hover:border-[#1c1917] hover:text-ink"
       } disabled:cursor-not-allowed disabled:opacity-50`}
     >
       <svg viewBox="0 0 24 24" className={size === "lg" ? "h-8 w-8" : "h-6 w-6"} aria-hidden="true">
         <path
           d="M12 3.2 14.7 8.7 20.8 9.6 16.4 13.8 17.4 19.8 12 17 6.6 19.8 7.6 13.8 3.2 9.6 9.3 8.7 12 3.2Z"
           fill={filled ? "currentColor" : "none"}
-          stroke={filled ? "#b58900" : "currentColor"}
+          stroke="currentColor"
           strokeWidth="1.6"
           strokeLinejoin="round"
         />
@@ -53,12 +53,12 @@ export function useOwner(orgNr: string): { claim: Claim | null; mine: boolean; t
 export function OwnerChip({ orgNr }: { orgNr: string }) {
   const { claim, mine } = useOwner(orgNr);
   if (!claim) {
-    return <span className="rounded-full bg-green-soft px-2 py-0.5 text-xs font-medium text-green">Ledigt</span>;
+    return <span className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-muted ring-1 ring-inset ring-line">Ledigt</span>;
   }
   return (
     <span
       className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-        mine ? "bg-amber-soft text-ink" : "bg-rust/10 text-rust"
+        mine ? "bg-white text-ink ring-1 ring-inset ring-[#d6007a]/40" : "bg-white text-muted ring-1 ring-inset ring-line"
       }`}
     >
       {mine ? "Ditt" : `Bearbetas av ${claim.userName}`}
@@ -214,7 +214,7 @@ export function CompanyWarnings({ company, compact = false }: { company: Company
           <span
             key={item.key}
             title={item.detail}
-            className={`rounded-full px-2 py-0.5 text-xs font-semibold ${item.tone === "bad" ? "bg-rust text-white" : "bg-amber text-ink"}`}
+            className={`rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${item.tone === "bad" ? "bg-white text-ink ring-[#1c1917]" : "bg-white text-muted ring-line"}`}
           >
             {item.label}
           </span>
@@ -227,8 +227,8 @@ export function CompanyWarnings({ company, compact = false }: { company: Company
       {items.map((item) => (
         <div
           key={item.key}
-          className={`rounded-2xl border-2 px-4 py-3 text-sm leading-6 ${
-            item.tone === "bad" ? "border-rust bg-rust/10" : "border-amber bg-amber-soft"
+          className={`rounded-2xl border border-line bg-white px-4 py-3 text-sm leading-6 ${
+            item.tone === "bad" ? "shadow-[inset_3px_0_0_#d6007a]" : ""
           }`}
         >
           <p className="font-semibold">
