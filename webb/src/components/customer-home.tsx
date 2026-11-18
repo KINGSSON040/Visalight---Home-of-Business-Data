@@ -16,7 +16,7 @@ const STEPS = [
   {
     no: "01",
     title: "Ange sökord",
-    text: "Skriv bransch, ort eller SNI-kod i byggaren. Sökningen visar endast aktiva företag som inte spärrat reklam.",
+    text: "Ange bransch, ort eller SNI-kod i byggaren. Sökningen visar endast aktiva företag som inte spärrat reklam.",
     icon: "search",
     tone: "text-[#9a1458]",
     wash: "bg-[#fdeef6]",
