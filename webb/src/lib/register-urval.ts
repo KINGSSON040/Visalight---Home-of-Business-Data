@@ -45,10 +45,18 @@ const NOT_A_COMPANY =
 const CITY_SQL =
   "lower(replace(replace(replace(replace(replace(replace(c.city, 'Ö', 'o'), 'ö', 'o'), 'Ä', 'a'), 'ä', 'a'), 'Å', 'a'), 'å', 'a'))";
 
+/**
+ * Bara aktiva företag som går att sälja.
+ * SCB FtgStat 1 (och exempelvärdet "verksam") betyder verksamt.
+ * 0 har aldrig varit verksamt, 9 är inte längre verksamt. De, liksom
+ * avregistrerade, vilande, inaktiva och reklamspärrade, räknas inte och följer inte med i utdraget.
+ */
+export const ACTIVE_STATUS = "lower(trim(coalesce(c.status_code, ''))) IN ('1', 'verksam')";
+
 export const SELLABLE = [
   "c.manual_exclude = 0",
   "(c.ended_on IS NULL OR trim(c.ended_on) = '')",
-  "(c.status_code IS NULL OR c.status_code != 'avregistrerad')",
+  ACTIVE_STATUS,
   "c.reklam_block = 0",
   "trim(c.name) != ''",
   "c.street IS NOT NULL AND trim(c.street) != ''",
@@ -192,12 +200,12 @@ function fromDatabase(selection: Selection): UrvalResult | null {
 
 let wholeCache: { key: string; result: UrvalResult } | null = null;
 
-/** Hela registret utan filter. Räknas en gång per registerfil. */
+/** Aktiva, säljbara företag utan urval. Räknas en gång per registerfil. */
 function wholeRegister(file: string): UrvalResult {
   const key = `${file}:${fs.statSync(file).mtimeMs}`;
   if (wholeCache?.key === key) return wholeCache.result;
   const result = countWhere(file, SELLABLE, {}, false);
-  result.note = "Hela registret, alla säljbara bolag i Sverige. Välj bransch eller ort för att smalna av.";
+  result.note = "Aktiva företag i dag som går att sälja. Vilande, inaktiva, avregistrerade och reklamspärrade ingår inte. Siffran följer den senaste uppdateringen. Välj bransch eller ort för att smalna av.";
   wholeCache = { key, result };
   return result;
 }
@@ -276,7 +284,7 @@ function countWhere(file: string, sql: string, args: Record<string, string>, wit
   }));
   const note =
     companies === 0
-      ? "Inget säljbart bolag matchar. Ett bolag räknas när namn, gatuadress, ort och SNI finns, och det inte är avregistrerat eller reklamspärrat."
+      ? "Inget aktivt, säljbart bolag matchar. Ett bolag räknas bara när det är verksamt, har namn, gatuadress, ort och SNI, och inte är vilande, inaktivt, avregistrerat eller reklamspärrat."
       : "Namnen kommer från det lokala registret. Filen innehåller hela urvalet, inte bara raderna som visas.";
   return ready("register", companies, phones, signatoryPhones, emails, preview, note, {
     withPhone,
@@ -295,7 +303,7 @@ function exampleUrval(selection: Selection): UrvalResult {
   if (filter.kind === "any" && !narrowed) {
     return {
       ...exampleEstimate(selection),
-      note: "Exempeldata: registret är inte inkopplat, så hela registrets antal är ett exempelvärde.",
+      note: "Exempel på aktiva företag som går att sälja. Registret är inte inkopplat, så antalet är ett märkt exempel, inte hela registret.",
     };
   }
   if (filter.kind === "none") {

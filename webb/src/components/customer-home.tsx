@@ -17,18 +17,18 @@ const FREE_ACCESS = "Ingen inloggning. Ingen prenumeration. Ingen bindningstid."
 const STEPS = [
   {
     no: "01",
-    title: "Välj urvalet",
-    text: "Skriv bransch, ort eller SNI-kod. Begränsa med län om ni vill. Bolagsform och antal anställda ligger under Fler filter. Telefon, e-post och beslutsfattare väljer ni till per rad.",
+    title: "Ange sökord",
+    text: "Skriv bransch, ort eller SNI-kod i byggaren. Sökningen gäller aktiva företag som går att sälja.",
   },
   {
     no: "02",
-    title: "Läs av antal och pris",
-    text: "Antalet räknas om medan ni väljer. Priset står under, exklusive moms, innan ni bestämmer er. Ni betalar bara för bolag och fält som finns. Ett tomt fält kostar inget.",
+    title: "Välj filter",
+    text: "Begränsa med län, bolagsform eller storlek. Lägg till telefon, e-post eller beslutsfattare om ni behöver det.",
   },
   {
     no: "03",
-    title: "Få utdraget",
-    text: "Filen kommer som CSV eller Excel med de kolumner ni valt. Ingen inloggning krävs, och det finns ingen prenumeration eller bindningstid. Tills betalning öppnar förhandsbokar ni utdraget.",
+    title: "Se pris direkt",
+    text: "Antal och pris står under urvalet, exklusive moms, innan ni förhandsbokar. Ingen prenumeration krävs.",
   },
 ];
 
@@ -116,20 +116,22 @@ export function CustomerHome({
 
   return (
     <main>
-      <section className="mx-auto grid max-w-6xl items-start gap-x-12 gap-y-6 px-4 pt-8 pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:pt-12">
+      <section className="mx-auto grid max-w-6xl items-start gap-x-12 gap-y-8 px-4 pt-8 pb-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:pt-12">
         <div className="min-w-0 lg:pt-2">
-          <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Utdrag för sälj och marknad</p>
+          <p className="text-xs font-semibold tracking-[0.14em] text-magenta uppercase">Företagsdata</p>
           <h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] sm:text-5xl lg:text-6xl">
             Alla Sveriges företag.
-            <span className="aurora-text mt-1 block">Se antal och pris direkt.</span>
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-            Verifierad och färsk företagsdata om svenska bolag. Välj bransch, ort och SNI. Ni ser hur många företag utdraget innehåller och vad det kostar, innan ni bestämmer er.
+            VisaLight arbetar med företagsdata. Ni hämtar ett utdrag med de aktiva bolag ni vill nå: namn, adress, bransch och de kontaktfält ni väljer.
+          </p>
+          <p className="mt-3 max-w-xl text-base leading-7 text-muted">
+            Det ska vara enkelt att ta ett utdrag. Därför finns ingen prenumeration. Ni hämtar filen när ni behöver den, och ser antal och pris innan ni bestämmer er.
           </p>
           <p className="access-line mt-4 max-w-xl">{FREE_ACCESS}</p>
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
             <a href="#urval" className="btn-neon inline-flex h-11 items-center rounded-lg px-5 text-sm font-semibold">
-              Bygg ert utdrag
+              Hämta ett utdrag
             </a>
             <a href="#fortroende" className="text-sm font-semibold text-ink underline-offset-4 hover:underline">
               Källa och uppdatering
@@ -141,47 +143,11 @@ export function CustomerHome({
         </div>
       </section>
 
-      <section id="fortroende" aria-labelledby="fortroende-rubrik" className="border-y border-line bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
-          <h2 id="fortroende-rubrik" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Vad utdraget bygger på
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">Tre saker som gäller varje fil, oavsett vilket urval ni gör.</p>
-          <div className="mt-8 grid gap-8 md:grid-cols-3">
-            <div>
-              <h3 className="text-sm font-bold">Källa</h3>
-              <p className="mt-2 text-sm leading-6 text-muted">
-                Namn, adress, ort, län, bolagsform och SNI hämtas från SCB:s allmänna företagsregister. Telefon, e-post och beslutsfattare skrivs bara in när källan har värdet. Saknas uppgiften lämnas fältet tomt.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-sm font-bold">Uppdatering</h3>
-              <p className="mt-2 text-sm leading-6 text-muted">
-                Registret senast uppdaterat: {updatedLabel}
-                {exampleData ? " (exempeldata)" : ""}. Utdraget tas från den senaste uppdateringen, inte från en fil från förra året. Det är inte en uppdatering varje minut.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-sm font-bold">Reklamspärr</h3>
-              <p className="mt-2 text-sm leading-6 text-muted">
-                Bolag som spärrat reklam, avregistrerats, är inaktiva eller har näringsförbud tas bort vid varje uppdatering. De följer inte med i filen ni köper.
-              </p>
-            </div>
-          </div>
-          <p className="mt-6 text-sm font-semibold">
-            <Link href="/kallor" className="text-magenta hover:underline">
-              Så hämtas uppgifterna
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      <section id="sa-funkar-det" aria-labelledby="steg" className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <section id="sa-funkar-det" aria-labelledby="steg" className="mx-auto max-w-6xl px-4 pt-2 pb-12">
         <h2 id="steg" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Så tas utdraget fram
+          Så funkar det
         </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">Tre steg i byggaren. Priset syns innan ni förhandsbokar.</p>
-        <ol className="mt-8 grid gap-6 md:grid-cols-3">
+        <ol className="mt-6 grid gap-6 md:grid-cols-3">
           {STEPS.map((step) => (
             <li key={step.no} className="border-t border-line pt-4">
               <p className="font-price text-xs font-bold text-magenta">{step.no}</p>
@@ -190,6 +156,41 @@ export function CustomerHome({
             </li>
           ))}
         </ol>
+      </section>
+
+      <section id="fortroende" aria-labelledby="fortroende-rubrik" className="border-y border-line bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
+          <h2 id="fortroende-rubrik" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+            Vad utdraget bygger på
+          </h2>
+          <p className="soft-copy mt-2 max-w-2xl text-sm text-muted">Tre saker som gäller varje fil, oavsett vilket urval ni gör.</p>
+          <div className="mt-8 grid gap-8 md:grid-cols-3">
+            <div>
+              <h3 className="text-sm font-semibold">Källa</h3>
+              <p className="soft-copy mt-2 text-sm text-muted">
+                Namn, adress, ort, län, bolagsform och SNI hämtas från SCB:s allmänna företagsregister, och bara för företag som är verksamma. Telefon, e-post och beslutsfattare skrivs bara in när källan har värdet. Saknas uppgiften lämnas fältet tomt.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold">Uppdatering</h3>
+              <p className="soft-copy mt-2 text-sm text-muted">
+                Registret senast uppdaterat: {updatedLabel}
+                {exampleData ? " (exempeldata)" : ""}. Siffran på sidan följer den uppdateringen och räknar bara aktiva företag som går att sälja. Utdraget tas från samma uppdatering, inte från en fil från förra året. Det är inte en uppdatering varje minut.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold">Reklamspärr</h3>
+              <p className="soft-copy mt-2 text-sm text-muted">
+                Vilande, inaktiva, avregistrerade och bolag som spärrat reklam tas bort vid varje uppdatering. De ingår inte i siffran och följer inte med i filen ni köper.
+              </p>
+            </div>
+          </div>
+          <p className="mt-6 text-sm">
+            <Link href="/kallor" className="soft-copy text-magenta hover:underline">
+              Så hämtas uppgifterna
+            </Link>
+          </p>
+        </div>
       </section>
 
       <NaringslivSection stats={stats} />
@@ -202,7 +203,7 @@ export function CustomerHome({
                 Vanliga urval
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-                Ett färdigt urval per bransch. Antalet är de bolag som finns i registret just nu. Öppna raden om ni vill se priset i byggaren.
+                Ett färdigt urval per bransch. Antalet är aktiva företag som går att sälja, och det följer den senaste uppdateringen. Öppna raden om ni vill se priset i byggaren.
               </p>
             </div>
             {stats.source === "example" ? <span className="rounded-full bg-gold px-2.5 py-0.5 text-xs font-bold text-night">Antal: exempeldata</span> : null}
@@ -352,7 +353,7 @@ export function CustomerHome({
               Alla Sveriges företag, i ett utdrag.
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-              {formatCount(stats.total)} bolag{stats.source === "example" ? " i exempeldata" : ""}. Välj vilka ni vill nå och se priset direkt.
+              {formatCount(stats.total)} aktiva företag i dag{stats.source === "example" ? ", ett märkt exempel" : ""}. Siffran följer den senaste uppdateringen. Välj vilka ni vill nå och se priset direkt.
             </p>
           </div>
           <a href="#urval" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">

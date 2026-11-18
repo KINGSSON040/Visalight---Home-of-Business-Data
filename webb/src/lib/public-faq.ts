@@ -11,7 +11,7 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Hur aktuellt är utdraget?",
-    a: "Utdraget tas från den senaste uppdateringen av företagsregistret. Vi säljer inte en fil från förra året. Avregistrerade bolag, konkurs och reklamspärr är redan borta. Det är inte en uppdatering varje minut.",
+    a: "Siffran och filen följer den senaste uppdateringen av företagsregistret. Vi säljer inte en fil från förra året. Bara aktiva företag som går att sälja ingår. Vilande, inaktiva, avregistrerade och reklamspärrade bolag är redan borta. Det är inte en uppdatering varje minut.",
   },
   {
     q: "Hur betalar vi?",

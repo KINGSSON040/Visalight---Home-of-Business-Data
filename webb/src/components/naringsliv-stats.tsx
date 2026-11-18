@@ -28,9 +28,9 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <article className="glass flex flex-col rounded-2xl p-4">
-        <p className="text-sm font-medium text-muted">Företag totalt</p>
+        <p className="text-sm font-medium text-muted">Aktiva företag i dag</p>
         <CountUp value={stats.total} className="font-display mt-1 text-4xl text-neon font-extrabold tracking-tight" />
-        <p className="mt-1 text-xs text-muted">säljbara bolag i registret</p>
+        <p className="mt-1 text-xs text-muted">som går att sälja</p>
         <Link href="/#urval" className="mt-auto pt-3 text-sm font-bold text-magenta hover:underline">
           Bygg utdrag på alla {formatCount(stats.total)} →
         </Link>
@@ -197,7 +197,7 @@ export function NaringslivSection({ stats, headingId = "siffror" }: { stats: Reg
             Sveriges näringsliv i siffror
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-            Hur många företag som finns, var de finns och vilka branscher som växer. Talen kommer från samma register som utdragen och byts när registret uppdateras. En rad öppnar byggaren med branschen eller länet ifyllt.
+            Hur många aktiva företag som går att sälja, var de finns och vilka branscher som växer. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Siffran följer den senaste uppdateringen. En rad öppnar byggaren med branschen eller länet ifyllt.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -208,7 +208,7 @@ export function NaringslivSection({ stats, headingId = "siffror" }: { stats: Reg
         </div>
       </div>
       {example ? (
-        <p className="mt-3 text-xs font-semibold text-muted">Registret är inte inkopplat i den här körningen. Alla tal i sektionen är exempeldata, inte riktiga siffror.</p>
+        <p className="mt-3 text-xs font-semibold text-muted">Registret är inte inkopplat i den här körningen. Talen är ett märkt exempel på aktiva företag som går att sälja, inte hela registret.</p>
       ) : null}
       <div className="mt-6">
         <StatTiles stats={stats} />

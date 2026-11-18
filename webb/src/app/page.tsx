@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   title: "VisaLight — Alla Sveriges företag i ett utdrag",
   description:
-    "Alla Sveriges företag. Välj bransch, ort och SNI, se antal och pris direkt. Ingen inloggning, ingen prenumeration, ingen bindningstid.",
+    "Alla Sveriges företag. VisaLight tar fram utdrag med företagsdata. Ingen prenumeration, just för att det ska vara enkelt. Ingen inloggning och ingen bindningstid.",
 };
 
 export default async function Home({

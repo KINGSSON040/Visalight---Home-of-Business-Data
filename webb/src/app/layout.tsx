@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Figtree, Inter, JetBrains_Mono } from "next/font/google";
+import { Figtree, Inter, JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
 import { SiteFrame } from "@/components/site-frame";
 import { registerDatabasePath } from "@/lib/register-path";
 import { registerStamp } from "@/lib/register-status";
@@ -11,10 +11,10 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const bricolage = Bricolage_Grotesque({
+const schibsted = Schibsted_Grotesk({
   subsets: ["latin"],
-  variable: "--font-bricolage",
-  weight: ["500", "700", "800"],
+  variable: "--font-schibsted",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const jbmono = JetBrains_Mono({
@@ -51,7 +51,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv">
-      <body className={`${inter.variable} ${bricolage.variable} ${figtree.variable} ${jbmono.variable} ${inter.className} antialiased`}>
+      <body className={`${inter.variable} ${schibsted.variable} ${figtree.variable} ${jbmono.variable} ${inter.className} antialiased`}>
         <SiteFrame registerReady={registerDatabasePath() !== null} updatedLabel={registerStamp().when} exampleData={registerStamp().example}>
           {children}
         </SiteFrame>

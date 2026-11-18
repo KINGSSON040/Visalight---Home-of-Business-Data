@@ -203,8 +203,15 @@ export function companyIsSellable(company: {
   city?: string | null;
   sni?: string | null;
   manual_exclude?: number | null;
+  status_code?: string | null;
+  ended_on?: string | null;
+  reklam_block?: number | null;
 }): boolean {
   if (company.manual_exclude) return false;
+  if (company.reklam_block) return false;
+  if (company.ended_on?.trim()) return false;
+  const status = (company.status_code ?? "").trim().toLowerCase();
+  if (status !== "1" && status !== "verksam") return false;
   return Boolean(company.name?.trim() && company.street?.trim() && company.city?.trim() && company.sni?.trim());
 }
 

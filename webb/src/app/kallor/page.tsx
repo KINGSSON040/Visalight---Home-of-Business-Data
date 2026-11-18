@@ -16,22 +16,22 @@ export default function SourcesPage() {
     >
       <section>
         <h2 className="text-2xl tracking-tight">SCB:s allmänna företagsregister</h2>
-        <p className="mt-2 leading-7 text-muted">
+        <p className="soft-copy mt-2 text-muted">
           Namn, adress, ort, län, juridisk form, SNI och storleksklass hämtas från SCB. Det är samma officiella
           företagsregister som beskriver verksamma företag i Sverige, inklusive enskild firma.
         </p>
       </section>
       <section>
         <h2 className="text-2xl tracking-tight">Så ofta det uppdateras</h2>
-        <p className="mt-2 leading-7 text-muted">
+        <p className="soft-copy mt-2 text-muted">
           Vi arbetar endast med aktuella uppgifter. Registret uppdateras vid varje ny synk mot SCB, och utdraget tas
           alltid från den senaste uppdateringen. Äldre register används inte. Det är inte en realtidsström. Nya bolag
-          kommer med. Bolag som avregistrerats, är inaktiva eller har näringsförbud tas ur filen ni köper.
+          kommer med. Vilande, inaktiva, avregistrerade och reklamspärrade bolag tas ur filen, och de ingår inte i siffran. Siffran följer den senaste uppdateringen.
         </p>
       </section>
       <section>
         <h2 className="text-2xl tracking-tight">Vad som inte gissas</h2>
-        <p className="mt-2 leading-7 text-muted">
+        <p className="soft-copy mt-2 text-muted">
           Telefon, e-post och beslutsfattarnummer skrivs bara in när en angiven källa har värdet. Saknas det lämnas
           fältet tomt, och ett tomt fält kostar inget. Bolagsverket registrerar företaget, men uttaget till listan görs
           från SCB. Skatteverket är inte källa för filen.

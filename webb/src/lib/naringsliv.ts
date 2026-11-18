@@ -18,44 +18,49 @@ export type RegisterStats = {
   growing: GrowthStat[];
 };
 
+/**
+ * Märkt exempel på aktiva företag som går att sälja, när registret inte är inkopplat.
+ * Talen ska inte se ut som hela SCB-registret. Vilande, inaktiva, avregistrerade
+ * och reklamspärrade ingår inte. Länets tal summerar till 420 000.
+ */
 const EXAMPLE_INDUSTRY_COUNTS: Record<string, number> = {
-  "41200": 48000,
-  "62010": 41000,
-  "56110": 23000,
-  "69201": 14000,
-  "96210": 12000,
-  "49410": 11000,
-  "96220": 9000,
-  "47112": 6000,
-  "69202": 3000,
-  "86211": 1200,
+  "41200": 17100,
+  "62010": 14600,
+  "56110": 8200,
+  "69201": 5000,
+  "96210": 4300,
+  "49410": 3900,
+  "96220": 3200,
+  "47112": 2100,
+  "69202": 1100,
+  "86211": 400,
 };
 
 const EXAMPLE_COUNTY_COUNTS: Record<string, number> = {
-  "01": 290000,
-  "14": 200000,
-  "12": 170000,
-  "05": 50000,
-  "03": 46000,
-  "06": 40000,
-  "13": 40000,
-  "20": 33000,
-  "18": 30000,
-  "17": 30000,
-  "24": 30000,
-  "04": 28000,
-  "08": 28000,
-  "21": 28000,
-  "19": 25000,
-  "25": 25000,
-  "22": 23000,
-  "07": 22000,
-  "23": 19000,
-  "10": 14000,
-  "09": 9000,
+  "01": 103220,
+  "14": 71186,
+  "12": 60508,
+  "05": 17797,
+  "03": 16373,
+  "06": 14237,
+  "13": 14237,
+  "20": 11746,
+  "18": 10678,
+  "17": 10678,
+  "24": 10678,
+  "04": 9966,
+  "08": 9966,
+  "21": 9966,
+  "19": 8898,
+  "25": 8898,
+  "22": 8186,
+  "07": 7831,
+  "23": 6763,
+  "10": 4985,
+  "09": 3203,
 };
 
-const EXAMPLE_MONTHLY = [5200, 5600, 6900, 6300, 5900, 4800, 4100, 5400, 6600, 6200, 6100, 6400];
+const EXAMPLE_MONTHLY = [1850, 1990, 2460, 2240, 2100, 1710, 1460, 1920, 2350, 2210, 2170, 2280];
 
 function lastMonths(count: number, now = new Date()): string[] {
   const months: string[] = [];
@@ -70,7 +75,7 @@ export function industryName(sni: string): string {
   return INDUSTRIES.find((item) => item.sni === sni)?.label ?? `SNI ${sni.slice(0, 2)}.${sni.slice(2)}`;
 }
 
-/** Exempeltal för en körning utan register. Ska alltid visas märkta som exempeldata. */
+/** Exempel på aktiva, säljbara företag när registret saknas. Ska alltid visas märkt som exempel, aldrig som hela registret. */
 export function exampleStats(): RegisterStats {
   const months = lastMonths(12);
   const byCounty = COUNTIES.map((county) => ({
@@ -88,10 +93,10 @@ export function exampleStats(): RegisterStats {
     ),
     byCounty,
     growing: [
-      { sni: "62010", label: "Datakonsulter", recent: 1180, previous: 1000, changePct: 18 },
-      { sni: "96220", label: "Skönhetsvård", recent: 342, previous: 300, changePct: 14 },
-      { sni: "41200", label: "Byggande av hus", recent: 1090, previous: 1000, changePct: 9 },
-      { sni: "49410", label: "Vägtransport", recent: 318, previous: 300, changePct: 6 },
+      { sni: "62010", label: "Datakonsulter", recent: 420, previous: 356, changePct: 18 },
+      { sni: "96220", label: "Skönhetsvård", recent: 122, previous: 107, changePct: 14 },
+      { sni: "41200", label: "Byggande av hus", recent: 388, previous: 356, changePct: 9 },
+      { sni: "49410", label: "Vägtransport", recent: 113, previous: 107, changePct: 6 },
     ],
   };
 }
@@ -159,7 +164,7 @@ export function exampleEstimate(selection: Selection, stats: RegisterStats = exa
     withEmail,
     withSignatory,
     preview: [],
-    note: "Exempeldata: registret är inte inkopplat, så antalet är ett räkneexempel och inte riktiga bolag.",
+    note: "Exempel på aktiva företag som går att sälja. Registret är inte inkopplat, så antalet är ett märkt exempel, inte hela registret.",
   };
 }
 
@@ -188,8 +193,8 @@ export const PRICE_EXAMPLES = [
   },
   {
     title: "Datakonsulter i hela Sverige",
-    detail: "20 000 bolag med telefon, e-post och beslutsfattare",
-    counts: { companies: 20000, phones: 12000, signatoryPhones: 7000, emails: 8000 },
+    detail: "14 600 aktiva bolag med telefon, e-post och beslutsfattare",
+    counts: { companies: 14600, phones: 9052, signatoryPhones: 5110, emails: 5986 },
     href: "/?sni=62010#urval",
   },
 ].map((item) => ({ ...item, quote: quote(item.counts) }));

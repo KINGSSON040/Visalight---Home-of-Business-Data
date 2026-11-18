@@ -24,17 +24,17 @@ export default function StatistikPage() {
         Sveriges näringsliv <span className="aurora-text">i siffror</span>
       </h1>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
-        Talen räknas fram ur registret vid varje uppdatering. Klicka på en bransch eller ett län för att bygga ett utdrag på just de bolagen.
+        Talen är aktiva företag som går att sälja, och de följer den senaste uppdateringen. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Klicka på en bransch eller ett län för att bygga ett utdrag på just de bolagen.
       </p>
       <p className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">
         <span>
           Registret senast uppdaterat: {stamp.when}
-          {stamp.example ? " (exempeldata)" : ""}
+          {stamp.example ? " (exempeldata)" : ""}. Siffran följer den senaste uppdateringen.
         </span>
         <ExampleBadge show={example} />
       </p>
       {example ? (
-        <p className="mt-2 text-sm font-semibold text-muted">Registret är inte inkopplat i den här körningen. Alla tal på sidan är exempeldata, inte riktiga siffror.</p>
+        <p className="mt-2 text-sm font-semibold text-muted">Registret är inte inkopplat i den här körningen. Talen är ett märkt exempel på aktiva företag som går att sälja, inte hela registret.</p>
       ) : null}
       <div className="mt-8">
         <StatTiles stats={stats} />

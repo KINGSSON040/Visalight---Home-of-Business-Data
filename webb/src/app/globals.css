@@ -34,7 +34,7 @@
   --font-sans: var(--font-inter);
   --font-serif: var(--font-inter);
   --font-mono: var(--font-inter);
-  --font-display: var(--font-bricolage);
+  --font-display: var(--font-schibsted);
   --font-body: var(--font-figtree);
   --font-price: var(--font-jbmono);
   --color-neon: #00a85e;
@@ -201,7 +201,7 @@ section[id],
 .customer-site h2,
 .customer-site h3,
 .customer-site .font-display {
-  font-family: var(--font-bricolage), var(--font-figtree), sans-serif;
+  font-family: var(--font-schibsted), var(--font-figtree), sans-serif;
 }
 
 .customer-site .font-price {
@@ -293,6 +293,13 @@ body:has(.customer-site) {
   border-bottom: 1px solid rgba(27, 16, 35, 0.04);
 }
 
+.soft-copy {
+  font-family: var(--font-schibsted), var(--font-figtree), sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.004em;
+  line-height: 1.65;
+}
+
 .access-line {
   color: #1b1023;
   font-size: 1rem;
@@ -312,8 +319,8 @@ body:has(.customer-site) {
 .glow-gold { box-shadow: 0 0 0 1px rgba(27, 16, 35, 0.06), 0 16px 36px -28px rgba(27, 16, 35, 0.35); }
 
 .builder-card {
-  background: #ffffff;
-  border: 1px solid #eadfe6;
+  background: #f3e6da;
+  border: 1px solid #e4d3c4;
   box-shadow: 0 16px 40px -28px rgba(27, 16, 35, 0.35);
 }
 

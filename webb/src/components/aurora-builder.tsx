@@ -78,6 +78,10 @@ export function AuroraBuilder({
 
   return (
     <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-2xl">
+      <p className="border-b border-[#e4d3c4] px-4 pt-3 pb-2.5 text-xs leading-5 text-muted sm:px-5">
+        Registret senast uppdaterat: {updatedLabel}
+        {exampleData ? " (exempeldata)" : ""}. Siffran följer den senaste uppdateringen.
+      </p>
       <div className="space-y-3 p-4 sm:p-5">
         <Step no="01" title="Bransch">
           <BrickSearch
@@ -172,7 +176,7 @@ export function AuroraBuilder({
         </Step>
       </div>
 
-      <Result draft={draft} urval={urval} loading={loading} exampleData={exampleData} updatedLabel={updatedLabel} />
+      <Result draft={draft} urval={urval} loading={loading} exampleData={exampleData} />
     </section>
   );
 }
@@ -367,13 +371,11 @@ function Result({
   urval,
   loading,
   exampleData,
-  updatedLabel,
 }: {
   draft: Selection;
   urval: UrvalResult;
   loading: boolean;
   exampleData: boolean;
-  updatedLabel: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const counts = pricedCounts(urval, draft);
@@ -400,7 +402,7 @@ function Result({
     <div ref={ref} className="result-field rounded-b-2xl px-4 pt-3.5 pb-3 sm:px-5">
       <div className="flex items-center justify-between gap-2">
         <p className="font-price text-[0.7rem] font-bold tracking-[0.14em] text-white/90 uppercase">
-          {selectionForCount(draft) ? "Ert urval" : "Hela registret, alla Sveriges företag"}
+          {selectionForCount(draft) ? "Aktiva i ert urval" : "Aktiva företag i dag"}
         </p>
         {example ? <span className="rounded-full bg-gold px-2 py-0.5 text-[0.68rem] font-bold text-night">Exempeldata</span> : null}
       </div>
@@ -440,10 +442,6 @@ function Result({
           {price.minimumApplied ? " · lägsta order 399 kr" : ""}
         </p>
       )}
-      <p className="mt-2 border-t border-white/25 pt-2 text-[0.72rem] text-white/95">
-        Registret senast uppdaterat: {updatedLabel}
-        {exampleData ? " (exempeldata)" : ""}
-      </p>
       <MobileBar watch={ref} companies={urval.companies} priceOre={price.totalOre} />
     </div>
   );
