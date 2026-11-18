@@ -332,7 +332,7 @@ body:has(.customer-site) {
 }
 
 .price-figure {
-  color: #ffe08a;
+  color: #1b1023;
 }
 
 .builder-card[data-lit="true"] {
@@ -340,8 +340,9 @@ body:has(.customer-site) {
 }
 
 .result-field {
-  background: #c40078;
-  color: #fff;
+  background: #fff8dc;
+  color: #1b1023;
+  border-top: 1px solid #e8d48a;
 }
 
 .big-count {
@@ -401,9 +402,13 @@ body:has(.customer-site) {
 .addon-chip:hover { background: #faf7f8; }
 
 .addon-chip[aria-pressed="true"] {
-  border-color: #00a85e;
-  background: #00a85e;
-  color: #1b1023;
+  border-color: #d6007a;
+  background: #d6007a;
+  color: #fff;
+}
+
+.addon-chip[aria-pressed="true"] .font-price {
+  color: #fff;
 }
 
 .brick,

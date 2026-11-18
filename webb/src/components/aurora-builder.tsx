@@ -214,7 +214,7 @@ function AddonChip({ on, onToggle, label, price }: { on: boolean; onToggle: () =
     <button type="button" aria-pressed={on} onClick={onToggle} className="addon-chip inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold">
       <span
         aria-hidden="true"
-        className={`inline-flex h-4 w-4 items-center justify-center rounded-full text-[0.62rem] font-bold ${on ? "bg-white text-neon" : "border border-ink/30"}`}
+        className={`inline-flex h-4 w-4 items-center justify-center rounded-full text-[0.62rem] font-bold ${on ? "bg-white text-magenta" : "border border-ink/30"}`}
       >
         {on ? "✓" : ""}
       </span>
@@ -400,7 +400,7 @@ function Result({
   return (
     <div ref={ref} className="result-field rounded-b-2xl px-4 pt-3.5 pb-3 sm:px-5">
       <div className="flex items-center justify-between gap-2">
-        <p className="font-price text-[0.7rem] font-bold tracking-[0.14em] text-white/90 uppercase">
+        <p className="font-price text-[0.7rem] font-bold tracking-[0.14em] text-muted uppercase">
           {selectionForCount(draft) ? "Aktiva i ert urval" : "Aktiva företag i dag"}
         </p>
       </div>
@@ -409,7 +409,7 @@ function Result({
           <p className="flex flex-wrap items-baseline gap-x-2">
             <span
               data-urval-count={String(urval.companies)}
-              className={`big-count font-display text-[2.9rem] leading-none font-extrabold tracking-[-0.03em] sm:text-[3.6rem] ${flare ? "flare" : ""} ${loading ? "opacity-85" : ""}`}
+              className={`big-count font-display text-[2.9rem] leading-none font-extrabold tracking-[-0.03em] text-magenta sm:text-[3.6rem] ${flare ? "flare" : ""} ${loading ? "opacity-85" : ""}`}
             >
               {shown.toLocaleString("sv-SE")}
             </span>
@@ -419,23 +419,23 @@ function Result({
             <span data-urval-price className="price-figure font-price text-base font-bold">
               {formatKronor(shownPrice)} kr
             </span>{" "}
-            <span className="text-white/85">exkl. moms · Excel eller CSV</span>
+            <span className="text-muted">exkl. moms · Excel eller CSV</span>
           </p>
         </div>
         <Link
           href={`/kassa?${selectionToQuery(counted)}`}
           aria-disabled={counts.companies === 0}
-          className={`inline-flex h-11 shrink-0 items-center gap-2 rounded-xl bg-white px-4 text-sm font-bold text-magenta shadow-[0_10px_24px_-12px_rgba(0,0,0,0.5)] hover:bg-[#fff6fb] ${counts.companies === 0 ? "pointer-events-none opacity-60" : ""}`}
+          className={`inline-flex h-11 shrink-0 items-center gap-2 rounded-xl border border-ink bg-white px-4 text-sm font-bold text-ink hover:bg-[#fffdf4] ${counts.companies === 0 ? "pointer-events-none opacity-60" : ""}`}
         >
           Förhandsboka utdraget <span aria-hidden="true">→</span>
         </Link>
       </div>
-      <p className="mt-2 text-sm font-semibold text-white">Ingen inloggning. Ingen prenumeration. Ingen bindningstid.</p>
-      <p className="mt-1.5 truncate text-xs text-white/90">{describeSelection(counted)}</p>
+      <p className="mt-2 text-sm font-semibold">Ingen inloggning. Ingen prenumeration. Ingen bindningstid.</p>
+      <p className="mt-1.5 truncate text-xs text-muted">{describeSelection(counted)}</p>
       {urval.companies === 0 ? (
         <p className="mt-1 text-xs font-semibold">{urval.note || "Inget bolag matchar."} Ta bort ett filter så kommer de tillbaka.</p>
       ) : (
-        <p className="font-price mt-1 hidden truncate text-[0.66rem] text-white/85 sm:block">
+        <p className="font-price mt-1 hidden truncate text-[0.66rem] text-muted sm:block">
           {parts.map((part) => `${part.label} ${Math.round(part.ore / 100).toLocaleString("sv-SE")} kr`).join(" + ")}
           {price.minimumApplied ? " · lägsta order 399 kr" : ""}
         </p>
@@ -460,9 +460,9 @@ function MobileBar({ watch, companies, priceOre }: { watch: React.RefObject<HTML
   if (hidden) return null;
   return (
     <a href="#urval" className="result-field fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-2xl px-4 py-2.5 shadow-xl lg:hidden">
-      <span className="font-display text-xl font-extrabold tabular-nums">{companies.toLocaleString("sv-SE")}</span>
+      <span className="font-display text-xl font-extrabold text-magenta tabular-nums">{companies.toLocaleString("sv-SE")}</span>
       <span className="price-figure font-price text-xs">företag · {Math.round(priceOre / 100).toLocaleString("sv-SE")} kr</span>
-      <span className="rounded-lg bg-white px-3 py-1 text-sm font-bold text-magenta">Ändra</span>
+      <span className="rounded-lg border border-ink bg-white px-3 py-1 text-sm font-bold text-ink">Ändra</span>
     </a>
   );
 }
