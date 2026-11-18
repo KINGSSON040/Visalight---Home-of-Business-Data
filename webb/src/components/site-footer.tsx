@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BrandLockup } from "@/components/logo-mark";
 import { StatusChip } from "@/components/status-chip";
-import { Mark, SELLER } from "@/lib/seller";
+import { SELLER } from "@/lib/seller";
 
 export function SiteFooter({
   updatedLabel,
@@ -21,8 +21,7 @@ export function SiteFooter({
         </div>
         <StatusChip updatedLabel={updatedLabel ?? null} registerReady={registerReady} exampleData={exampleData} />
         <p className="text-sm leading-6 text-muted">
-          {SELLER.tradeName} är inte ett registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark> ·{" "}
-          <Mark>{SELLER.vatNr}</Mark>
+          {SELLER.line}
         </p>
         <nav className="flex flex-wrap gap-x-4 gap-y-2">
           <Link href="/#urval">Skapa utdrag</Link>

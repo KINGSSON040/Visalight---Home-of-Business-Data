@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/page-intro";
-import { Mark, SELLER } from "@/lib/seller";
+import { SELLER } from "@/lib/seller";
 
 export const metadata: Metadata = {
   title: "Cookies — VisaLight",
@@ -28,8 +28,7 @@ export default function CookiesPage() {
       <section>
         <h2 className="text-2xl tracking-tight">Om det ändras</h2>
         <p className="mt-2 leading-7 text-muted">
-          Om en betaltjänst senare behöver en cookie står det här. Ansvarig för sidan är ännu inte ett bolag:{" "}
-          <Mark>{SELLER.orgNr}</Mark>, <Mark>{SELLER.address}</Mark>, <Mark>{SELLER.vatNr}</Mark>.
+          Om en betaltjänst senare behöver en cookie står det här. {SELLER.line}
         </p>
       </section>
     </PageIntro>

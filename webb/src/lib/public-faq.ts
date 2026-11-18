@@ -7,7 +7,7 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Ingår moms?",
-    a: `Priserna i utdraget är exklusive moms. ${SELLER.tradeName} är inte momsregistrerat ännu. Momsnummer fylls i som ${SELLER.vatNr} när bolaget finns.`,
+    a: `Priserna i utdraget är exklusive moms. ${SELLER.line}`,
   },
   {
     q: "Hur aktuellt är utdraget?",

@@ -7,7 +7,7 @@ import { describeSelection, selectionFromRecord, selectionToQuery } from "@/lib/
 import { registerDatabasePath } from "@/lib/register-path";
 import { loadUrval } from "@/lib/register-urval";
 import { registerUpdatedLabel } from "@/lib/register-status";
-import { Mark, SELLER } from "@/lib/seller";
+import { SELLER } from "@/lib/seller";
 import { pricedCounts } from "@/lib/urval";
 
 export const metadata: Metadata = {
@@ -36,8 +36,7 @@ export default async function CheckoutPage({
         {urval.source === "register" ? "bolag" : "exempelbolag"} i urvalet.
       </p>
       <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
-        {SELLER.tradeName} är inte ett registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark>{" "}
-        · <Mark>{SELLER.vatNr}</Mark>
+        {SELLER.line}
       </p>
       <div className="mt-4">
         <StatusChip updatedLabel={registerUpdatedLabel()} registerReady={registerDatabasePath() !== null} />

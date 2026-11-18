@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ORDER_STORAGE_KEY, type OrderDraft, type Selection } from "@/lib/catalog";
-import { Mark, SELLER } from "@/lib/seller";
+import { SELLER } from "@/lib/seller";
 
 export function CheckoutForm({ selection }: { selection: Selection }) {
   const router = useRouter();
@@ -37,8 +37,7 @@ export function CheckoutForm({ selection }: { selection: Selection }) {
       <p className="inline-flex rounded-full bg-foam px-3 py-1 text-sm text-ink">Beställning öppnar snart. Ingen betalning dras.</p>
       <h2 className="mt-3 font-serif text-2xl">Förhandsboka utdraget</h2>
       <p className="mt-2 text-sm leading-6 text-muted">
-        Beställning öppnar snart. Ingen betalning dras och ingen fil skickas. {SELLER.tradeName} är inte ett
-        registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark> · <Mark>{SELLER.vatNr}</Mark>
+        Beställning öppnar snart. Ingen betalning dras och ingen fil skickas. {SELLER.line}
       </p>
       <label className="mt-4 block text-sm">
         <span className="mb-1 block text-muted">E-post</span>

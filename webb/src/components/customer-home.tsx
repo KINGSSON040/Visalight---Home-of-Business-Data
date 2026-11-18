@@ -121,7 +121,7 @@ export function CustomerHome({
             Alla Sveriges företag.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-            VisaLight arbetar med företagsdata. Ni hämtar ett utdrag med de aktiva bolag ni vill nå: namn, adress, bransch och de kontaktfält ni väljer.
+            VisaLight är ett svenskt företag och varumärke med säte i Malmö. Ni hämtar ett utdrag med de aktiva bolag ni vill nå: namn, adress, bransch och de kontaktfält ni väljer.
           </p>
           <p className="mt-3 max-w-xl text-base leading-7 text-muted">
             Det ska vara enkelt att ta ett utdrag. Därför finns ingen prenumeration. Välj <strong className="font-bold text-ink">bransch</strong>, <strong className="font-bold text-ink">ort</strong> och <strong className="font-bold text-ink">SNI</strong>, och se antal och pris innan ni bestämmer er.

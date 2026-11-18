@@ -9,7 +9,7 @@ import {
   selectionToQuery,
   type OrderDraft,
 } from "@/lib/catalog";
-import { Mark, SELLER } from "@/lib/seller";
+import { SELLER } from "@/lib/seller";
 
 export default function ConfirmationPage() {
   const [order, setOrder] = useState<OrderDraft | null | undefined>(undefined);
@@ -64,8 +64,7 @@ export default function ConfirmationPage() {
         inte ett kvitto.
       </p>
       <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">
-        {SELLER.tradeName} är inte ett registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark>{" "}
-        · <Mark>{SELLER.vatNr}</Mark>
+        {SELLER.line}
       </p>
       <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <article className="rounded-3xl border border-line bg-card p-5 sm:p-6">
