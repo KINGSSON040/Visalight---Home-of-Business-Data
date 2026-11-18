@@ -76,7 +76,7 @@ export function AuroraBuilder({
 
   return (
     <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-2xl">
-      <p className="border-b border-white/40 px-4 pt-3 pb-2.5 text-xs leading-5 text-muted sm:px-5">
+      <p className="register-stamp mx-4 mt-4 rounded-xl px-3 py-2 text-xs leading-5 sm:mx-5">
         Registret senast uppdaterat: {updatedLabel}. Siffran följer den senaste uppdateringen.
       </p>
       <div className="space-y-3 p-4 sm:p-5">

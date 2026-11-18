@@ -319,14 +319,16 @@ body:has(.customer-site) {
 .glow-gold { box-shadow: 0 0 0 1px rgba(27, 16, 35, 0.06), 0 16px 36px -28px rgba(27, 16, 35, 0.35); }
 
 .builder-card {
-  background: #00a85e;
-  border: 1px solid #00a85e;
+  background: #f3ddcc;
+  border: 1px solid #e4c8b0;
   box-shadow: 0 16px 40px -28px rgba(27, 16, 35, 0.35);
   color: #1b1023;
 }
 
-.builder-card .text-muted {
-  color: #1b1023;
+.register-stamp {
+  background: #faf6f0;
+  border: 1px solid #e4d2c2;
+  color: #574862;
 }
 
 .price-figure {
@@ -384,7 +386,7 @@ body:has(.customer-site) {
 .chip:hover { background: #faf7f8; }
 
 .chip[aria-pressed="true"] {
-  border-color: #fff;
+  border-color: #00a85e;
   background: #00a85e;
   color: #1b1023;
 }
@@ -399,7 +401,7 @@ body:has(.customer-site) {
 .addon-chip:hover { background: #faf7f8; }
 
 .addon-chip[aria-pressed="true"] {
-  border-color: #fff;
+  border-color: #00a85e;
   background: #00a85e;
   color: #1b1023;
 }
