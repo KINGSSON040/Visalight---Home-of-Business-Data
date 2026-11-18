@@ -1,4 +1,4 @@
-import { INDUSTRIES } from "@/lib/catalog";
+import { INDUSTRIES, selectionIndustries } from "@/lib/catalog";
 
 export type TopicKind = "bransch" | "ord";
 
@@ -21,30 +21,30 @@ export const TOPICS: Topic[] = [
   bransch("akerier", "Åkerier", "49410", "Åkerier och annan vägtransport kan avgränsas med SNI och ort innan filen beställs."),
   bransch("frisorsalonger", "Frisörsalonger", "96210", "Frisörsalonger har SNI 96.210, Frisörer och barberare. Skönhetssalonger är en annan kod, 96.220."),
   bransch("redovisningsbyraer", "Redovisningsbyråer", "69201", "Redovisningsbyråer söks via sin SNI-kod. E-post kommer med när källan har en adress."),
-  bransch("elektriker", "Elektriker", undefined, "Elektriker och elinstallatörer är en vanlig lista när man söker hantverkare i en kommun."),
-  bransch("rormokare", "Rörmokare", undefined, "Rörmokare och VVS-firmor behövs ofta ort för ort, med namn och adress som grund."),
-  bransch("malerifirmor", "Målerifirmor", undefined, "Målerifirmor kan samlas som ett branschurval. Numret följer med bara om det står i källan."),
-  bransch("stadfirmor", "Städfirmor", undefined, "Städfirmor och lokalvård är ett vanligt urval för den som ringer eller mejlar företag."),
-  bransch("advokatbyraer", "Advokatbyråer", undefined, "Advokatbyråer identifieras som bransch, med organisationsnummer och adress på varje rad."),
+  bransch("elektriker", "Elektriker", "43210", "Elektriker och elinstallatörer är en vanlig lista när man söker hantverkare i en kommun."),
+  bransch("rormokare", "Rörmokare", "43221", "Rörmokare och VVS-firmor behövs ofta ort för ort, med namn och adress som grund."),
+  bransch("malerifirmor", "Målerifirmor", "43341", "Målerifirmor kan samlas som ett branschurval. Numret följer med bara om det står i källan."),
+  bransch("stadfirmor", "Städfirmor", "81210", "Städfirmor och lokalvård är ett vanligt urval för den som ringer eller mejlar företag."),
+  bransch("advokatbyraer", "Advokatbyråer", "69101", "Advokatbyråer identifieras som bransch, med organisationsnummer och adress på varje rad."),
   bransch("revisionsbyraer", "Revisionsbyråer", "69202", "Revisionsbyråer har SNI 69.202. Redovisningsbyråer ligger på 69.201 och är ett annat urval."),
-  bransch("fastighetsforvaltare", "Fastighetsförvaltare", undefined, "Fastighetsförvaltare har egna listor, skilda från mäklare och från bolag som bara äger hus."),
-  bransch("hotell", "Hotell", undefined, "Hotell söks som bransch och kan begränsas till en ort. Kedjor och enskilda hus ligger som egna bolag."),
-  bransch("tandlakare", "Tandläkare", undefined, "Tandläkarmottagningar behövs ofta lokalt. Adressen finns med, telefonen bara när den är publicerad i källan."),
-  bransch("bilverkstader", "Bilverkstäder", undefined, "Bilverkstäder är ett vanligt urval för reservdelar, försäkring och verkstadsbesök."),
-  bransch("reklambyraer", "Reklambyråer", undefined, "Reklambyråer kan listas för samarbeten. E-post lämnas tom om byrån inte har angett någon."),
-  bransch("arkitektkontor", "Arkitektkontor", undefined, "Arkitektkontor söks som egen bransch, med organisationsnummer så raden går att skilja från liknande namn."),
-  bransch("bemanningsforetag", "Bemanningsföretag", undefined, "Bemanningsföretag och personaluthyrning kan tas ut som ett eget urval."),
-  bransch("catering", "Catering", undefined, "Cateringfirmor ligger nära restaurang men är en egen bransch när listan ska vara precis."),
-  bransch("bagerier", "Bagerier", undefined, "Bagerier kan sökas för leverans och grossist. Flera arbetsställen betyder flera bolag, inte en gissad kedja."),
-  bransch("tradgardsforetag", "Trädgårdsföretag", undefined, "Trädgårdsföretag och skötsel av grönytor är ett säsongsdrivet urval som hålls till angiven ort."),
-  bransch("flyttfirmor", "Flyttfirmor", undefined, "Flyttfirmor behövs ofta i en stad. Listan tar med de bolag som har adress och SNI, inte avregistrerade namn."),
-  bransch("sakerhetsforetag", "Säkerhetsföretag", undefined, "Säkerhetsföretag och bevakning kan tas ut som bransch när uppdraget kräver den nischen."),
-  bransch("e-handel", "E-handel", undefined, "E-handlare har sällan besöksadress som säger hela verksamheten. Adressen i filen är den källan har angett."),
-  bransch("veterinarkliniker", "Veterinärkliniker", undefined, "Veterinärkliniker är få per ort. Därför syns det tydligt när telefon eller e-post saknas."),
-  bransch("gym", "Gym", undefined, "Gym och träningsanläggningar kan listas per ort. Ett bolag kan ha ett nummer, ett annat inget."),
-  bransch("forskoleforetag", "Förskoleföretag", undefined, "Förskoleföretag är bolag, inte varje avdelning. Urvalet följer organisationsnumret."),
-  bransch("fotografer", "Fotografer", undefined, "Fotografer driver ofta små bolag. Namn och adress räcker som grund, kontaktfält när de finns."),
-  bransch("maklare", "Mäklare", undefined, "Mäklarfirmor kan skiljas från fastighetsägare. Filen tar med firman, inte mäklarens privata nummer om det inte är angivet."),
+  bransch("fastighetsforvaltare", "Fastighetsförvaltare", "68320", "Fastighetsförvaltare har egna listor, skilda från mäklare och från bolag som bara äger hus."),
+  bransch("hotell", "Hotell", "55101", "Hotell söks som bransch och kan begränsas till en ort. Kedjor och enskilda hus ligger som egna bolag."),
+  bransch("tandlakare", "Tandläkare", "86230", "Tandläkarmottagningar behövs ofta lokalt. Adressen finns med, telefonen bara när den är publicerad i källan."),
+  bransch("bilverkstader", "Bilverkstäder", "95311", "Bilverkstäder är ett vanligt urval för reservdelar, försäkring och verkstadsbesök."),
+  bransch("reklambyraer", "Reklambyråer", "73111", "Reklambyråer kan listas för samarbeten. E-post lämnas tom om byrån inte har angett någon."),
+  bransch("arkitektkontor", "Arkitektkontor", "71110", "Arkitektkontor söks som egen bransch, med organisationsnummer så raden går att skilja från liknande namn."),
+  bransch("bemanningsforetag", "Bemanningsföretag", "78201", "Bemanningsföretag och personaluthyrning kan tas ut som ett eget urval."),
+  bransch("catering", "Catering", "56210", "Cateringfirmor ligger nära restaurang men är en egen bransch när listan ska vara precis."),
+  bransch("bagerier", "Bagerier", "10710", "Bagerier kan sökas för leverans och grossist. Flera arbetsställen betyder flera bolag, inte en gissad kedja."),
+  bransch("tradgardsforetag", "Trädgårdsföretag", "81300", "Trädgårdsföretag och skötsel av grönytor är ett säsongsdrivet urval som hålls till angiven ort."),
+  bransch("flyttfirmor", "Flyttfirmor", "49420", "Flyttfirmor behövs ofta i en stad. Listan tar med de bolag som har adress och SNI, inte avregistrerade namn."),
+  bransch("sakerhetsforetag", "Säkerhetsföretag", "80010", "Säkerhetsföretag och bevakning kan tas ut som bransch när uppdraget kräver den nischen."),
+  bransch("e-handel", "E-handel", "47123", "E-handlare har sällan besöksadress som säger hela verksamheten. Adressen i filen är den källan har angett."),
+  bransch("veterinarkliniker", "Veterinärkliniker", "75000", "Veterinärkliniker är få per ort. Därför syns det tydligt när telefon eller e-post saknas."),
+  bransch("gym", "Gym", "93130", "Gym och träningsanläggningar kan listas per ort. Ett bolag kan ha ett nummer, ett annat inget."),
+  bransch("forskoleforetag", "Förskoleföretag", "85100", "Förskoleföretag är bolag, inte varje avdelning. Urvalet följer organisationsnumret."),
+  bransch("fotografer", "Fotografer", "74200", "Fotografer driver ofta små bolag. Namn och adress räcker som grund, kontaktfält när de finns."),
+  bransch("maklare", "Mäklare", "68310", "Mäklarfirmor kan skiljas från fastighetsägare. Filen tar med firman, inte mäklarens privata nummer om det inte är angivet."),
   ord("foretagsdata", "Företagsdata", "Företagsdata är namn, organisationsnummer, adress, ort, bransch och de kontaktfält källan faktiskt har."),
   ord("foretagsregister", "Företagsregister", "Ett företagsregister används för att hitta bolag och avgränsa dem innan en fil beställs."),
   ord("organisationsnummer", "Organisationsnummer", "Organisationsnumret är nyckeln på varje rad, så två bolag med liknande namn inte blandas ihop."),
@@ -68,8 +68,8 @@ function bransch(slug: string, nav: string, sni: string | undefined, lead: strin
     slug,
     kind: "bransch",
     nav,
-    title: `Företagslista: ${nav}`,
-    description: `${lead} Priset visas innan köp. Tills registret är kopplat är siffrorna i verktyget exempel.`,
+    title: `Företagslista och utdrag för ${nav}`,
+    description: `Företagslista och utdrag för ${nav}. ${lead} Antal och pris syns innan köp. Tills registret är kopplat är siffrorna exempel.`,
     lead,
     sni,
   };
@@ -170,7 +170,7 @@ export function topicPath(topic: Topic): string {
 }
 
 export function topicBuilderHref(topic: Topic): string {
-  if (topic.sni && INDUSTRIES.some((item) => item.sni === topic.sni)) {
+  if (topic.sni && selectionIndustries().some((item) => item.sni === topic.sni)) {
     return `/?sni=${topic.sni}#urval`;
   }
   if (topic.kind === "bransch") return `/?bransch=${encodeURIComponent(topic.nav)}#urval`;

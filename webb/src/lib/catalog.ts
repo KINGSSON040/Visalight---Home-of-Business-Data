@@ -117,6 +117,40 @@ export const INDUSTRIES: Industry[] = [
   },
 ];
 
+/**
+ * Branscher som söks vid namn. Samma urval som INDUSTRIES, men de visas inte som egna staplar.
+ * Koderna är SNI 2025. legacy är äldre koder för samma verksamhet.
+ */
+export const SEARCH_INDUSTRIES: Industry[] = [
+  { sni: "43210", code: "43.210", label: "Elinstallationer", words: ["elektriker", "elinstallatör", "elinstallation"] },
+  { sni: "43221", code: "43.221", label: "Värme- och sanitetsarbeten", words: ["rörmokare", "vvs", "rörläggare"], legacy: ["43220", "43222", "43223", "43229"] },
+  { sni: "43341", code: "43.341", label: "Måleriarbeten", words: ["målare", "måleri", "målerifirma", "målerifirmor"] },
+  { sni: "81210", code: "81.210", label: "Lokalvård", words: ["städ", "städfirma", "städfirmor", "lokalvård"] },
+  { sni: "69101", code: "69.101", label: "Advokatbyråverksamhet", words: ["advokat", "advokatbyrå", "advokatbyråer"] },
+  { sni: "68320", code: "68.320", label: "Fastighetsförvaltning på uppdrag", words: ["fastighetsförvaltare", "förvaltare"], legacy: ["68320"] },
+  { sni: "55101", code: "55.101", label: "Hotellverksamhet med restaurangrörelse", words: ["hotell"], legacy: ["55102"] },
+  { sni: "86230", code: "86.230", label: "Tandläkarverksamhet", words: ["tandläkare", "tandvård"] },
+  { sni: "95311", code: "95.311", label: "Allmän service och reparation av motorfordon utom motorcyklar", words: ["bilverkstad", "bilverkstäder", "verkstad"], legacy: ["45201"] },
+  { sni: "73111", code: "73.111", label: "Reklambyråverksamhet", words: ["reklambyrå", "reklambyråer", "reklam"] },
+  { sni: "71110", code: "71.110", label: "Arkitektverksamhet", words: ["arkitekt", "arkitektkontor"] },
+  { sni: "78201", code: "78.201", label: "Personaluthyrning", words: ["bemanning", "bemanningsföretag", "personaluthyrning"], legacy: ["78200"] },
+  { sni: "56210", code: "56.210", label: "Cateringverksamhet vid enskilda evenemang", words: ["catering"] },
+  { sni: "10710", code: "10.710", label: "Tillverkning av mjukt matbröd och färska bakverk", words: ["bageri", "bagerier"], legacy: ["47241"] },
+  { sni: "81300", code: "81.300", label: "Skötsel och underhåll av grönytor", words: ["trädgård", "trädgårdsföretag", "grönytor"] },
+  { sni: "49420", code: "49.420", label: "Flyttjänster", words: ["flytt", "flyttfirma", "flyttfirmor"] },
+  { sni: "80010", code: "80.010", label: "Bevakningsverksamhet och privat säkerhetsverksamhet", words: ["säkerhet", "säkerhetsföretag", "bevakning"], legacy: ["80100"] },
+  { sni: "47123", code: "47.123", label: "Detaljhandel via internet eller postorder med brett sortiment", words: ["e-handel", "ehandel", "webbutik"], legacy: ["47911"] },
+  { sni: "75000", code: "75.000", label: "Veterinärverksamhet", words: ["veterinär", "veterinärklinik", "veterinärkliniker"] },
+  { sni: "93130", code: "93.130", label: "Drift av gymanläggningar", words: ["gym", "träningsanläggning"] },
+  { sni: "85100", code: "85.100", label: "Förskoleutbildning", words: ["förskola", "förskoleföretag"] },
+  { sni: "74200", code: "74.200", label: "Fotoverksamhet", words: ["fotograf", "fotografer"], legacy: ["74201"] },
+  { sni: "68310", code: "68.310", label: "Fastighetsförmedling", words: ["mäklare", "mäklarfirma"] },
+];
+
+export function selectionIndustries(): Industry[] {
+  return [...INDUSTRIES, ...SEARCH_INDUSTRIES];
+}
+
 const LEGACY_SNI: Record<string, string> = {
   "56101": "56110",
   "96021": "96210",
@@ -344,7 +378,8 @@ export function formGroupLabel(forms: string[]): string {
 }
 
 export function industryLabel(sni: string): string {
-  return INDUSTRIES.find((item) => item.sni === sni)?.label ?? sni;
+  const digits = sni.replace(/\D/g, "");
+  return selectionIndustries().find((item) => item.sni === digits)?.label ?? sni;
 }
 
 function fold(value: string): string {
@@ -380,7 +415,7 @@ export function resolveQuery(text: string): (Partial<Selection> & { form?: strin
   if (!trimmed) return null;
   const needle = fold(trimmed);
   const digits = trimmed.replace(/\D/g, "");
-  const industry = INDUSTRIES.find((item) => {
+  const industry = selectionIndustries().find((item) => {
     const codes = [item.sni, item.code, ...(item.legacy ?? [])].map((code) => code.replace(/\D/g, ""));
     if (digits.length >= 2 && codes.includes(digits)) return true;
     return fold(item.label) === needle || item.words.some((word) => fold(word) === needle);
@@ -453,7 +488,7 @@ function sniSpellings(code: string): string[] {
 }
 
 function spellingsFor(digits: string): string[] {
-  const industry = INDUSTRIES.find(
+  const industry = selectionIndustries().find(
     (item) => item.sni === digits || (item.legacy ?? []).some((code) => code.replace(/\D/g, "") === digits),
   );
   return [...new Set([digits, industry?.sni ?? "", ...(industry?.legacy ?? [])].flatMap(sniSpellings))];
@@ -467,7 +502,7 @@ export function selectionSniFilter(selection: { sni?: string; bransch?: string; 
   if (!text) return { kind: "any" };
   const needle = fold(text);
   const digits = text.replace(/\D/g, "");
-  const hits = INDUSTRIES.filter((item) => industryMatches(item, needle, digits));
+  const hits = selectionIndustries().filter((item) => industryMatches(item, needle, digits));
   if (hits.length > 0) {
     const codes = hits.flatMap((item) => [item.sni, ...(item.legacy ?? [])].flatMap(sniSpellings));
     return { kind: "codes", codes: [...new Set(codes)] };
@@ -481,7 +516,7 @@ export function suggestBranscher(text: string): Suggestion[] {
   const needle = fold(text.trim());
   const digits = text.replace(/\D/g, "");
   if (needle.length < 2 && digits.length < 2) return [];
-  return INDUSTRIES.filter((item) => industryMatches(item, needle, digits)).slice(0, 8).map((item) => industrySuggestion(item, true));
+  return selectionIndustries().filter((item) => industryMatches(item, needle, digits)).slice(0, 8).map((item) => industrySuggestion(item, true));
 }
 
 /** Butikens sökfält. Bransch först, sedan område, län, bolagsform och storlek. Aldrig ett enskilt bolag. */
@@ -491,7 +526,7 @@ export function suggestSegment(text: string): Suggestion[] {
   if (needle.length < 1 && digits.length < 1) return [];
   const found: Suggestion[] = [];
 
-  for (const item of INDUSTRIES) {
+  for (const item of selectionIndustries()) {
     if (!industrySuggestMatch(item, needle, digits)) continue;
     found.push(industrySuggestion(item, true));
   }
@@ -566,7 +601,7 @@ export function suggestQuery(text: string): Suggestion[] {
     });
   }
 
-  for (const item of INDUSTRIES) {
+  for (const item of selectionIndustries()) {
     if (!industryMatches(item, needle, digits)) continue;
     found.push(industrySuggestion(item, true));
   }
@@ -623,7 +658,7 @@ export function suggestCities(text: string): Suggestion[] {
 export function suggestIndustries(text: string): Suggestion[] {
   const needle = fold(text.trim());
   const digits = text.replace(/\D/g, "");
-  return INDUSTRIES.filter((item) => !needle || industryMatches(item, needle, digits)).map((item) => industrySuggestion(item, false));
+  return selectionIndustries().filter((item) => !needle || industryMatches(item, needle, digits)).map((item) => industrySuggestion(item, false));
 }
 
 export function selectionToQuery(selection: Selection): string {
@@ -643,18 +678,25 @@ export function selectionToQuery(selection: Selection): string {
 }
 
 export function selectionFromQuery(params: URLSearchParams): Selection {
-  const sniParam = LEGACY_SNI[params.get("sni") ?? ""] ?? params.get("sni") ?? "";
+  const sniParam = (LEGACY_SNI[params.get("sni") ?? ""] ?? params.get("sni") ?? "").replace(/\D/g, "");
   const branschParam = params.get("bransch") ?? "";
-  const byLabel = INDUSTRIES.find((item) => branschParam && fold(item.label) === fold(branschParam));
-  const byCode = INDUSTRIES.find((item) => item.sni === sniParam);
+  const pool = selectionIndustries();
+  const byLabel = pool.find(
+    (item) =>
+      branschParam &&
+      (fold(item.label) === fold(branschParam) || item.words.some((word) => fold(word) === fold(branschParam))),
+  );
+  const byCode = pool.find(
+    (item) => item.sni === sniParam || (item.legacy ?? []).some((code) => code.replace(/\D/g, "") === sniParam),
+  );
   let sni = "";
   let bransch = branschParam;
   if (byLabel) {
     sni = byLabel.sni;
     bransch = byLabel.label;
-  } else if (!branschParam && byCode) {
+  } else if (byCode) {
     sni = byCode.sni;
-    bransch = byCode.label;
+    bransch = branschParam || byCode.label;
   }
   const forms = (params.get("form") ?? "")
     .split(",")

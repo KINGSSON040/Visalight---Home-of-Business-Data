@@ -7,6 +7,7 @@ import {
   EMPLOYEE_BANDS,
   FORM_GROUPS,
   INDUSTRIES,
+  selectionIndustries,
   describeSelection,
   selectionForCount,
   selectionToQuery,
@@ -69,7 +70,7 @@ export function AuroraBuilder({
   const bransch = (draft.bransch ?? "").trim();
   const industryBricks =
     draft.sni || bransch
-      ? [{ key: "bransch", text: draft.sni ? `${dotted(draft.sni)} ${INDUSTRIES.find((item) => item.sni === draft.sni)?.label ?? bransch}` : bransch, clear: { sni: "", bransch: "" } }]
+      ? [{ key: "bransch", text: draft.sni ? `${dotted(draft.sni)} ${selectionIndustries().find((item) => item.sni === draft.sni)?.label ?? bransch}` : bransch, clear: { sni: "", bransch: "" } }]
       : [];
   const regionBricks = [
     ...(draft.county ? [{ key: "lan", text: draft.county, clear: { county: "" } }] : []),

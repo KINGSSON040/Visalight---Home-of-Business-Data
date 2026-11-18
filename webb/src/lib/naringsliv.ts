@@ -34,6 +34,29 @@ const EXAMPLE_INDUSTRY_COUNTS: Record<string, number> = {
   "47112": 2100,
   "69202": 1100,
   "86211": 400,
+  "43210": 7600,
+  "43221": 5400,
+  "43341": 3100,
+  "81210": 6800,
+  "69101": 2400,
+  "68320": 1900,
+  "55101": 1500,
+  "86230": 2800,
+  "95311": 4500,
+  "73111": 2200,
+  "71110": 1800,
+  "78201": 900,
+  "56210": 700,
+  "10710": 600,
+  "81300": 1600,
+  "49420": 800,
+  "80010": 500,
+  "47123": 3400,
+  "75000": 700,
+  "93130": 1100,
+  "85100": 1300,
+  "74200": 2100,
+  "68310": 1700,
 };
 
 const EXAMPLE_COUNTY_COUNTS: Record<string, number> = {
@@ -138,8 +161,8 @@ export function exampleEstimate(selection: Selection, stats: RegisterStats = exa
   let share = 1;
   if (filter.kind === "none") share = 0;
   if (filter.kind === "codes") {
-    const hits = stats.byIndustry.filter((item) => filter.codes.some((code) => code.replace(/\D/g, "") === item.sni));
-    share = hits.length ? hits.reduce((sum, item) => sum + item.count, 0) / stats.total : 0.004;
+    const known = [...new Set(filter.codes.map((code) => code.replace(/\D/g, "")))].filter((code) => EXAMPLE_INDUSTRY_COUNTS[code] != null);
+    share = known.length ? known.reduce((sum, code) => sum + EXAMPLE_INDUSTRY_COUNTS[code], 0) / stats.total : 0.004;
   }
   if (filter.kind === "prefix") share = 0.02;
   const city = fold(selection.city ?? "");

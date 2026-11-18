@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { INDUSTRIES, type Industry } from "@/lib/catalog";
+import { INDUSTRIES, selectionIndustries, type Industry } from "@/lib/catalog";
 import { BASE_ORE, EMAIL_ORE, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import {
   dottedSni,
@@ -22,16 +22,17 @@ function ore(value: number): string {
 export function topicMetadata(kind: TopicKind, slug: string): Metadata {
   const topic = getTopic(kind, slug);
   if (!topic) return {};
-  const industry = INDUSTRIES.find((item) => item.sni === topic.sni);
-  const code = industry ? dottedSni(industry.sni) : "";
-  const title = industry
-    ? `Företagslista för ${industry.label.toLowerCase()} (SNI ${code})`
-    : topic.kind === "bransch"
-      ? `Företagslista: ${topic.nav}`
+  const known = selectionIndustries().find((item) => item.sni === topic.sni);
+  const code = known ? dottedSni(known.sni) : "";
+  const name = (known?.label ?? (topic.kind === "bransch" ? topic.nav : "")).toLowerCase();
+  const title =
+    topic.kind === "bransch"
+      ? `Företagslista och utdrag för ${name}${code ? ` (SNI ${code})` : ""}`
       : topic.title;
-  const description = industry
-    ? `Företagsdata för ${industry.label.toLowerCase()}, SNI ${code}. Namn, organisationsnummer, adress och bransch. Telefon och e-post där uppgiften finns. Priset visas innan köp.`
-    : topic.description;
+  const description =
+    topic.kind === "bransch"
+      ? `Företagslista och utdrag för ${name}${code ? `, SNI ${code}` : ""}. Aktiva bolag med namn, adress och bransch. Antal och pris syns innan köp.`
+      : topic.description;
   const path = topicPath(topic);
   return {
     title: `${title} — VisaLight`,
