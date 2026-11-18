@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -17,6 +17,8 @@ export function SiteFrame({
   exampleData?: boolean;
 }) {
   const path = usePathname();
+  const params = useSearchParams();
+  const freshCompanies = path.startsWith("/nystartade-bolag") || (path === "/kassa" && (params.get("dagar") === "7" || params.get("dagar") === "30"));
   if (path.startsWith("/crm")) return <CrmFrame>{children}</CrmFrame>;
   return (
     <div className="customer-site">
@@ -27,7 +29,12 @@ export function SiteFrame({
       </div>
       <SiteHeader />
       {children}
-      <SiteFooter updatedLabel={updatedLabel} registerReady={registerReady} exampleData={exampleData} />
+      <SiteFooter
+        updatedLabel={updatedLabel}
+        registerReady={registerReady}
+        exampleData={exampleData}
+        hideRegisterChip={freshCompanies}
+      />
     </div>
   );
 }
