@@ -26,7 +26,7 @@ export default function NyheterPage() {
       <p className="text-sm font-semibold tracking-[0.18em] text-ink uppercase">Nyheter</p>
       <h1 className="mt-2 text-5xl font-extrabold tracking-tight sm:text-6xl">Nyheter och uppdateringar</h1>
       <p className="mt-3 max-w-2xl text-lg text-muted">
-        Vad som händer i registret och i Sveriges näringsliv. Inlägg märkta exempeltext byts mot riktiga när de finns.
+        Uppdateringar från registret. Utan register visas inga antal.
       </p>
       <ol className="mt-10 space-y-3">
         {posts.map((post) => (

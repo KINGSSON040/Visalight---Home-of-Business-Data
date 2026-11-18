@@ -62,30 +62,36 @@ export default async function NewCompaniesPage({
           Visa antal och pris
         </button>
       </form>
-      <p className="mt-8 font-price text-[0.7rem] font-bold tracking-[0.14em] text-muted uppercase">
-        Registrerade de senaste {count.days} dagarna
-      </p>
-      <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
-        <span className="font-display text-[2.9rem] leading-none font-extrabold tracking-[-0.03em] text-ink sm:text-[3.6rem]">
-          {count.companies.toLocaleString("sv-SE")}
-        </span>
-        <span className="font-display text-lg font-bold">bolag</span>
-      </p>
-      <p className="mt-2 text-xs leading-5 text-muted">{count.note}</p>
-      <p className="mt-3 text-sm font-semibold">
-        <span className="price-figure font-price text-base font-bold">{formatKronor(count.price.totalOre)} kr</span>{" "}
-        <span className="text-muted">exkl. moms för grunduppgifterna. Priset syns innan betalning.</span>
-      </p>
-      {count.price.minimumApplied ? <p className="mt-1 text-xs text-muted">Lägsta order 399 kr.</p> : null}
-      <p className="mt-2 text-xs leading-5 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
-      <div className="mt-5 flex flex-wrap gap-3">
-        <Link href={checkout} className="btn-neon inline-flex h-11 items-center rounded-xl px-4 text-sm font-bold">
-          Köp utdrag
-        </Link>
-        <Link href="/#urval" className="inline-flex h-11 items-center text-sm font-semibold text-ink underline-offset-4 hover:underline">
-          Öppna byggaren
-        </Link>
-      </div>
+      {count.source === "register" ? (
+        <>
+          <p className="mt-8 font-price text-[0.7rem] font-bold tracking-[0.14em] text-muted uppercase">
+            Registrerade de senaste {count.days} dagarna
+          </p>
+          <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
+            <span className="font-display text-[2.9rem] leading-none font-extrabold tracking-[-0.03em] text-ink sm:text-[3.6rem]">
+              {count.companies.toLocaleString("sv-SE")}
+            </span>
+            <span className="font-display text-lg font-bold">bolag</span>
+          </p>
+          <p className="mt-2 text-xs leading-5 text-muted">{count.note}</p>
+          <p className="mt-3 text-sm font-semibold">
+            <span className="price-figure font-price text-base font-bold">{formatKronor(count.price.totalOre)} kr</span>{" "}
+            <span className="text-muted">exkl. moms för grunduppgifterna. Priset syns innan betalning.</span>
+          </p>
+          {count.price.minimumApplied ? <p className="mt-1 text-xs text-muted">Lägsta order 399 kr.</p> : null}
+          <p className="mt-2 text-xs leading-5 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Link href={checkout} className="btn-neon inline-flex h-11 items-center rounded-xl px-4 text-sm font-bold">
+              Köp utdrag
+            </Link>
+            <Link href="/#urval" className="inline-flex h-11 items-center text-sm font-semibold text-ink underline-offset-4 hover:underline">
+              Öppna byggaren
+            </Link>
+          </div>
+        </>
+      ) : (
+        <p className="mt-8 text-sm font-semibold">Registret är inte inkopplat.</p>
+      )}
     </main>
   );
 }

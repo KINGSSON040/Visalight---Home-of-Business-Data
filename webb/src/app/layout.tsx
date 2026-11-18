@@ -72,7 +72,11 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <body className={`${inter.variable} ${schibsted.variable} ${figtree.variable} ${jbmono.variable} ${inter.className} antialiased`}>
-        <SiteFrame registerReady={registerDatabasePath() !== null} updatedLabel={registerStamp().when} exampleData={registerStamp().example}>
+        <SiteFrame
+          registerReady={registerDatabasePath() !== null}
+          updatedLabel={registerStamp().example ? null : registerStamp().when}
+          exampleData={registerStamp().example}
+        >
           {children}
         </SiteFrame>
       </body>

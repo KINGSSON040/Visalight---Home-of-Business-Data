@@ -57,36 +57,42 @@ export const NEWS_POSTS: NewsPost[] = [
   },
 ];
 
-/** Ett automatiskt inlägg om senaste registeruppdateringen. */
+/** Ett automatiskt inlägg om senaste registeruppdateringen. Utan register: inga tal. */
 export function registerPost(stats: RegisterStats, updatedLabel: string, isoDate: string): NewsPost {
-  const example = stats.source === "example";
+  if (stats.source !== "register") {
+    return {
+      slug: "registret-uppdaterat",
+      date: "",
+      kind: "Uppdatering",
+      title: "Ingen uppdatering från registret",
+      lead: "Registret är inte inkopplat.",
+      body: ["Antal per bransch, område och storlek publiceras när registret är inkopplat."],
+      example: false,
+    };
+  }
+  const top = stats.byIndustry[0]?.label.toLocaleLowerCase("sv");
   return {
     slug: "registret-uppdaterat",
     date: isoDate,
     kind: "Uppdatering",
     title: `Registret uppdaterat, ${formatCount(stats.newLastMonth)} nya bolag`,
-    lead: example
-      ? `Exempelsiffror. Registret är inte inkopplat. Datumet ${updatedLabel} och antalet ${formatCount(stats.total)} är exempel.`
-      : `Senaste uppdateringen ${updatedLabel}. ${formatCount(stats.total)} aktiva företag som inte spärrat reklam. Siffran följer den uppdateringen.`,
+    lead: `Senaste uppdateringen ${updatedLabel}. ${formatCount(stats.total)} aktiva företag som inte spärrat reklam. Siffran följer den uppdateringen.`,
     body: [
-      example
-        ? "Registret är inte inkopplat i den här körningen, så siffrorna i inlägget följer samma underlag som sidan."
-        : "Inlägget skapas automatiskt från den senaste lyckade uppdateringen av registret.",
-      `${formatCount(stats.newLastMonth)} bolag har registrerats den senaste månaden. Störst bransch just nu är ${
-        stats.byIndustry[0]?.label.toLocaleLowerCase("sv") ?? "okänd"
-      }.`,
+      "Inlägget skapas automatiskt från den senaste lyckade uppdateringen av registret.",
+      `${formatCount(stats.newLastMonth)} bolag har registrerats den senaste månaden.${top ? ` Störst bransch just nu är ${top}.` : ""}`,
     ],
     cta: { label: "Bygg ett utdrag på färska bolag", href: "/#urval" },
-    example,
+    example: false,
   };
 }
 
-/** Registerinlägget först, sedan övriga inlägg med det senaste överst. */
+/** Bara uppdateringen från registret. Påhittade exempelinlägg visas inte. */
 export function allPosts(stats: RegisterStats, updatedLabel: string, isoDate: string): NewsPost[] {
-  return [registerPost(stats, updatedLabel, isoDate), ...[...NEWS_POSTS].sort((a, b) => b.date.localeCompare(a.date))];
+  return [registerPost(stats, updatedLabel, isoDate)];
 }
 
 export function formatNewsDate(iso: string): string {
+  if (!iso) return "";
   const date = new Date(`${iso}T12:00:00Z`);
   if (Number.isNaN(date.getTime())) return iso;
   return new Intl.DateTimeFormat("sv-SE", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(date);

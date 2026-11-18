@@ -70,7 +70,7 @@ function bransch(slug: string, sni: string, lead: string): Topic {
     kind: "bransch",
     nav,
     title: `Företagslista och utdrag för ${nav}`,
-    description: `Företagslista och utdrag för ${nav}. ${lead} Antal och pris syns innan köp. Tills registret är kopplat är siffrorna exempel.`,
+    description: `Företagslista och utdrag för ${nav}. ${lead} Antal och pris syns innan köp när registret är inkopplat.`,
     lead,
     sni,
   };
@@ -82,7 +82,7 @@ function ord(slug: string, nav: string, lead: string): Topic {
     kind: "ord",
     nav,
     title: nav,
-    description: `${lead} Priset visas innan köp. Tills registret är kopplat är siffrorna i verktyget exempel.`,
+    description: `${lead} Priset visas innan köp när registret är inkopplat.`,
     lead,
   };
 }

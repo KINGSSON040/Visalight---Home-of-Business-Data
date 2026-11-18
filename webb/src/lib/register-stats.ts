@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import Database from "better-sqlite3";
-import { COUNTIES } from "@/lib/catalog";
-import { exampleStats, industryName, type RegisterStats } from "@/lib/naringsliv";
+import { COUNTIES, EMPLOYEE_RANGES } from "@/lib/catalog";
+import { exampleStats, industryName, type RegisterStats, type SizeStat } from "@/lib/naringsliv";
 import { registerDatabasePath } from "@/lib/register-path";
-import { SELLABLE } from "@/lib/register-urval";
+import { SELLABLE, employeeRangeForClass } from "@/lib/register-urval";
 
 const REG_DATE = `(CASE
   WHEN length(trim(coalesce(nullif(c.registered_on, ''), c.started_on, ''))) = 8
@@ -15,7 +15,7 @@ const MAIN_SNI = "(SELECT org_nr, replace(sni, '.', '') AS sni, MIN(rank) FROM i
 
 let cached: { key: string; stats: RegisterStats } | null = null;
 
-/** Statistik från registret, eller märkta exempeltal när registret saknas. */
+/** Statistik från registret. Utan register är talen tomma och får inte visas. */
 export function loadStats(): RegisterStats {
   const file = registerDatabasePath();
   if (!file) return exampleStats();
@@ -82,6 +82,21 @@ function fromDatabase(file: string): RegisterStats {
     }
     const byCounty = COUNTIES.map((county) => ({ ...county, count: countyCounts.get(county.code) ?? 0 })).sort((a, b) => b.count - a.count);
 
+    const sizeRows = db
+      .prepare(`SELECT trim(coalesce(c.employee_class, '')) AS class, COUNT(*) AS n FROM companies c WHERE ${SELLABLE} GROUP BY class`)
+      .all() as { class: string; n: number }[];
+    const sizeCounts = new Map<string, number>();
+    for (const row of sizeRows) {
+      const label = employeeRangeForClass(row.class) ?? (row.class ? "Annan storleksklass" : "Storleksklass saknas");
+      sizeCounts.set(label, (sizeCounts.get(label) ?? 0) + row.n);
+    }
+    const bySize: SizeStat[] = [
+      ...EMPLOYEE_RANGES.map((range) => ({ label: range.label, count: sizeCounts.get(range.label) ?? 0 })),
+      ...["Annan storleksklass", "Storleksklass saknas"]
+        .filter((label) => (sizeCounts.get(label) ?? 0) > 0)
+        .map((label) => ({ label, count: sizeCounts.get(label) ?? 0 })),
+    ];
+
     const growthRows = db
       .prepare(
         `SELECT m.sni AS sni,
@@ -104,7 +119,7 @@ function fromDatabase(file: string): RegisterStats {
       .sort((a, b) => b.changePct - a.changePct)
       .slice(0, 5);
 
-    return { source: "register", total, newLastMonth, monthly, byIndustry, byCounty, growing };
+    return { source: "register", total, newLastMonth, monthly, byIndustry, byCounty, bySize, growing };
   } finally {
     db.close();
   }

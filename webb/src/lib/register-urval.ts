@@ -1,8 +1,7 @@
 import fs from "node:fs";
 import Database from "better-sqlite3";
-import { COMPANIES, countyCode, employeeBands, listParts, selectionSniFilter, type Selection } from "@/lib/catalog";
+import { EMPLOYEE_RANGES, countyCode, employeeBands, listParts, selectionSniFilter, type Selection } from "@/lib/catalog";
 import { registerDatabasePath } from "@/lib/register-path";
-import { exampleEstimate } from "@/lib/naringsliv";
 import type { UrvalPreview, UrvalResult } from "@/lib/urval";
 
 /**
@@ -146,6 +145,18 @@ type BuiltWhere =
 
 function employeeClassValues(label: string): string[] {
   return [...new Set(employeeBands(label).flatMap((band) => SIZE_VALUES[band] ?? []))];
+}
+
+/** Vilket storleksintervall i byggaren en registerklass hör till. */
+export function employeeRangeForClass(raw: string): string | null {
+  const value = raw.trim();
+  if (!value) return null;
+  for (const range of EMPLOYEE_RANGES) {
+    for (const band of range.bands) {
+      if (band === value || (SIZE_VALUES[band] ?? []).includes(value)) return range.label;
+    }
+  }
+  return null;
 }
 
 function where(selection: Selection): BuiltWhere {
@@ -328,35 +339,19 @@ function countWhere(file: string, sql: string, args: Record<string, string>, wit
 
 function exampleUrval(selection: Selection): UrvalResult {
   const filter = selectionSniFilter(selection);
-  const cities = listParts(selection.city).map(foldCity);
-  const forms = selection.forms ?? [];
-  const counties = listParts(selection.county ?? "");
-  const bands = employeeBands(selection.employees ?? "");
-  const narrowed = Boolean(cities.length || forms.length > 0 || counties.length || bands.length);
-  if (filter.kind === "any" && !narrowed) {
-    return {
-      ...exampleEstimate(selection),
-      note: "Exempelsiffror. Registret är inte inkopplat. Antalet är aktiva företag som inte spärrat reklam, inte hela registret.",
-    };
-  }
-  if (filter.kind === "none") {
-    return ready("example", 0, 0, 0, 0, [], emptyNote(selection));
-  }
-  const rows = COMPANIES.filter((company) => {
-    if (forms.length > 0 && !forms.includes(company.form)) return false;
-    if (cities.length || counties.length) {
-      const cityHit = cities.some((city) => foldCity(company.city).includes(city));
-      const countyHit = counties.includes(company.county);
-      if (!cityHit && !countyHit) return false;
-    }
-    if (bands.length && !bands.includes(company.employees)) return false;
-    if (filter.kind === "codes" && !filter.codes.includes(company.sni)) return false;
-    if (filter.kind === "prefix" && !company.sni.startsWith(filter.prefix)) return false;
-    return true;
-  });
+  if (filter.kind === "none") return ready("example", 0, 0, 0, 0, [], emptyNote(selection));
   return {
-    ...exampleEstimate(selection),
-    preview: rows.slice(0, 8).map((row) => ({ orgNr: row.orgNr, name: row.name, city: row.city, sni: row.sni })),
+    source: "example",
+    status: "idle",
+    companies: 0,
+    phones: 0,
+    signatoryPhones: 0,
+    emails: 0,
+    withPhone: 0,
+    withEmail: 0,
+    withSignatory: 0,
+    preview: [],
+    note: "Registret är inte inkopplat.",
   };
 }
 

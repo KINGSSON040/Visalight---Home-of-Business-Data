@@ -60,8 +60,8 @@ export default async function CheckoutPage({
       <p className="mt-3 max-w-xl text-muted">
         Beställning öppnar snart. Ingen betalning dras och ingen fil skickas. Ni lämnar urvalet och en e-postadress.{" "}
         {freshWindow ? `Registrerade de senaste ${fresh.days} dagarna. ` : ""}
-        {describeSelection(selection)}. {companies.toLocaleString("sv-SE")}{" "}
-        {urval.source === "register" ? "bolag" : "exempelbolag"} i urvalet.
+        {describeSelection(selection)}.
+        {urval.source === "register" ? ` ${companies.toLocaleString("sv-SE")} bolag i urvalet.` : " Registret är inte inkopplat."}
       </p>
       <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
         {SELLER.line}
@@ -69,14 +69,22 @@ export default async function CheckoutPage({
       <div className="mt-4">
         {freshWindow ? (
           <p className="max-w-xl text-xs leading-5 text-muted">
-            {freshCount?.source === "example" ? "Exempelsiffror. Registret är inte inkopplat. " : "Antalet kommer från registret på den här datorn. "}
+            {freshCount?.source === "example" ? "Registret är inte inkopplat. " : "Antalet kommer från registret på den här datorn. "}
             Antalet är bolag med registreringsdatum i perioden.
           </p>
         ) : (
           <StatusChip updatedLabel={registerUpdatedLabel()} registerReady={registerDatabasePath() !== null} />
         )}
       </div>
-      {companies === 0 ? (
+      {urval.source !== "register" ? (
+        <div className="mt-8 rounded-3xl border border-dashed border-line bg-card px-6 py-12">
+          <p className="font-serif text-3xl">Registret är inte inkopplat.</p>
+          <p className="mt-2 text-muted">Antal och pris visas när registret finns.</p>
+          <Link href={back} className="btn-fade-sea mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
+            Till urvalet
+          </Link>
+        </div>
+      ) : companies === 0 ? (
         <div className="mt-8 rounded-3xl border border-dashed border-line bg-card px-6 py-12">
           <p className="font-serif text-3xl">Urvalet är tomt</p>
           <p className="mt-2 text-muted">Gå tillbaka och välj minst ett bolag.</p>

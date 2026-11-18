@@ -12,7 +12,7 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Hur aktuellt är utdraget?",
-    a: "När registret är inkopplat följer siffran och filen den senaste uppdateringen. Vi säljer inte en fil från förra året. Bara aktiva företag som inte spärrat reklam ingår. Vilande, inaktiva, avregistrerade och reklamspärrade bolag är redan borta. Det är inte en uppdatering varje minut. Tills registret är inkopplat är siffrorna på sidan exempel.",
+    a: "När registret är inkopplat följer siffran och filen den senaste uppdateringen. Vi säljer inte en fil från förra året. Bara aktiva företag som inte spärrat reklam ingår. Vilande, inaktiva, avregistrerade och reklamspärrade bolag är redan borta. Det är inte en uppdatering varje minut. Tills registret är inkopplat visas inga antal.",
   },
   {
     q: "Hur betalar vi?",

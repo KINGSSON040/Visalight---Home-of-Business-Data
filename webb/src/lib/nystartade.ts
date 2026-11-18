@@ -1,6 +1,5 @@
 import Database from "better-sqlite3";
 import { selectionIndustries } from "@/lib/catalog";
-import { exampleFreshCompanies } from "@/lib/naringsliv";
 import { quote, type PriceQuote } from "@/lib/pricing";
 import { registerDatabasePath } from "@/lib/register-path";
 
@@ -32,13 +31,12 @@ export function freshQuery(input: { dagar?: string; sni?: string; ort?: string }
 export function countNewCompanies(input: { days: 7 | 30; sni: string; city: string }): FreshCount {
   const file = registerDatabasePath();
   if (!file) {
-    const companies = exampleFreshCompanies(input.days, input.sni, input.city);
     return {
       source: "example",
       days: input.days,
-      companies,
-      price: quote({ companies, phones: 0, signatoryPhones: 0, emails: 0 }),
-      note: "Exempelsiffror. Registret är inte inkopplat.",
+      companies: 0,
+      price: quote({ companies: 0, phones: 0, signatoryPhones: 0, emails: 0 }),
+      note: "Registret är inte inkopplat.",
     };
   }
   const companies = countInDatabase(file, input);

@@ -7,9 +7,9 @@ export function StatusChip({
   exampleData?: boolean;
   plain?: boolean;
 }) {
-  const fresh = `Siffran följer den senaste uppdateringen och räknar bara aktiva företag som inte spärrat reklam.${
-    registerReady ? " Urvalet gäller den datan." : ""
-  }`;
+  const fresh = registerReady
+    ? "Siffran följer den senaste uppdateringen och räknar bara aktiva företag som inte spärrat reklam. Urvalet gäller den datan."
+    : "Registret är inte inkopplat.";
 
   if (plain) {
     return (

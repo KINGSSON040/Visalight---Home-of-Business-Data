@@ -57,7 +57,6 @@ export function AuroraBuilder({
   urval,
   loading,
   updatedLabel,
-  exampleDate = false,
 }: {
   draft: Selection;
   onChange: Patch;
@@ -96,11 +95,11 @@ export function AuroraBuilder({
   return (
     <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-3xl">
       <div className="flex flex-col gap-1 px-4 pt-2.5 sm:flex-row sm:items-start sm:justify-between sm:px-5 sm:pt-3">
-        <SelectionCount companies={urval.companies} loading={loading} />
+        {urval.source === "register" ? <SelectionCount companies={urval.companies} loading={loading} /> : <p className="min-h-10" />}
         <p className="register-stamp w-max max-w-[15rem] shrink-0 text-right text-[0.6rem] leading-[1.35] sm:pt-2">
-          {exampleDate
-            ? `Exempelsiffror. Registret är inte inkopplat. Datumet ${updatedLabel} är ett exempel.`
-            : `Registret senast uppdaterat: ${updatedLabel}. Siffran följer den senaste uppdateringen.`}
+          {urval.source === "register"
+            ? `Registret senast uppdaterat: ${updatedLabel}. Siffran följer den senaste uppdateringen.`
+            : "Registret är inte inkopplat."}
         </p>
       </div>
       <div className="mx-3 mt-1.5 mb-1.5 space-y-1.5 rounded-2xl bg-white px-3 py-2 sm:mx-4 sm:px-4">
@@ -487,42 +486,46 @@ function Result({
   loading: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const connected = urval.source === "register";
   const counts = pricedCounts(urval, draft);
   const price = priceForUrval(urval, draft);
-  const shownPrice = useCountUp(price.totalOre, { fromZero: true, duration: 1100 });
+  const shownPrice = useCountUp(connected ? price.totalOre : 0, { fromZero: true, duration: 1100 });
   const counted = selectionForCount(draft) ?? draft;
 
   return (
     <div ref={ref} className="result-field rounded-b-3xl px-4 pt-2 pb-2 sm:px-5">
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1" aria-live="polite" aria-busy={loading}>
         <div className="min-w-0">
-          <p className="text-sm font-semibold">
-            <span data-urval-price className="price-figure font-price text-lg font-bold">
-              {formatKronor(shownPrice)} kr
-            </span>{" "}
-            <span className="text-muted">exkl. moms · Excel eller CSV</span>
-          </p>
+          {connected ? (
+            <p className="text-sm font-semibold">
+              <span data-urval-price className="price-figure font-price text-lg font-bold">
+                {formatKronor(shownPrice)} kr
+              </span>{" "}
+              <span className="text-muted">exkl. moms · Excel eller CSV</span>
+            </p>
+          ) : (
+            <p className="text-sm font-semibold">Registret är inte inkopplat.</p>
+          )}
         </div>
-        <Link
-          href={`/kassa?${selectionToQuery(counted)}`}
-          aria-disabled={counts.companies === 0}
-          className={`btn-neon inline-flex h-9 shrink-0 items-center gap-2 rounded-lg px-3 text-sm font-bold ${counts.companies === 0 ? "pointer-events-none opacity-60" : ""}`}
-        >
-          Köp utdrag <span aria-hidden="true">→</span>
-        </Link>
+        {connected ? (
+          <Link
+            href={`/kassa?${selectionToQuery(counted)}`}
+            aria-disabled={counts.companies === 0}
+            className={`btn-neon inline-flex h-9 shrink-0 items-center gap-2 rounded-lg px-3 text-sm font-bold ${counts.companies === 0 ? "pointer-events-none opacity-60" : ""}`}
+          >
+            Köp utdrag <span aria-hidden="true">→</span>
+          </Link>
+        ) : null}
       </div>
       <div className="mt-2 space-y-0.5">
-        {urval.source === "example" ? (
-          <p className="text-xs leading-4 text-muted">Exempelsiffror. Registret är inte inkopplat.</p>
-        ) : null}
         <p className="text-xs leading-4">Ingen inloggning, prenumeration eller bindningstid.</p>
         <p className="text-xs leading-4 text-muted">Bara aktiva företag som inte spärrat reklam. Uppdateras en gång i veckan.</p>
         <p className="text-xs leading-4 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
-        {urval.companies === 0 ? (
+        {connected && urval.companies === 0 ? (
           <p className="text-xs font-semibold">{urval.note || "Inget bolag matchar."} Ta bort ett filter så kommer de tillbaka.</p>
         ) : null}
       </div>
-      <MobileBar watch={ref} companies={urval.companies} priceOre={price.totalOre} />
+      {connected ? <MobileBar watch={ref} companies={urval.companies} priceOre={price.totalOre} /> : null}
     </div>
   );
 }

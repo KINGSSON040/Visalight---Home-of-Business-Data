@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AuroraBuilder } from "@/components/aurora-builder";
 import { NaringslivSection } from "@/components/naringsliv-stats";
 import { selectionForCount, selectionToQuery, type Selection } from "@/lib/catalog";
-import { builderHrefForSni, formatCount, PRICE_EXAMPLES, type RegisterStats } from "@/lib/naringsliv";
+import { builderHrefForSni, formatCount, type RegisterStats } from "@/lib/naringsliv";
 import { formatNewsDate, type NewsPost } from "@/lib/nyheter";
 import { BASE_ORE, EMAIL_ORE, formatKronor, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import { PUBLIC_FAQ } from "@/lib/public-faq";
@@ -186,14 +186,15 @@ export function CustomerHome({
           {STEPS.map((step, index) => (
             <li
               key={step.no}
+              data-step={index + 1}
               className="step-card flex flex-col rounded-3xl bg-white px-7 py-8 shadow-[0_18px_40px_-32px_rgba(27,16,35,0.45)] ring-1 ring-ink/8"
-              style={{ animationDelay: `${index * 90}ms` }}
+              style={{ animationDelay: `${index * 140}ms` }}
             >
               <div className="flex items-start justify-between gap-4">
                 <span className={`inline-flex h-11 w-11 items-center justify-center rounded-2xl ${step.wash} ${step.tone}`}>
                   <StepIcon name={step.icon} />
                 </span>
-                <p className={`font-display text-4xl leading-none font-extrabold tracking-[-0.04em] ${step.tone}`}>{step.no}</p>
+                <p className={`step-index font-display text-5xl leading-none font-extrabold tracking-[-0.04em] ${step.tone}`}>{step.no}</p>
               </div>
               <h3 className="mt-8 text-xl font-extrabold tracking-tight text-ink">{step.title}</h3>
               <p className="mt-3 text-sm leading-7 text-ink/80">{step.text}</p>
@@ -219,7 +220,7 @@ export function CustomerHome({
               <h3 className="text-xl font-extrabold tracking-tight">Uppdatering</h3>
               <p className="soft-copy mt-3 text-sm leading-7 text-ink/80">
                 {exampleDate
-                  ? "När registret är inkopplat synkas det en gång i veckan. Siffrorna ni ser nu är exempel och räknar aktiva företag som inte spärrat reklam."
+                  ? "Registret är inte inkopplat. När det är inkopplat synkas det en gång i veckan och räknar bara aktiva företag som inte spärrat reklam."
                   : "Registret synkas en gång i veckan. Siffran på sidan följer den senaste uppdateringen och räknar bara aktiva företag som inte spärrat reklam. Utdraget tas från samma uppdatering, inte från en fil från förra året."}
               </p>
             </div>
@@ -248,11 +249,14 @@ export function CustomerHome({
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
               Nya bolag kommer in från Bolagsverket, och filen uppdateras varje vecka. De behöver ofta bank, redovisning, försäkring, telefoni, webb och lokal.
-              {fresh.example ? " Exempelsiffror. Registret är inte inkopplat." : ""}
             </p>
-            <p className="mt-3 text-sm font-semibold">
-              <span className="font-display text-4xl font-extrabold tracking-tight text-ink">{fresh.companies.toLocaleString("sv-SE")}</span> bolag de senaste 30 dagarna.
-            </p>
+            {fresh.example ? (
+              <p className="mt-3 text-sm font-semibold">Registret är inte inkopplat.</p>
+            ) : (
+              <p className="mt-3 text-sm font-semibold">
+                <span className="font-display text-4xl font-extrabold tracking-tight text-ink">{fresh.companies.toLocaleString("sv-SE")}</span> bolag de senaste 30 dagarna.
+              </p>
+            )}
           </div>
           <Link href="/nystartade-bolag" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">
             Se antal och pris
@@ -268,13 +272,15 @@ export function CustomerHome({
                 Vanliga urval
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-                Ett färdigt urval per bransch. Antalet är aktiva företag som inte spärrat reklam, och det följer den senaste uppdateringen. Öppna raden om ni vill se priset i byggaren.
+                {stats.source === "register"
+                  ? "Ett färdigt urval per bransch. Antalet är aktiva företag som inte spärrat reklam, och det följer den senaste uppdateringen. Öppna raden om ni vill se priset i byggaren."
+                  : "Ett färdigt urval per bransch. Registret är inte inkopplat, så antalet visas inte."}
               </p>
             </div>
           </div>
           <ul className="mt-6 divide-y divide-line border-y border-line">
             {industries.map((topic) => {
-              const count = stats.byIndustry.find((item) => item.sni === topic.sni)?.count;
+              const count = stats.source === "register" ? stats.byIndustry.find((item) => item.sni === topic.sni)?.count : undefined;
               return (
                 <li key={topic.slug}>
                   <Link
@@ -331,32 +337,9 @@ export function CustomerHome({
             ))}
           </dl>
         </div>
-        <h3 className="mt-16 text-3xl font-extrabold tracking-tight">Så räknas priset</h3>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          Tre vanliga urval, räknade med styckpriset. Det är en förklaring, inte en offert. Ert eget pris räknas i byggaren.
+        <p className="mt-8 max-w-2xl text-sm leading-6 text-muted">
+          Summan räknas i byggaren från registret. {stats.source === "register" ? "Siffran följer den senaste uppdateringen." : "Registret är inte inkopplat, så ingen summa visas."}
         </p>
-        <ul className="mt-6 grid gap-4 md:grid-cols-3">
-          {PRICE_EXAMPLES.map((item, index) => (
-            <li key={item.title} className={`rounded-3xl bg-white px-6 py-7 ${["border-t-4 border-ink", "border-t-4 border-[#c4892a]", "border-t-4 border-[#8a5a3b]"][index] ?? ""}`}>
-              <p className="font-semibold">{item.title}</p>
-              <p className="mt-1 text-sm text-muted">{item.detail}</p>
-              <ul className="mt-3 space-y-1 text-sm leading-6">
-                <li>{item.counts.companies.toLocaleString("sv-SE")} bolag × {formatKronor(BASE_ORE)} kr</li>
-                {item.counts.phones > 0 ? <li>{item.counts.phones.toLocaleString("sv-SE")} nummer × {formatKronor(PHONE_ORE)} kr</li> : null}
-                {item.counts.emails > 0 ? <li>{item.counts.emails.toLocaleString("sv-SE")} e-post × {formatKronor(EMAIL_ORE)} kr</li> : null}
-                {item.counts.signatoryPhones > 0 ? <li>{item.counts.signatoryPhones.toLocaleString("sv-SE")} beslutsfattare × {formatKronor(SIGNATORY_ORE)} kr</li> : null}
-              </ul>
-              <p className="mt-2 text-sm leading-6 text-ink/80">
-                {item.quote.minimumApplied
-                  ? `Summan ligger under lägsta order, så priset blir ${formatKronor(item.quote.totalOre)} kr exkl. moms.`
-                  : `${formatKronor(item.quote.totalOre)} kr exkl. moms.`}
-              </p>
-              <Link href={item.href} className="mt-3 inline-flex text-sm font-semibold text-ink underline-offset-4 hover:underline">
-                Räkna samma urval
-              </Link>
-            </li>
-          ))}
-        </ul>
         <p className="mt-4 text-sm text-muted">
           Filen har fasta kolumner.{" "}
           <Link href="/smakprov" className="font-semibold text-ink hover:underline">
@@ -374,7 +357,7 @@ export function CustomerHome({
                 Nyheter och uppdateringar
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-                Vad som ändrats i registret och sådant som påverkar hur ett utdrag ska läsas. Inlägg märkta exempeltext byts ut när underlaget finns.
+                Vad som ändrats i registret. Uppdateringen skrivs från registret, och utan det visas inga antal.
               </p>
             </div>
             <Link href="/nyheter" className="text-sm font-semibold text-ink hover:underline">
@@ -429,8 +412,9 @@ export function CustomerHome({
               Alla Sveriges företag, i ett utdrag.
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-              {stats.source === "example" ? "Exempelsiffror. Registret är inte inkopplat. " : ""}
-              {formatCount(stats.total)} aktiva företag i dag. {stats.source === "example" ? "Antalet är ett exempel." : "Siffran följer den senaste uppdateringen."} Välj vilka ni vill nå och se priset direkt.
+              {stats.source === "register"
+                ? `${formatCount(stats.total)} aktiva företag i dag. Siffran följer den senaste uppdateringen. Välj vilka ni vill nå och se priset direkt.`
+                : "Registret är inte inkopplat. Välj vilka ni vill nå och se priset när det finns."}
             </p>
           </div>
           <a href="#urval" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">

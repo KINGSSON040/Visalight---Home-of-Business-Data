@@ -5,11 +5,13 @@ import Link from "next/link";
 import { CountUp, useInView } from "@/components/count-up";
 import {
   builderHrefForCounty,
+  builderHrefForSize,
   builderHrefForSni,
   formatCount,
   countyRows,
   industryRows,
   monthLabel,
+  sizeRows,
   type RegisterStats,
 } from "@/lib/naringsliv";
 
@@ -22,7 +24,6 @@ export function StatTiles({ stats }: { stats: RegisterStats }) {
         <p className="text-sm font-medium text-[#f6efe6]/75">Aktiva företag i dag</p>
         <CountUp value={stats.total} className="font-display mt-3 text-5xl font-extrabold tracking-[-0.04em] text-[#f6efe6]" />
         <p className="mt-2 text-xs text-[#f6efe6]/70">som inte spärrat reklam</p>
-        {stats.source === "example" ? <p className="mt-1 text-xs leading-5 text-[#f6efe6]/70">Exempelsiffror. Registret är inte inkopplat.</p> : null}
         <Link href="/#urval" className="mt-auto pt-4 text-sm font-bold text-[#f6efe6] hover:underline">
           Bygg utdrag på alla {formatCount(stats.total)} →
         </Link>
@@ -88,9 +89,9 @@ export function BarList({
   title: string;
   rows: { key: string; label: string; count: number; detail?: string }[];
   tone?: "neon" | "magenta" | "amber";
-  kind: "sni" | "county";
+  kind: "sni" | "county" | "size";
 }) {
-  const hrefFor = kind === "sni" ? builderHrefForSni : builderHrefForCounty;
+  const hrefFor = kind === "sni" ? builderHrefForSni : kind === "size" ? builderHrefForSize : builderHrefForCounty;
   const ref = useRef<HTMLDivElement>(null);
   const seen = useInView(ref);
   const max = Math.max(...rows.map((row) => row.count), 1);
@@ -174,6 +175,7 @@ export function MonthlyChart({ stats }: { stats: RegisterStats }) {
 }
 
 export function NaringslivSection({ stats, headingId = "siffror" }: { stats: RegisterStats; headingId?: string }) {
+  const connected = stats.source === "register";
   return (
     <section
       id="statistik"
@@ -183,27 +185,32 @@ export function NaringslivSection({ stats, headingId = "siffror" }: { stats: Reg
       <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Ur registret</p>
+          <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">{connected ? "Ur registret" : "Registret"}</p>
           <h2 id={headingId} className="mt-3 text-4xl font-extrabold tracking-[-0.03em] text-balance sm:text-5xl">
             Sveriges näringsliv i siffror
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-            {stats.source === "example" ? "Exempelsiffror. Registret är inte inkopplat. " : ""}
-            Hur många aktiva företag som inte spärrat reklam, var de finns och vilka branscher som växer. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. {stats.source === "example" ? "Talen är exempel tills registret är inkopplat." : "Siffran följer den senaste uppdateringen."} En rad öppnar byggaren med branschen eller länet ifyllt.
+            {connected
+              ? "Hur många aktiva företag som inte spärrat reklam, per bransch, område och storlek. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Siffran följer den senaste uppdateringen. En rad öppnar byggaren med urvalet ifyllt."
+              : "Registret är inte inkopplat. Antal per bransch, per område och per storlek visas när registret finns."}
           </p>
         </div>
         <Link href="/statistik" className="text-sm font-semibold text-ink hover:underline">
           All statistik
         </Link>
       </div>
-      <div className="mt-10">
-        <StatTiles stats={stats} />
-      </div>
-      <div className="mt-3 grid gap-3 lg:grid-cols-3">
-        <BarList title="Per bransch (SNI)" rows={industryRows(stats.byIndustry.slice(0, 6))} kind="sni" />
-        <BarList title="Per län" rows={countyRows(stats.byCounty.slice(0, 6))} tone="amber" kind="county" />
-        <Growing stats={stats} />
-      </div>
+      {connected ? (
+        <>
+          <div className="mt-10">
+            <StatTiles stats={stats} />
+          </div>
+          <div className="mt-3 grid gap-3 lg:grid-cols-3">
+            <BarList title="Per bransch (SNI)" rows={industryRows(stats.byIndustry.slice(0, 8))} kind="sni" />
+            <BarList title="Per område" rows={countyRows(stats.byCounty.slice(0, 8))} tone="amber" kind="county" />
+            <BarList title="Per storlek" rows={sizeRows(stats.bySize)} kind="size" />
+          </div>
+        </>
+      ) : null}
       </div>
     </section>
   );

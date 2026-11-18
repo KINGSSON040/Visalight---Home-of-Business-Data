@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BarList, Growing, MonthlyChart, StatTiles } from "@/components/naringsliv-stats";
-import { countyRows, industryRows } from "@/lib/naringsliv";
+import { countyRows, industryRows, sizeRows } from "@/lib/naringsliv";
 import { loadStats } from "@/lib/register-stats";
 import { EXAMPLE_FIGURES_LINE, registerStamp } from "@/lib/register-status";
 
@@ -28,11 +28,12 @@ export default function StatistikPage() {
         Sveriges näringsliv <span className="aurora-text">i siffror</span>
       </h1>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
-        Talen är aktiva företag som inte spärrat reklam{example ? "" : ", och de följer den senaste uppdateringen"}. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Klicka på en bransch eller ett län för att bygga ett utdrag på just de bolagen.
+        {example
+          ? "Registret är inte inkopplat. Antal per bransch, per område och per storlek visas när registret finns."
+          : "Talen är aktiva företag som inte spärrat reklam, och de följer den senaste uppdateringen. Vilande, inaktiva, avregistrerade och reklamspärrade räknas inte. Klicka på en rad för att bygga ett utdrag."}
       </p>
-      <p className="mt-3 text-sm text-muted">
-        {example ? `${EXAMPLE_FIGURES_LINE} Datumet ${registerStamp().when} är ett exempel.` : "Siffran följer den senaste uppdateringen."}
-      </p>
+      {example ? null : (
+        <>
       <div className="mt-8">
         <StatTiles stats={stats} />
       </div>
@@ -40,10 +41,13 @@ export default function StatistikPage() {
         <MonthlyChart stats={stats} />
         <Growing stats={stats} />
       </div>
-      <div className="mt-3 grid gap-3 lg:grid-cols-2">
-        <BarList title="Företag per bransch (SNI)" rows={industryRows(stats.byIndustry)} kind="sni" />
-        <BarList title="Företag per län" rows={countyRows(stats.byCounty)} tone="magenta" kind="county" />
+      <div className="mt-3 grid gap-3 lg:grid-cols-3">
+        <BarList title="Företag per bransch (SNI)" rows={industryRows(stats.byIndustry.slice(0, 12))} kind="sni" />
+        <BarList title="Företag per område" rows={countyRows(stats.byCounty)} tone="magenta" kind="county" />
+        <BarList title="Företag per storlek" rows={sizeRows(stats.bySize)} kind="size" />
       </div>
+        </>
+      )}
       <div className="builder-card mt-10 flex flex-col items-start gap-4 rounded-[2rem] p-6 sm:flex-row sm:items-center sm:justify-between">
         <p className="font-display text-2xl font-bold">Hittat en bransch som växer? Se vad ett utdrag kostar.</p>
         <Link href="/#urval" className="btn-neon inline-flex h-12 shrink-0 items-center rounded-full px-6 font-bold">

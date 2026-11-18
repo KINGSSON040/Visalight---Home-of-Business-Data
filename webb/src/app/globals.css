@@ -433,12 +433,51 @@ body:has(.customer-site) {
 }
 
 .step-card {
-  animation: step-in 0.55s ease both;
+  --step: #9a1458;
+  position: relative;
+  isolation: isolate;
+  animation: step-in 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.step-card[data-step="2"] { --step: #8a5a00; }
+.step-card[data-step="3"] { --step: #0f6b45; }
+
+.step-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(115deg, transparent 18%, var(--step) 50%, transparent 82%);
+  background-size: 240% 100%;
+  animation: step-sheen 3.8s ease-in-out infinite;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.step-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 32px 54px -34px rgba(27, 16, 35, 0.5);
+}
+
+.step-index {
+  color: var(--step);
+  text-shadow: 0 10px 24px color-mix(in srgb, var(--step) 28%, transparent);
 }
 
 @keyframes step-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: none; }
+}
+
+@keyframes step-sheen {
+  0% { background-position: 130% 0; }
+  55% { background-position: -30% 0; }
+  100% { background-position: -130% 0; }
 }
 
 .field-box {
@@ -530,8 +569,12 @@ body:has(.customer-site) {
   .big-count.flare,
   .float-in,
   .step-card,
+  .step-card::before,
   .hero-title {
     animation: none !important;
+  }
+  .step-card:hover {
+    transform: none;
   }
   .bar-fill,
   .builder-card,

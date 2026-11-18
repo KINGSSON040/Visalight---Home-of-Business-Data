@@ -433,11 +433,6 @@ function formsOf(selection: { forms?: string[] }): string[] {
   return Array.isArray(selection.forms) ? selection.forms : [];
 }
 
-function countWhere(predicate: (company: Company) => boolean): number {
-  return COMPANIES.filter(predicate).length;
-}
-
-
 function industrySuggestMatch(item: Industry, needle: string, digits: string): boolean {
   if (digits.length >= 1 && (item.sni.startsWith(digits) || item.code.replace(/\D/g, "").startsWith(digits))) {
     return true;
@@ -491,11 +486,7 @@ function industryMatches(item: Industry, needle: string, digits: string): boolea
 }
 
 function industryDetail(item: Industry): string {
-  const count = countWhere((company) => company.sni === item.sni);
-  const countLabel = count
-    ? `${count.toLocaleString("sv-SE")} exempelbolag`
-    : "inga exempelbolag i förhandsvisningen";
-  return [`SNI ${item.code}`, item.note, countLabel].filter(Boolean).join(" · ");
+  return [`SNI ${item.code}`, item.note].filter(Boolean).join(" · ");
 }
 
 function industrySuggestion(item: Industry, fillQuery: boolean): Suggestion {
@@ -651,26 +642,22 @@ export function suggestQuery(text: string): Suggestion[] {
 
   for (const city of CITIES) {
     if (!fold(city).includes(needle)) continue;
-    const count = countWhere((company) => company.city === city);
     found.push({
       id: `ort-${city}`,
       kind: "ort",
       title: city,
-      detail: `${count.toLocaleString("sv-SE")} exempelbolag`,
+      detail: "Ort",
       apply: { city, query: "" },
     });
   }
 
   for (const form of LEGAL_FORMS) {
     if (!fold(form.label).includes(needle)) continue;
-    const count = countWhere((company) => company.form === form.code);
     found.push({
       id: `form-${form.code}`,
       kind: "form",
       title: form.label,
-      detail: count
-        ? `${count.toLocaleString("sv-SE")} exempelbolag`
-        : "Bolagsform i Sverige · inga exempelbolag i förhandsvisningen",
+      detail: "Bolagsform",
       apply: { form: form.code, query: "" },
     });
   }
@@ -687,12 +674,11 @@ export function suggestQuery(text: string): Suggestion[] {
 export function suggestCities(text: string): Suggestion[] {
   const needle = fold(text.trim());
   return CITIES.filter((city) => !needle || fold(city).includes(needle)).map((city) => {
-    const count = countWhere((company) => company.city === city);
     return {
       id: `ort-${city}`,
       kind: "ort" as const,
       title: city,
-      detail: `${count.toLocaleString("sv-SE")} exempelbolag`,
+      detail: "Ort",
       apply: { city },
     };
   });
