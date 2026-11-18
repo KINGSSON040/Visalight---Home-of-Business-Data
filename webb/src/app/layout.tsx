@@ -29,15 +29,6 @@ const schibsted = localFont({
   display: "swap",
 });
 
-const jbmono = localFont({
-  src: [
-    { path: "../fonts/JetBrainsMono-Medium.woff2", weight: "500", style: "normal" },
-    { path: "../fonts/JetBrainsMono-Bold.woff2", weight: "700", style: "normal" },
-  ],
-  variable: "--font-jbmono",
-  display: "swap",
-});
-
 const figtree = localFont({
   src: [
     { path: "../fonts/Figtree-Regular.woff2", weight: "400", style: "normal" },
@@ -71,7 +62,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv">
-      <body className={`${inter.variable} ${schibsted.variable} ${figtree.variable} ${jbmono.variable} ${inter.className} antialiased`}>
+      <body className={`${inter.variable} ${schibsted.variable} ${figtree.variable} ${inter.className} antialiased`}>
         <SiteFrame
           registerReady={registerDatabasePath() !== null}
           updatedLabel={registerStamp().example ? null : registerStamp().when}

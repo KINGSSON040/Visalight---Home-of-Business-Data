@@ -36,7 +36,7 @@
   --font-mono: var(--font-inter);
   --font-display: var(--font-schibsted);
   --font-body: var(--font-figtree);
-  --font-price: var(--font-jbmono);
+  --font-price: var(--font-figtree);
   --color-neon: #00a85e;
   --color-neon-fill: #1fe08a;
   --color-magenta: #d6007a;
@@ -205,7 +205,7 @@ section[id],
 }
 
 .customer-site .font-price {
-  font-family: var(--font-jbmono), ui-monospace, monospace;
+  font-family: var(--font-figtree), system-ui, sans-serif;
   font-variant-numeric: tabular-nums;
 }
 
@@ -518,7 +518,7 @@ body:has(.customer-site) {
 }
 
 .step-no {
-  font-family: var(--font-jbmono), ui-monospace, monospace;
+  font-family: var(--font-figtree), system-ui, sans-serif;
   color: #574862;
 }
 
