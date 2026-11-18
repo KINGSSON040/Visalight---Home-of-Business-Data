@@ -12,7 +12,7 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Hur aktuellt är utdraget?",
-    a: "VisaLight säljer verifierad, uppdaterad och färsk företagsinformation. När registret är inkopplat följer siffran och filen den senaste uppdateringen. Vi säljer inte en fil från förra året. Bara aktiva företag som inte spärrat reklam ingår. Vilande, inaktiva, avregistrerade och reklamspärrade bolag är redan borta. Det är inte en uppdatering varje minut. Det hänger ihop med att jobba med färsk information. Tills registret är inkopplat visas inga antal.",
+    a: "När ni ska nå nästa kund behöver listan vara aktuell. När registret är inkopplat följer siffran och filen den senaste uppdateringen, så informationen är färsk. Filen är inte från förra året. Bara aktiva företag som inte spärrat reklam ingår. Vilande, inaktiva, avregistrerade och reklamspärrade bolag är redan borta. Det är inte en uppdatering varje minut. Tills registret är inkopplat visas inga antal.",
   },
   {
     q: "Hur betalar vi?",
@@ -20,11 +20,11 @@ export const PUBLIC_FAQ = [
   },
   {
     q: "Får vi kontakta bolagen?",
-    a: "Utdraget är till för att ni ska hitta er nästa kund redan idag. Reklamspärrade bolag är borttagna. Ni ansvarar för ert eget utskick, inklusive NIX-Telefon och de regler som gäller just den kanalen.",
+    a: "Ni använder listan för att kontakta er nästa kund redan idag. Reklamspärrade bolag är borttagna. Ni ansvarar för ert eget utskick, inklusive NIX-Telefon och de regler som gäller just den kanalen.",
   },
   {
     q: "Hur skiljer sig ett utdrag från ett gratis uppslag eller ett årsabonnemang?",
-    a: "Ett utdrag är verifierad företagsinformation ni väljer själva, för att hitta er nästa kund redan idag. Antal och pris syns innan köp, och det finns ingen prenumeration. Ett gratis uppslag gäller ett bolag i taget. Ett årsabonnemang bevakar och kräver inloggning. Utdraget är ingen kreditupplysning och ingen bevakning varje dag. När registret är inkopplat synkas det en gång i veckan.",
+    a: "Ni väljer listan själva, så ni kan hitta er nästa kund redan idag. Antal och pris syns innan köp, och det finns ingen prenumeration. Ett gratis uppslag gäller ett bolag i taget. Ett årsabonnemang bevakar och kräver inloggning. Listan är ingen kreditupplysning och ingen bevakning varje dag. När registret är inkopplat synkas det en gång i veckan, så uppgifterna är färska.",
   },
   {
     q: "Vilket format får jag?",

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { BuilderLink } from "@/components/builder-link";
 import { BrandLockup } from "@/components/logo-mark";
 import { StatusChip } from "@/components/status-chip";
-import { OFFER_LINE, SELLER } from "@/lib/seller";
+import { OFFER_LINE, OFFER_WHY, SELLER } from "@/lib/seller";
 
 const GROUPS = [
   {
@@ -57,7 +57,7 @@ export function SiteFooter({
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)]">
         <div className="space-y-4">
           <BrandLockup />
-          <p className="max-w-sm leading-6">{OFFER_LINE} Ni köper för att hitta er nästa kund redan idag. Priser exkl. moms. Lägsta order 399 kr.</p>
+          <p className="max-w-sm leading-6">{OFFER_LINE} {OFFER_WHY} Priser exkl. moms. Lägsta order 399 kr.</p>
           <p className="max-w-sm leading-6 text-muted">{SELLER.line}</p>
           <p id="kontakt" className="max-w-sm leading-6 text-muted">
             Telefon: numret läggs in när det finns. Vill ni inte köpa själva kan ni{" "}

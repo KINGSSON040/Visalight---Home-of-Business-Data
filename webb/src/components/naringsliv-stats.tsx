@@ -191,7 +191,7 @@ export function NaringslivSection({ stats, headingId = "siffror" }: { stats: Reg
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
             {connected
-              ? "Siffrorna är den uppdaterade företagsinformationen, uppdelad på bransch, län och antal anställda. Vilande, inaktiva, avregistrerade och reklamspärrade ingår inte. Klicka på en rad för att öppna byggaren med det urvalet."
+              ? "Se var nästa kund finns, uppdelat på bransch, län och antal anställda. Siffrorna är färska för att de kommer från den senaste uppdateringen. Vilande, inaktiva, avregistrerade och reklamspärrade ingår inte. Klicka på en rad för att öppna byggaren."
               : "Bolagsregistret är inte inkopplat. Antal per bransch, per område och per storlek visas när registret finns."}
           </p>
         </div>
