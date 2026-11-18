@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const stamp = registerStamp();
   const posts = allPosts(loadStats(), stamp.when, stamp.isoDate);
   const realNews = posts.filter((post) => !post.example);
-  const fixed = ["", "/statistik", "/nystartade-bolag", "/bransch", "/sni", "/ord", "/smakprov", "/foretag", "/konto", "/kallor", "/gdpr", "/integritet", "/villkor", "/cookies", "/salj", "/ekonomi", "/utvecklare", "/demo"].map((path) => ({
+  const fixed = ["", "/statistik", "/nystartade-bolag", "/priser", "/om-oss", "/kontakt", "/bransch", "/sni", "/ord", "/smakprov", "/foretag", "/konto", "/kallor", "/gdpr", "/integritet", "/villkor", "/cookies", "/salj", "/ekonomi", "/utvecklare"].map((path) => ({
     url: `${origin}${path || "/"}`,
     lastModified: now,
   }));

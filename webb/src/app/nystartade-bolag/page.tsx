@@ -30,7 +30,7 @@ export default async function NewCompaniesPage({
       <p className="text-xs font-semibold tracking-[0.14em] text-muted uppercase">Bolagsverket</p>
       <h1 className="mt-3 text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">Nystartade bolag</h1>
       <p className="mt-4 max-w-2xl text-base leading-7 text-muted">
-        Färsk företagsinformation om bolag som just registrerats, för den som vill hitta sin nästa kund redan idag. Nya bolag kommer in från Bolagsverket, och filen uppdateras varje vecka.
+        Hitta kunder bland bolag som just registrerats. De kommer in från Bolagsverket varje vecka, så informationen är färsk.
       </p>
       <form method="get" className="mt-8 flex flex-wrap items-end gap-3">
         <fieldset className="flex gap-2">

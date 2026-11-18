@@ -12,7 +12,7 @@ export default function SourcesPage() {
     <PageIntro
       eyebrow="Var uppgiften kommer ifrån"
       title="Aktuella bolag, från senaste uttaget."
-      lead="VisaLight säljer verifierad, uppdaterad och färsk företagsinformation. Registret synkas en gång i veckan, och utdraget tar bara med aktiva bolag."
+      lead="Ni når bolag som finns kvar, för att registret synkas en gång i veckan och bara aktiva bolag följer med."
     >
       <section>
         <h2 className="text-2xl tracking-tight">SCB:s allmänna företagsregister</h2>

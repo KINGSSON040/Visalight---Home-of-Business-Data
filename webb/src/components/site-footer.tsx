@@ -2,41 +2,38 @@ import Link from "next/link";
 import { BuilderLink } from "@/components/builder-link";
 import { BrandLockup } from "@/components/logo-mark";
 import { StatusChip } from "@/components/status-chip";
-import { OFFER_LINE, OFFER_WHY, SELLER } from "@/lib/seller";
+import { OFFER_LINE, OFFER_WHY, SELLER, SellerFacts } from "@/lib/seller";
 
 const GROUPS = [
   {
     title: "Utdrag",
     links: [
       { href: "/#urval", label: "Till listbyggaren" },
-      { href: "/statistik", label: "Statistik" },
+      { href: "/priser", label: "Priser" },
       { href: "/nystartade-bolag", label: "Nystartade bolag" },
+      { href: "/bransch", label: "Branscher" },
+      { href: "/statistik", label: "Statistik" },
       { href: "/nyheter", label: "Nyheter" },
       { href: "/smakprov", label: "Smakprov" },
-      { href: "/bransch", label: "Branscher" },
-      { href: "/konto", label: "Köphistorik" },
     ],
   },
   {
-    title: "Kontakt",
+    title: "Företaget",
     links: [
-      { href: "/demo?arende=meddelande", label: "Skriv ett meddelande" },
-      { href: "/demo?arende=tid", label: "Boka tid" },
-      { href: "/demo?arende=mote", label: "Boka möte" },
-      { href: "/demo", label: "Boka 15 minuter" },
+      { href: "/om-oss", label: "Om oss" },
+      { href: "/kontakt", label: "Kontakt" },
+      { href: "/kontakt?arende=meddelande", label: "Skriv ett meddelande" },
+      { href: "/kallor", label: "Källor" },
+      { href: "/salj", label: "Sälj" },
     ],
   },
   {
     title: "Villkor",
     links: [
-      { href: "/kallor", label: "Källor" },
-      { href: "/gdpr", label: "Personuppgifter" },
       { href: "/integritet", label: "Integritet" },
       { href: "/villkor", label: "Köpvillkor" },
       { href: "/cookies", label: "Cookies" },
-      { href: "/salj", label: "Sälj" },
-      { href: "/ekonomi", label: "Ekonomi" },
-      { href: "/utvecklare", label: "Utvecklare" },
+      { href: "/gdpr", label: "Personuppgifter" },
     ],
   },
 ];
@@ -59,12 +56,10 @@ export function SiteFooter({
           <BrandLockup />
           <p className="max-w-sm leading-6">{OFFER_LINE} {OFFER_WHY} Priser exkl. moms. Lägsta order 399 kr.</p>
           <p className="max-w-sm leading-6 text-muted">{SELLER.line}</p>
+          <SellerFacts className="max-w-sm space-y-1 text-sm leading-6 text-muted" />
           <p id="kontakt" className="max-w-sm leading-6 text-muted">
-            Telefon: numret läggs in när det finns. Vill ni inte köpa själva kan ni{" "}
-            <Link href="/demo?arende=meddelande" className="font-semibold text-ink hover:underline">skriva ett meddelande</Link>,{" "}
-            <Link href="/demo?arende=tid" className="font-semibold text-ink hover:underline">boka tid</Link>{" "}
-            eller{" "}
-            <Link href="/demo?arende=mote" className="font-semibold text-ink hover:underline">boka möte</Link>.
+            Vill ni inte köpa själva kan ni{" "}
+            <Link href="/kontakt?arende=meddelande" className="font-semibold text-ink hover:underline">skriva ett meddelande</Link>.
             Inget skickas förrän en inkorg finns.
           </p>
         </div>

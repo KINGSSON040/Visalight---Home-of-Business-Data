@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/page-intro";
-import { SELLER } from "@/lib/seller";
+import { SELLER, SellerFacts } from "@/lib/seller";
 
 export const metadata: Metadata = {
   title: "Köpvillkor — VisaLight",
@@ -20,6 +20,7 @@ export default function TermsPage() {
         <h2 className="text-2xl tracking-tight">Vem som säljer</h2>
         <p className="mt-2 leading-7 text-muted">
           {SELLER.line}
+          <SellerFacts />
         </p>
       </section>
       <section>

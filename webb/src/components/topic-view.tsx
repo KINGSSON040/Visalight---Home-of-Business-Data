@@ -53,7 +53,7 @@ export function TopicIndex({ kind }: { kind: TopicKind }) {
       </h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
         {isIndustry
-          ? "Varje bransch har en egen sida med verifierad och färsk företagsinformation, och varje SNI-kod leder dit. Där står vad raden innehåller och vad det kostar."
+          ? "Varje bransch har en egen sida, så ni kan hitta kunder där. SNI-koden leder dit, och där står vad raden innehåller och vad det kostar."
           : "Sidorna förklarar orden som hör till företagsinformation, företagsregister och utdrag."}
       </p>
       {isIndustry ? (
@@ -93,7 +93,7 @@ export function TopicArticle({ kind, slug }: { kind: TopicKind; slug: string }) 
       <h1 className="mt-3 max-w-3xl font-serif text-5xl tracking-tight">{topic.title}</h1>
       <p className="mt-5 max-w-2xl text-lg leading-8">{topic.lead}</p>
       <p className="mt-4 max-w-2xl leading-8 text-muted">
-        VisaLight säljer verifierad, uppdaterad och färsk företagsinformation. Utdraget tas från den senaste uppdateringen. Ett telefonnummer eller en e-postadress som inte finns lämnas tom och kostar inget.
+        Hitta er nästa kund här idag. Utdraget tas från den senaste uppdateringen, så uppgifterna är färska. Ett telefonnummer eller en e-postadress som inte finns lämnas tom och kostar inget.
       </p>
       {topic.sni ? <p className="mt-4 font-mono text-sm text-sea">SNI {topic.sni}</p> : null}
       <Link href={topicBuilderHref(topic)} className="btn-fade-sea mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
@@ -180,7 +180,7 @@ function IndustryArticle({
       </h1>
       <p className="mt-5 max-w-2xl text-lg leading-8">{topic.lead}</p>
       <p className="mt-4 max-w-2xl leading-8 text-muted">
-        VisaLight säljer verifierad, uppdaterad och färsk företagsinformation. Ni köper för att hitta er nästa kund i den här branschen redan idag.
+        Hitta er nästa kund i den här branschen idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.
         Sökningar på företagsinformation och företagsregister för den här branschen landar här.
         Utdraget avgränsas med SNI {code}
         {older.length ? `, även om en äldre källa fortfarande skriver ${older.join(" eller ")}` : ""}.

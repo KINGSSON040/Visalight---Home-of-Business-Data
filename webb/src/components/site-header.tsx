@@ -3,10 +3,11 @@ import { BuilderLink } from "@/components/builder-link";
 import { BrandLockup } from "@/components/logo-mark";
 
 const LINKS = [
-  { href: "/statistik", label: "Statistik" },
-  { href: "/nyheter", label: "Nyheter" },
-  { href: "/#pris", label: "Pris" },
-  { href: "/#sa-funkar-det", label: "Så fungerar det" },
+  { href: "/priser", label: "Priser" },
+  { href: "/nystartade-bolag", label: "Nystartade" },
+  { href: "/bransch", label: "Branscher" },
+  { href: "/om-oss", label: "Om oss" },
+  { href: "/kontakt", label: "Kontakt" },
 ];
 
 export function SiteHeader() {

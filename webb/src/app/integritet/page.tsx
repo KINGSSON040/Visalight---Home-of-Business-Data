@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIntro } from "@/components/page-intro";
-import { SELLER } from "@/lib/seller";
+import { SELLER, SellerFacts } from "@/lib/seller";
 
 export const metadata: Metadata = {
   title: "Integritet — VisaLight",
@@ -20,6 +20,7 @@ export default function IntegrityPage() {
       <section>
         <h2 className="text-2xl tracking-tight">Ansvarig</h2>
         <p className="mt-2 leading-7 text-muted">{SELLER.line}</p>
+        <SellerFacts />
       </section>
       <section>
         <h2 className="text-2xl tracking-tight">Utdraget</h2>

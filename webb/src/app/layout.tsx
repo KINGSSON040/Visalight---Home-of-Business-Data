@@ -42,16 +42,15 @@ const figtree = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin()),
-  title: "VisaLight — Verifierad, uppdaterad och färsk företagsinformation",
+  title: "Hitta er nästa kund idag — VisaLight",
   description:
-    "VisaLight säljer verifierad, uppdaterad och färsk företagsinformation. Ni köper för att hitta er nästa kund redan idag. Välj bransch, se antal och pris, utan abonnemang.",
+    "Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska. Välj bransch, se antal och pris, utan abonnemang.",
   openGraph: {
     locale: "sv_SE",
     type: "website",
     siteName: "VisaLight",
-    title: "VisaLight — Verifierad, uppdaterad och färsk företagsinformation",
-    description:
-      "Ni köper för att hitta er nästa kund redan idag. Det hänger ihop med att jobba med färsk information.",
+    title: "Hitta er nästa kund idag — VisaLight",
+    description: "Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.",
   },
 };
 
