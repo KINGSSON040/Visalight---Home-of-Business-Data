@@ -143,7 +143,7 @@ export function CustomerHome({
       <section className="border-b border-line bg-white">
         <div className="mx-auto grid max-w-6xl items-start gap-x-8 gap-y-6 px-4 pt-4 pb-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,38rem)] lg:pt-5 lg:pb-8">
         <div className="min-w-0 lg:pt-2">
-          <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Företagsdata</p>
+          <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Hitta kunder</p>
           <h1 className="hero-title mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] sm:text-5xl lg:text-6xl">
             Alla Sveriges företag.
           </h1>
@@ -152,8 +152,8 @@ export function CustomerHome({
           </p>
           <p className="mt-3 max-w-xl text-base leading-7 text-muted">
             {stats.source === "register"
-              ? `Vårt register innehåller ${formatCount(stats.total)} företag. Välj vilka ni vill nå idag. Ingen prenumeration. Inga dolda avgifter.`
-              : "Välj vilka ni vill nå idag. Ingen prenumeration. Inga dolda avgifter."}
+              ? `För företag och personer som vill sälja och hitta kunder. Registret innehåller ${formatCount(stats.total)} aktiva företag. Välj vilka ni vill nå idag. Ingen prenumeration. Inga dolda avgifter.`
+              : "För företag och personer som vill sälja och hitta kunder. Välj vilka ni vill nå idag. Ingen prenumeration. Inga dolda avgifter."}
           </p>
           <ul className="mt-4 space-y-1 text-sm text-ink/80">
             {ACCESS_POINTS.map((point) => (
@@ -187,6 +187,7 @@ export function CustomerHome({
         <h2 id="steg" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
           Så fungerar det
         </h2>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">Tre steg till en lista med kunder ni kan kontakta.</p>
         <ol className="mt-10 grid gap-5 md:grid-cols-3">
           {STEPS.map((step, index) => (
             <li
@@ -213,7 +214,7 @@ export function CustomerHome({
           <h2 id="fortroende-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
             Vad utdraget bygger på
           </h2>
-          <p className="soft-copy mt-3 max-w-2xl text-sm leading-6 text-muted">Tre saker som gäller varje fil, oavsett vilket urval ni gör.</p>
+          <p className="soft-copy mt-3 max-w-2xl text-sm leading-6 text-muted">Tre saker som gäller varje lista ni använder när ni söker kunder.</p>
           <div className="mt-12 grid gap-12 md:grid-cols-3">
             <div className="border-t-2 border-ink pt-6">
               <h3 className="text-xl font-extrabold tracking-tight">Källa</h3>
@@ -253,7 +254,7 @@ export function CustomerHome({
               Nystartade bolag
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-              Nya bolag kommer in från Bolagsverket, och filen uppdateras varje vecka. De behöver ofta bank, redovisning, försäkring, telefoni, webb och lokal.
+              För företag och personer som säljer till nya bolag. Bolagen kommer in från Bolagsverket, och filen uppdateras varje vecka. Många behöver bank, redovisning, försäkring, telefoni, webb och lokal.
             </p>
             {fresh.example ? (
               <p className="mt-3 text-sm font-semibold">Registret är inte inkopplat.</p>
@@ -278,8 +279,8 @@ export function CustomerHome({
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
                 {stats.source === "register"
-                  ? "Ett färdigt urval per bransch. Antalet är aktiva företag som inte spärrat reklam, och det följer den senaste uppdateringen. Öppna raden om ni vill se priset i byggaren."
-                  : "Ett färdigt urval per bransch. Registret är inte inkopplat, så antalet visas inte."}
+                  ? "Färdiga urval för den som vill hitta kunder i en bransch. Antalet är aktiva företag som inte spärrat reklam, och det följer den senaste uppdateringen. Öppna raden om ni vill se priset i byggaren."
+                  : "Färdiga urval för den som vill hitta kunder i en bransch. Registret är inte inkopplat, så antalet visas inte."}
               </p>
             </div>
           </div>
@@ -320,7 +321,7 @@ export function CustomerHome({
               Ni betalar för det utdrag ni väljer.
             </h2>
             <p className="mt-4 max-w-md text-sm leading-6 text-muted">
-              Grunddata ingår alltid: namn, organisationsnummer, adress, ort, bransch och SNI. Telefon, e-post och beslutsfattare lägger ni till bara om ni behöver dem. Ett tomt fält kostar inget.
+              Grunddata ingår alltid: namn, organisationsnummer, adress, ort, bransch och SNI. Lägg till telefon, e-post och beslutsfattare när ni vill nå kunden. Ett tomt fält kostar inget.
             </p>
             <p className="mt-3 max-w-md text-sm leading-6 text-muted">
               Priset är ett engångspris per utdrag, exklusive moms. Lägsta order {formatKronor(MINIMUM_ORE).replace(",00", "")} kr. Samma styckpris oavsett om urvalet är en bransch i en stad eller hela landet.
@@ -362,7 +363,7 @@ export function CustomerHome({
                 Nyheter och uppdateringar
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-                Vad som ändrats i registret. Uppdateringen skrivs från registret, och utan det visas inga antal.
+                Vad som ändrats i registret, så ni ser var nya kunder tillkommit. Uppdateringen skrivs från registret, och utan det visas inga antal.
               </p>
             </div>
             <Link href="/nyheter" className="text-sm font-semibold text-ink hover:underline">
@@ -396,7 +397,7 @@ export function CustomerHome({
         <h2 id="fragor-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
           Vanliga frågor
         </h2>
-        <p className="mt-2 text-sm leading-6 text-muted">Pris, aktualitet, format och vad som gäller när ni kontaktar bolagen.</p>
+        <p className="mt-2 text-sm leading-6 text-muted">Pris, aktualitet och format för företag och personer som vill kontakta sina kunder.</p>
         <div className="mt-4 divide-y divide-line border-y border-line">
           {PUBLIC_FAQ.map((item) => (
             <details key={item.q} className="group py-4">
@@ -418,8 +419,8 @@ export function CustomerHome({
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
               {stats.source === "register"
-                ? `${formatCount(stats.total)} aktiva företag i dag. Siffran följer den senaste uppdateringen. Välj vilka ni vill nå och se priset direkt.`
-                : "Registret är inte inkopplat. Välj vilka ni vill nå och se priset när det finns."}
+                ? `${formatCount(stats.total)} aktiva företag i dag. Siffran följer den senaste uppdateringen. Välj vilka kunder ni vill nå och se priset direkt.`
+                : "Registret är inte inkopplat. Välj vilka kunder ni vill nå och se priset när det finns."}
             </p>
           </div>
           <a href="#urval" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">
