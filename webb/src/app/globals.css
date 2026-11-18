@@ -482,3 +482,75 @@ section[id],
   box-shadow: 8px 8px 0 #ffb000;
   background: #ffffff;
 }
+
+/* Säljarens skrivbord. Paletten gäller bara inuti CRM och lämnar kundsidan orörd. */
+.crm-desk {
+  --paper: #f6f5f3;
+  --ink: #1c1917;
+  --muted: #57534e;
+  --line: #e6e3de;
+  --card: #ffffff;
+  --sea: #1c1917;
+  --sea-bright: #1c1917;
+  --sea-deep: #1c1917;
+  --green: #1c1917;
+  --green-soft: #f3f1ee;
+  --rust: #44403c;
+  --amber: #a8a29e;
+  --amber-soft: #f6f5f3;
+  --foam: #f1efec;
+  min-height: 100dvh;
+  background: #f6f5f3;
+  color: #1c1917;
+  font-variant-numeric: tabular-nums;
+}
+
+.crm-desk ::selection {
+  background: #f6d5e6;
+  color: #1c1917;
+}
+
+.crm-desk :focus-visible {
+  outline-color: #d6007a;
+}
+
+.crm-desk .bg-sea,
+.crm-desk .btn-fade-sea,
+.crm-desk .btn-fade-green,
+.crm-desk .bg-green {
+  background-image: none;
+  background-color: #1c1917;
+  color: #fff;
+}
+
+.crm-desk .bg-amber,
+.crm-desk .btn-fade-amber {
+  background-image: none;
+  background-color: #fff;
+  color: #1c1917;
+  box-shadow: inset 0 0 0 1px #e6e3de;
+}
+
+.crm-desk .btn-fade-rust {
+  background-image: none;
+  background-color: #fff;
+  color: #1c1917;
+  box-shadow: inset 0 0 0 1px #1c1917;
+}
+
+.crm-desk .bg-rust {
+  background-image: none;
+  background-color: #44403c;
+  color: #fff;
+}
+
+.crm-desk .btn-fade-sea:hover,
+.crm-desk .btn-fade-green:hover,
+.crm-desk .btn-fade-rust:hover,
+.crm-desk .btn-fade-amber:hover {
+  filter: none;
+}
+
+.crm-desk a.text-sea:hover {
+  color: #d6007a;
+}

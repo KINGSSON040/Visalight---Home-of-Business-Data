@@ -77,7 +77,7 @@ export function PipelineView() {
             Skarpa leads från första kontakt till signering. Varje möjlighet har ett nästa steg med datum. Dra korten mellan faserna eller välj fas i listan. Inget raderas, vunna och förlorade stängs.
           </p>
         </div>
-        <button type="button" onClick={() => setCreating((current) => !current)} className="btn-fade-green h-12 rounded-full bg-green px-6 font-semibold text-white">
+        <button type="button" onClick={() => setCreating((current) => !current)} className="h-11 rounded-full bg-[#d6007a] px-5 text-sm font-semibold text-white hover:bg-[#b80068]">
           {creating ? "Stäng" : "Ny möjlighet"}
         </button>
       </div>
@@ -128,18 +128,18 @@ export function PipelineView() {
         </section>
       ) : null}
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Öppna möjligheter" value={String(open.length)} tone="bg-sea text-white" />
-        <Stat label="Öppet värde" value={formatMoney(openSum)} tone="bg-green text-white" />
-        <Stat label="Varma leads" value={String(hot.length)} tone="bg-rust text-white" />
+      <div className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line lg:grid-cols-4">
+        <Stat label="Öppna möjligheter" value={String(open.length)} />
+        <Stat label="Öppet värde" value={formatMoney(openSum)} />
+        <Stat label="Varma leads" value={String(hot.length)} />
         <button
           type="button"
           onClick={() => setAttention((current) => !current)}
           aria-pressed={attention}
-          className={`rounded-2xl p-4 text-left ${attention ? "bg-amber ring-2 ring-ink" : "bg-amber-soft ring-1 ring-amber"}`}
+          className={`bg-white p-6 text-left hover:bg-[#fafaf9] ${attention ? "shadow-[inset_0_-2px_0_#d6007a]" : ""}`}
         >
-          <span className="block text-2xl font-bold">{alerts}</span>
-          <span className="text-sm font-semibold">Kräver uppföljning{attention ? " (filtrerat)" : ""}</span>
+          <span className="block text-[clamp(2.25rem,4vw,3.25rem)] font-semibold leading-none tracking-tight tabular-nums">{alerts}</span>
+          <span className="mt-3 block text-sm text-muted">Kräver uppföljning{attention ? " · filtrerat" : ""}</span>
         </button>
       </div>
 
@@ -232,7 +232,7 @@ export function PipelineView() {
                   setDragId("");
                   if (opp) requestMove(opp, stage.id);
                 }}
-                className={`w-72 shrink-0 rounded-2xl border bg-paper p-2 ${overStage === stage.id ? "border-sea ring-2 ring-sea" : "border-line"}`}
+                className={`w-72 shrink-0 rounded-2xl border bg-[#f6f5f3] p-2 ${overStage === stage.id ? "border-[#d6007a] ring-2 ring-[#d6007a]" : "border-line"}`}
               >
                 <header className={`rounded-xl px-3 py-2 ${stage.head}`}>
                   <p className="font-semibold">
@@ -282,11 +282,11 @@ export function PipelineView() {
   );
 }
 
-function Stat({ label, value, tone }: { label: string; value: string; tone: string }) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className={`rounded-2xl p-4 ${tone}`}>
-      <span className="block text-2xl font-bold">{value}</span>
-      <span className="text-sm font-semibold">{label}</span>
+    <div className="bg-white px-5 py-6">
+      <span className="block text-[clamp(2.25rem,4vw,3.25rem)] font-semibold leading-none tracking-tight tabular-nums">{value}</span>
+      <span className="mt-3 block text-sm text-muted">{label}</span>
     </div>
   );
 }
@@ -326,14 +326,13 @@ function KanbanCard({
   const store = useCrmStore();
   const closed = isOppClosed(opp.stage);
   const flags = oppFlags(opp, store.now, store.staleDays);
-  const hot = opp.temperature === "varm" && !closed;
   return (
     <li
       draggable={!closed || store.isAdmin}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       className={`cursor-grab rounded-xl border bg-white p-3 text-sm shadow-sm active:cursor-grabbing ${dragging ? "opacity-40" : ""} ${
-        flags.overdue ? "border-rust ring-1 ring-rust" : hot ? "border-amber ring-1 ring-amber" : "border-line"
+        flags.overdue ? "border-line shadow-[inset_3px_0_0_#d6007a]" : "border-line"
       }`}
     >
       <div className="flex items-start justify-between gap-2">

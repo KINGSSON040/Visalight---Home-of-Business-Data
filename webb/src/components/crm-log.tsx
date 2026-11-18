@@ -25,17 +25,17 @@ import {
 } from "@/lib/crm-store";
 
 const TONE_ON: Record<OutcomeTone, string> = {
-  good: "btn-fade-green border-green bg-green text-white",
-  warm: "btn-fade-amber border-amber bg-amber text-ink",
-  neutral: "btn-fade-sea border-sea bg-sea text-white",
-  bad: "btn-fade-rust border-rust bg-rust text-white",
+  good: "border-[#1c1917] bg-[#1c1917] text-white",
+  warm: "border-[#1c1917] bg-[#1c1917] text-white",
+  neutral: "border-[#1c1917] bg-[#1c1917] text-white",
+  bad: "border-[#1c1917] bg-[#1c1917] text-white",
 };
 
 const TONE_OFF: Record<OutcomeTone, string> = {
-  good: "border-green/40 bg-green-soft text-ink hover:border-green",
-  warm: "border-amber/60 bg-amber-soft text-ink hover:border-amber",
-  neutral: "border-line bg-foam text-ink hover:border-sea",
-  bad: "border-rust/40 bg-rust/10 text-ink hover:border-rust",
+  good: "border-line bg-white text-ink hover:border-[#1c1917]",
+  warm: "border-line bg-white text-ink hover:border-[#1c1917]",
+  neutral: "border-line bg-white text-ink hover:border-[#1c1917]",
+  bad: "border-line bg-white text-ink hover:border-[#1c1917]",
 };
 
 export function isStruck(struck: { orgNr: string; value: string }[], orgNr: string, value: string) {
@@ -403,10 +403,10 @@ export function HistoryRow({ entry }: { entry: Activity }) {
   const system = isSystemKind(entry.outcome);
   const tone = outcomeInfo(entry.outcome)?.tone ?? "neutral";
   const bar: Record<OutcomeTone, string> = {
-    good: "border-green",
-    warm: "border-amber",
-    neutral: "border-sea",
-    bad: "border-rust",
+    good: "border-[#d6007a]",
+    warm: "border-[#1c1917]",
+    neutral: "border-line",
+    bad: "border-[#1c1917]/30",
   };
   const known = entry.outcome in SYSTEM_EVENTS || Boolean(outcomeInfo(entry.outcome));
   return (
