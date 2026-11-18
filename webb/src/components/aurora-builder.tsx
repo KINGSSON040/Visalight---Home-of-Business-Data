@@ -95,7 +95,7 @@ export function AuroraBuilder({
 
   return (
     <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-3xl">
-      <div className="flex flex-col gap-3 px-5 pt-6 sm:flex-row sm:items-start sm:justify-between sm:px-7 sm:pt-7">
+      <div className="flex flex-col gap-1 px-4 pt-2.5 sm:flex-row sm:items-start sm:justify-between sm:px-5 sm:pt-3">
         <SelectionCount companies={urval.companies} loading={loading} />
         <p className="register-stamp w-max max-w-[15rem] shrink-0 text-right text-[0.6rem] leading-[1.35] sm:pt-2">
           {exampleDate
@@ -103,7 +103,8 @@ export function AuroraBuilder({
             : `Registret senast uppdaterat: ${updatedLabel}. Siffran följer den senaste uppdateringen.`}
         </p>
       </div>
-      <div className="mx-3 mt-4 mb-3 space-y-4 rounded-2xl bg-white px-4 py-4 sm:mx-4 sm:px-5 sm:py-5">
+      <div className="mx-3 mt-1.5 mb-1.5 space-y-1.5 rounded-2xl bg-white px-3 py-2 sm:mx-4 sm:px-4">
+        <div className="grid gap-2 lg:grid-cols-2">
         <Step no="01" title="Bransch">
           <BrickSearch
             kinds={["bransch"]}
@@ -175,7 +176,9 @@ export function AuroraBuilder({
             })}
           </div>
         </Step>
+        </div>
 
+        <div className="grid gap-2 lg:grid-cols-2">
         <div>
           <p className="text-xs font-semibold">Antal anställda</p>
           {listParts(draft.employees).length > 0 ? (
@@ -241,9 +244,10 @@ export function AuroraBuilder({
               </button>
             ))}
           </div>
-          <p className="mt-1.5 text-xs leading-5 text-muted">
+          <p className="mt-1 text-xs leading-4 text-muted">
             Registret synkas en gång i veckan. Nya bolag kommer med då.
           </p>
+        </div>
         </div>
 
         <Step
@@ -270,7 +274,7 @@ export function AuroraBuilder({
               price={`+${formatKronor(SIGNATORY_ORE)} kr/nr`}
             />
           </div>
-          <p className="mt-2 max-w-xl text-xs leading-5 text-muted">
+          <p className="mt-1 max-w-xl text-xs leading-4 text-muted">
             Ett direktnummer till en person, eller en enskild firma, kan samtidigt vara en personuppgift. Ni ansvarar för utskicket, inklusive NIX och de regler som gäller just den kanalen.
           </p>
           {more ? <MoreFilters draft={draft} onChange={onChange} /> : null}
@@ -285,8 +289,8 @@ export function AuroraBuilder({
 function Step({ no, title, aside, children }: { no: string; title: string; aside?: React.ReactNode; children: React.ReactNode }) {
   return (
     <fieldset className="min-w-0">
-      <div className="mb-1.5 flex items-baseline justify-between gap-2">
-        <legend className="flex items-baseline gap-2 text-base font-bold">
+      <div className="mb-1 flex items-baseline justify-between gap-2">
+        <legend className="flex items-baseline gap-2 text-sm font-bold">
           <span className="step-no text-xs font-bold">{no}</span>
           <span className="font-display">{title}</span>
         </legend>
@@ -299,7 +303,7 @@ function Step({ no, title, aside, children }: { no: string; title: string; aside
 
 function AddonChip({ on, onToggle, label, price }: { on: boolean; onToggle: () => void; label: string; price: string }) {
   return (
-    <button type="button" aria-pressed={on} onClick={onToggle} className="addon-chip inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold">
+    <button type="button" aria-pressed={on} onClick={onToggle} className="addon-chip inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold">
       <span
         aria-hidden="true"
         className={`inline-flex h-4 w-4 items-center justify-center rounded-full text-[0.62rem] font-bold ${on ? "bg-white text-magenta" : "border border-ink/30"}`}
@@ -349,7 +353,7 @@ function BrickSearch({
 
   return (
     <div className={`relative ${open ? "z-30" : ""}`}>
-      <div className="field-box flex min-h-11 flex-wrap items-center gap-1.5 rounded-2xl px-3 py-1.5">
+      <div className="field-box flex min-h-9 flex-wrap items-center gap-1 rounded-xl px-2.5 py-1">
         <span aria-hidden="true" className="text-muted">
           ⌕
         </span>
@@ -462,11 +466,11 @@ function SelectionCount({ companies, loading }: { companies: number; loading: bo
     <p className="min-w-0" aria-live="polite" aria-busy={loading}>
       <span
         data-urval-count={String(companies)}
-        className={`font-display text-5xl leading-none font-extrabold tracking-[-0.04em] text-ink sm:text-6xl ${loading ? "opacity-85" : ""}`}
+        className={`font-display text-4xl leading-none font-extrabold tracking-[-0.04em] text-ink sm:text-5xl ${loading ? "opacity-85" : ""}`}
       >
         {shown.toLocaleString("sv-SE")}
       </span>{" "}
-      <span className="text-lg font-semibold">företag</span>
+      <span className="text-base font-semibold">företag</span>
     </p>
   );
 }
@@ -487,11 +491,11 @@ function Result({
   const counted = selectionForCount(draft) ?? draft;
 
   return (
-    <div ref={ref} className="result-field rounded-b-3xl px-5 pt-4 pb-5 sm:px-7">
-      <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2" aria-live="polite" aria-busy={loading}>
+    <div ref={ref} className="result-field rounded-b-3xl px-4 pt-2 pb-2 sm:px-5">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1" aria-live="polite" aria-busy={loading}>
         <div className="min-w-0">
           <p className="text-sm font-semibold">
-            <span data-urval-price className="price-figure font-price text-xl font-bold">
+            <span data-urval-price className="price-figure font-price text-lg font-bold">
               {formatKronor(shownPrice)} kr
             </span>{" "}
             <span className="text-muted">exkl. moms · Excel eller CSV</span>
@@ -500,18 +504,18 @@ function Result({
         <Link
           href={`/kassa?${selectionToQuery(counted)}`}
           aria-disabled={counts.companies === 0}
-          className={`btn-neon inline-flex h-11 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold ${counts.companies === 0 ? "pointer-events-none opacity-60" : ""}`}
+          className={`btn-neon inline-flex h-9 shrink-0 items-center gap-2 rounded-lg px-3 text-sm font-bold ${counts.companies === 0 ? "pointer-events-none opacity-60" : ""}`}
         >
           Köp utdrag <span aria-hidden="true">→</span>
         </Link>
       </div>
-      <div className="mt-4 space-y-2">
+      <div className="mt-2 space-y-0.5">
         {urval.source === "example" ? (
-          <p className="text-xs leading-5 text-muted">Exempelsiffror. Registret är inte inkopplat.</p>
+          <p className="text-xs leading-4 text-muted">Exempelsiffror. Registret är inte inkopplat.</p>
         ) : null}
-        <p className="text-sm leading-6">Ingen inloggning, prenumeration eller bindningstid.</p>
-        <p className="text-sm leading-6 text-muted">Bara aktiva företag som inte spärrat reklam. Uppdateras en gång i veckan.</p>
-        <p className="text-xs leading-5 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
+        <p className="text-xs leading-4">Ingen inloggning, prenumeration eller bindningstid.</p>
+        <p className="text-xs leading-4 text-muted">Bara aktiva företag som inte spärrat reklam. Uppdateras en gång i veckan.</p>
+        <p className="text-xs leading-4 text-muted">Ingen betalning dras och ingen fil skickas ännu.</p>
         {urval.companies === 0 ? (
           <p className="text-xs font-semibold">{urval.note || "Inget bolag matchar."} Ta bort ett filter så kommer de tillbaka.</p>
         ) : null}

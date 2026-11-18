@@ -141,7 +141,7 @@ export function CustomerHome({
   return (
     <main>
       <section className="border-b border-line bg-white">
-        <div className="mx-auto grid max-w-6xl items-start gap-x-12 gap-y-8 px-4 pt-8 pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:pt-12 lg:pb-14">
+        <div className="mx-auto grid max-w-6xl items-start gap-x-8 gap-y-6 px-4 pt-4 pb-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,38rem)] lg:pt-5 lg:pb-8">
         <div className="min-w-0 lg:pt-2">
           <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Företagsdata</p>
           <h1 className="hero-title mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] sm:text-5xl lg:text-6xl">
