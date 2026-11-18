@@ -96,7 +96,7 @@ export function AuroraBuilder({
     <section id="urval" aria-label="Listbyggaren" data-lit={lit} className="builder-card relative overflow-visible rounded-3xl">
       <div className="flex flex-col gap-1 px-4 pt-2.5 sm:flex-row sm:items-start sm:justify-between sm:px-5 sm:pt-3">
         {urval.source === "register" ? <SelectionCount companies={urval.companies} loading={loading} /> : <p className="min-h-10" />}
-        <p className="register-stamp w-max max-w-[15rem] shrink-0 text-right text-[0.6rem] leading-[1.35] sm:pt-2">
+        <p className="register-stamp -mt-1 -mr-1 w-max max-w-[15rem] shrink-0 self-end text-right text-[0.6rem] leading-[1.35] sm:-mt-1.5 sm:-mr-2 sm:self-start">
           {urval.source === "register"
             ? `Registret senast uppdaterat: ${updatedLabel}. Siffran följer den senaste uppdateringen.`
             : "Registret är inte inkopplat."}
