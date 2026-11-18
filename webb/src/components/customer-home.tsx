@@ -66,6 +66,7 @@ export function CustomerHome({
   exampleDate = false,
   stats,
   news,
+  fresh,
 }: {
   initial: Selection;
   initialUrval: UrvalResult;
@@ -73,6 +74,7 @@ export function CustomerHome({
   exampleDate?: boolean;
   stats: RegisterStats;
   news: NewsPost[];
+  fresh: { companies: number; example: boolean };
 }) {
   const [draft, setDraft] = useState(initial);
   const [urval, setUrval] = useState(initialUrval);
@@ -203,6 +205,26 @@ export function CustomerHome({
       </section>
 
       <NaringslivSection stats={stats} />
+
+      <section id="nystartade" aria-labelledby="nystartade-rubrik" className="border-t border-line">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-4 py-12 sm:flex-row sm:items-end sm:justify-between sm:py-14">
+          <div>
+            <h2 id="nystartade-rubrik" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+              Nystartade bolag
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+              Nya bolag kommer in dagligen från Bolagsverket. De behöver ofta bank, redovisning, försäkring, telefoni, webb och lokal.
+              {fresh.example ? " Exempelsiffror. Registret är inte inkopplat." : ""}
+            </p>
+            <p className="mt-3 text-sm font-semibold">
+              <span className="font-display text-2xl font-extrabold text-magenta">{fresh.companies.toLocaleString("sv-SE")}</span> bolag de senaste 30 dagarna.
+            </p>
+          </div>
+          <Link href="/nystartade-bolag" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">
+            Se antal och pris
+          </Link>
+        </div>
+      </section>
 
       <section id="branscher" aria-labelledby="branscher-rubrik" className="border-t border-line bg-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">

@@ -152,6 +152,20 @@ function fold(value: string): string {
   return value.toLocaleLowerCase("sv").replace(/[åä]/g, "a").replace(/ö/g, "o").replace(/é/g, "e").trim();
 }
 
+/** Exempel på hur många bolag som registrerats de senaste dagarna. Märks alltid som exempel. */
+export function exampleFreshCompanies(days: number, sni: string, city: string): number {
+  const stats = exampleStats();
+  let share = days / 30;
+  const code = sni.replace(/\D/g, "");
+  if (code) {
+    const known = EXAMPLE_INDUSTRY_COUNTS[code];
+    share *= known != null && stats.total > 0 ? known / stats.total : 0.004;
+  }
+  const place = fold(city);
+  if (place) share *= CITY_SHARE[place] ?? 0.006;
+  return Math.max(0, Math.round(stats.newLastMonth * share));
+}
+
 /**
  * Ett räkneexempel för urvalet när registret inte är inkopplat. Andelarna är påhittade,
  * så resultatet inte ska läsas som hela registret.

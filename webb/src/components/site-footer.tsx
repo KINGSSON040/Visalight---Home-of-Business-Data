@@ -34,6 +34,7 @@ export function SiteFooter({
         <nav className="flex flex-wrap gap-x-4 gap-y-2">
           <Link href="/#urval">Skapa utdrag</Link>
           <Link href="/statistik">Statistik</Link>
+          <Link href="/nystartade-bolag">Nystartade bolag</Link>
           <Link href="/nyheter">Nyheter</Link>
           <Link href="/smakprov">Smakprov</Link>
           <Link href="/kallor">Källor</Link>
