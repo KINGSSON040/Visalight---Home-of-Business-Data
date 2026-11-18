@@ -173,7 +173,7 @@ section[id],
 
 /* Kundsidan: ljust norrsken. CRM ligger utanför .customer-site och behåller sina färger. */
 .customer-site {
-  --paper: #fff8dc;
+  --paper: #f5f4f2;
   --ink: #1b1023;
   --muted: #574862;
   --line: #ecdfe8;
@@ -220,7 +220,7 @@ section[id],
 }
 
 body:has(.customer-site) {
-  background: #fff8dc;
+  background: #f5f4f2;
 }
 
 /* Norrskenet: en svag glöd bara högst upp. Rörelsen är kvar, men diskret. */
@@ -319,16 +319,19 @@ body:has(.customer-site) {
 .glow-gold { box-shadow: 0 0 0 1px rgba(27, 16, 35, 0.06), 0 16px 36px -28px rgba(27, 16, 35, 0.35); }
 
 .builder-card {
-  background: #fff8dc;
-  border: 1px solid #e8d48a;
+  background: #ffe14a;
+  border: 1px solid #e0b000;
   box-shadow: 0 16px 40px -28px rgba(27, 16, 35, 0.35);
   color: #1b1023;
 }
 
 .register-stamp {
-  background: #fffdf4;
-  border: 1px solid #e8d48a;
+  background: #fff6c4;
+  border: 1px solid #e0b000;
   color: #574862;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .price-figure {
@@ -340,9 +343,9 @@ body:has(.customer-site) {
 }
 
 .result-field {
-  background: #fff8dc;
+  background: #ffe14a;
   color: #1b1023;
-  border-top: 1px solid #e8d48a;
+  border-top: 1px solid #e0b000;
 }
 
 .big-count {
