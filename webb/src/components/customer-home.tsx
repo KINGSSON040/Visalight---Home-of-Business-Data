@@ -151,15 +151,9 @@ export function CustomerHome({
             Välj bransch. Se priset. Köp direkt.
           </p>
           <p className="mt-3 max-w-xl text-base leading-7 text-muted">
-            Listan innehåller de aktiva bolag ni valt, med namn, adress, bransch och det kontaktfält ni kryssar i. Vill ni hellre ha hjälp kan ni{" "}
-            <a href="#kontakt" className="font-semibold text-ink underline-offset-4 hover:underline">
-              ringa
-            </a>{" "}
-            eller{" "}
-            <Link href="/demo?arende=tid" className="font-semibold text-ink underline-offset-4 hover:underline">
-              boka tid
-            </Link>
-            .
+            {stats.source === "register"
+              ? `Vårt register innehåller ${formatCount(stats.total)} företag. Välj vilka ni vill nå idag. Ingen prenumeration. Inga dolda avgifter.`
+              : "Välj vilka ni vill nå idag. Ingen prenumeration. Inga dolda avgifter."}
           </p>
           <ul className="mt-4 space-y-1 text-sm text-ink/80">
             {ACCESS_POINTS.map((point) => (
