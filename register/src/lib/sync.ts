@@ -104,12 +104,12 @@ function upsertBatch(companies: ScbCompany[]) {
       org_nr, pe_org_nr, name, street, co_address, postal_code, city,
       municipality_code, county_code, legal_form, status_code, employee_class,
       turnover_class, workplace_count, reklam_block, phone_block, email_block,
-      started_on, ended_on, registered_on, source, fetched_at
+      started_on, ended_on, registered_on, source, fetched_at, first_seen_at
     ) VALUES (
       @org_nr, @pe_org_nr, @name, @street, @co_address, @postal_code, @city,
       @municipality_code, @county_code, @legal_form, @status_code, @employee_class,
       @turnover_class, @workplace_count, @reklam_block, @phone_block, @email_block,
-      @started_on, @ended_on, @registered_on, 'scb', @fetched_at
+      @started_on, @ended_on, @registered_on, 'scb', @fetched_at, @fetched_at
     )
     ON CONFLICT(org_nr) DO UPDATE SET
       pe_org_nr = excluded.pe_org_nr,
@@ -130,7 +130,7 @@ function upsertBatch(companies: ScbCompany[]) {
       email_block = excluded.email_block,
       started_on = excluded.started_on,
       ended_on = excluded.ended_on,
-      registered_on = excluded.registered_on,
+      registered_on = COALESCE(excluded.registered_on, companies.registered_on),
       source = 'scb',
       fetched_at = excluded.fetched_at
   `);

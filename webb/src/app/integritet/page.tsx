@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIntro } from "@/components/page-intro";
-import { Mark, SELLER } from "@/lib/seller";
+import { SELLER, SellerFacts } from "@/lib/seller";
 
 export const metadata: Metadata = {
   title: "Integritet — VisaLight",
   description:
-    "Så behandlar VisaLight uppgifter om bolag i utdraget och om en förhandsbokning. Ingen betalning dras. Bolaget är inte registrerat ännu.",
+    "Så behandlar VisaLight uppgifter om bolag i utdraget och om en förhandsbokning. VisaLight är ett svenskt företag och varumärke med säte i Malmö.",
   alternates: { canonical: "/integritet" },
 };
 
@@ -15,14 +15,12 @@ export default function IntegrityPage() {
     <PageIntro
       eyebrow="Integritet"
       title="Uppgifter om bolag, och om er beställning."
-      lead="De flesta raderna i utdraget är uppgifter om ett företag. VisaLight är inte ett registrerat bolag ännu, så det finns ingen utsedd personuppgiftsansvarig med organisationsnummer."
+      lead={`De flesta raderna i utdraget är uppgifter om ett företag. ${SELLER.line}`}
     >
       <section>
-        <h2 className="text-2xl tracking-tight">Ansvarig, när bolaget finns</h2>
-        <p className="mt-2 leading-7 text-muted">
-          Plats för uppgifterna: <Mark>{SELLER.orgNr}</Mark>, <Mark>{SELLER.address}</Mark>, <Mark>{SELLER.vatNr}</Mark>.
-          Inget av det är ifyllt.
-        </p>
+        <h2 className="text-2xl tracking-tight">Ansvarig</h2>
+        <p className="mt-2 leading-7 text-muted">{SELLER.line}</p>
+        <SellerFacts />
       </section>
       <section>
         <h2 className="text-2xl tracking-tight">Utdraget</h2>

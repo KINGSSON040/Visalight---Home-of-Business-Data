@@ -2,48 +2,91 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ListBuilder } from "@/components/builder";
-import { UrvalWalkthrough } from "@/components/urval-walkthrough";
-import { HomeMore } from "@/components/home-more";
-import { SampleOffer } from "@/components/sample-offer";
+import { Megaphone, Phone, Sprout, Users } from "lucide-react";
+import { BuilderLink } from "@/components/builder-link";
+import { AuroraBuilder } from "@/components/aurora-builder";
+import { NaringslivSection } from "@/components/naringsliv-stats";
 import { selectionForCount, selectionToQuery, type Selection } from "@/lib/catalog";
+import { builderHrefForSni, formatCount, type RegisterStats } from "@/lib/naringsliv";
+import { formatNewsDate, type NewsPost } from "@/lib/nyheter";
 import { BASE_ORE, EMAIL_ORE, formatKronor, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
-import type { UrvalResult } from "@/lib/urval";
 import { PUBLIC_FAQ } from "@/lib/public-faq";
-import { linkedIndustries, topicBuilderHref } from "@/lib/topics";
-import { StatusChip } from "@/components/status-chip";
-
-const LEFT_OUT = [
-  {
-    title: "Avregistrerade bolag",
-    text: "Bolag som har avregistrerats tas bort när registret uppdateras. De ligger inte kvar i nästa utdrag.",
-  },
-  {
-    title: "Konkurs och näringsförbud",
-    text: "Bolag i konkurs, inaktiva bolag och bolag med näringsförbud följer inte med i det ni köper.",
-  },
-  {
-    title: "Reklamspärr",
-    text: "Bolag som har spärrat reklam säljs inte. Ni behöver inte rensa filen själva.",
-  },
-  {
-    title: "Uppgifter som saknas",
-    text: "Finns inget telefonnummer eller ingen e-post lämnas fältet tomt. Ett tomt fält kostar inget.",
-  },
-];
+import { linkedIndustries } from "@/lib/topics";
+import type { UrvalResult } from "@/lib/urval";
 
 const STEPS = [
   {
-    title: "Välj bransch och ort",
-    text: "Skriv frisör, restaurang eller revisionsbyrå. Förslagen är branscher, inte enskilda bolag.",
+    no: "01",
+    title: "Ange sökord",
+    text: "Ange bransch, ort eller SNI-kod i byggaren. Sökningen visar endast aktiva företag som inte spärrat reklam.",
+    icon: "search",
+    tone: "text-[#9a1458]",
+    wash: "bg-[#fdeef6]",
   },
   {
-    title: "Se antal och pris",
-    text: "Antalet och priset står i utdraget direkt. Priset visas alltid innan ni köper.",
+    no: "02",
+    title: "Välj filter",
+    text: "Avgränsa med län, bolagsform eller storlek. Lägg till telefon, e-postadress eller beslutsfattare om ni behöver det.",
+    icon: "filter",
+    tone: "text-[#8a5a00]",
+    wash: "bg-[#fff6dc]",
   },
   {
-    title: "Få filen",
-    text: "Förhandsboka med e-post. Beställning öppnar snart. Ingen betalning dras.",
+    no: "03",
+    title: "Se pris direkt",
+    text: "Antal och pris visas direkt i byggaren, exklusive moms.",
+    icon: "price",
+    tone: "text-[#0f6b45]",
+    wash: "bg-[#e8f7ef]",
+  },
+] as const;
+
+const ACCESS_POINTS = ["Inget konto krävs.", "Ingen prenumeration.", "Ingen bindningstid."];
+
+const USE_CASES = [
+  { title: "Säljare", text: "Ring er nästa kund i branschen ni valt. Telefon följer med bara där numret finns.", icon: Phone, href: "/salj" },
+  { title: "Byråer", text: "Ta fram urvalet åt uppdragsgivaren. Se priset innan ni köper.", icon: Megaphone, href: "/#urval" },
+  { title: "Rekrytering", text: "Hitta arbetsgivarna i branschen och orten ni valt. Listan är färsk, så ni kan kontakta dem idag.", icon: Users, href: "/#urval" },
+  { title: "Nystartade", text: "Nå bolagen som just startat. De kommer in varje vecka, så informationen ni använder är färsk.", icon: Sprout, href: "/nystartade-bolag" },
+] as const;
+
+function StepIcon({ name }: { name: (typeof STEPS)[number]["icon"] }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+      {name === "search" ? <circle cx="11" cy="11" r="6" {...common} /> : null}
+      {name === "search" ? <path d="M16 16.5 20 20.5" {...common} /> : null}
+      {name === "filter" ? <path d="M4 6h16M7 12h10M10 18h4" {...common} /> : null}
+      {name === "price" ? <path d="M6 5.5h12v13l-6-2.5-6 2.5Z" {...common} /> : null}
+      {name === "price" ? <path d="M9 10h6" {...common} /> : null}
+    </svg>
+  );
+}
+
+function sniLabel(sni: string) {
+  return sni.length === 5 ? `${sni.slice(0, 2)}.${sni.slice(2)}` : sni;
+}
+
+const PRICE_ROWS = [
+  {
+    title: "Företagsuppgifter (grunddata)",
+    price: `${formatKronor(BASE_ORE)} kr/bolag`,
+    text: "Namn, organisationsnummer, adress, ort, bransch och SNI-kod. Ingår alltid.",
+  },
+  {
+    title: "Telefon",
+    price: `+${formatKronor(PHONE_ORE)} kr/nr`,
+    text: "Bolagets växel- eller företagsnummer. Ni betalar bara för bolag som har ett nummer.",
+  },
+  {
+    title: "Beslutsfattare",
+    price: `+${formatKronor(SIGNATORY_ORE)} kr/nr`,
+    text: "Direktnummer till den som bestämmer. Ni betalar bara där numret finns.",
+  },
+  {
+    title: "E-post",
+    price: `+${formatKronor(EMAIL_ORE)} kr/st`,
+    text: "Bolagets e-postadress. Ni betalar bara för bolag som har en adress.",
   },
 ];
 
@@ -51,30 +94,25 @@ export function CustomerHome({
   initial,
   initialUrval,
   updatedLabel,
-  registerReady = false,
-  exampleData = false,
+  exampleDate = false,
+  stats,
+  news,
+  fresh,
 }: {
   initial: Selection;
   initialUrval: UrvalResult;
-  updatedLabel: string | null;
-  registerReady?: boolean;
-  exampleData?: boolean;
+  updatedLabel: string;
+  exampleDate?: boolean;
+  stats: RegisterStats;
+  news: NewsPost[];
+  fresh: { companies: number; example: boolean };
 }) {
   const [draft, setDraft] = useState(initial);
   const [urval, setUrval] = useState(initialUrval);
   const [loading, setLoading] = useState(false);
   const counted = selectionForCount(draft);
-  const priced: Selection = {
-    ...(counted ?? draft),
-    query: draft.query,
-    phones: draft.phones,
-    emails: draft.emails,
-    signatory: draft.signatory,
-  };
-  const share = selectionToQuery(priced);
-  const searchKey = counted
-    ? selectionToQuery({ ...counted, phones: false, emails: false, signatory: false })
-    : "";
+  const share = selectionToQuery({ ...(counted ?? draft), query: draft.query });
+  const searchKey = counted ? selectionToQuery({ ...counted, phones: false, emails: false, signatory: false }) : "";
 
   useEffect(() => {
     const controller = new AbortController();
@@ -92,7 +130,7 @@ export function CustomerHome({
         .finally(() => {
           if (!controller.signal.aborted) setLoading(false);
         });
-    }, 200);
+    }, 180);
     return () => {
       window.clearTimeout(timer);
       controller.abort();
@@ -100,208 +138,351 @@ export function CustomerHome({
   }, [searchKey]);
 
   useEffect(() => {
-    const current = new URLSearchParams(window.location.search);
-    const next = new URLSearchParams(share);
-    const tema = current.get("tema");
-    const filter = current.get("filter");
-    if (tema) next.set("tema", tema);
-    if (filter) next.set("filter", filter);
-    const query = next.toString();
-    window.history.replaceState(null, "", query ? `/?${query}` : "/");
+    window.history.replaceState(null, "", `/?${share}${window.location.hash}`);
   }, [share]);
 
+  useEffect(() => {
+    if (window.location.hash !== "#urval") return;
+    document.getElementById("urval")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   function patch(next: Partial<Selection>) {
-    setDraft((current) => {
-      const merged = { ...current, ...next };
-      const typing =
-        typeof next.query === "string" &&
-        next.sni === undefined &&
-        next.bransch === undefined &&
-        next.query !== current.query &&
-        next.query.trim().length > 0;
-      if (typing) {
-        merged.sni = "";
-        merged.bransch = "";
-      }
-      return merged;
-    });
+    setDraft((current) => ({ ...current, ...next }));
   }
+
+  const industries = linkedIndustries();
 
   return (
     <main>
-      <section className="home-hero mx-auto grid max-w-6xl items-start gap-6 px-4 py-3 sm:py-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(20rem,1fr)] lg:gap-8 lg:py-4">
-        <article className="min-w-0">
-          <p className="text-sm uppercase tracking-[0.18em] text-sea">Utan prenumeration</p>
-          <h1 className="mt-3 max-w-xl text-4xl leading-[1.08] tracking-tight text-balance sm:text-5xl">
-            Fyll i utdraget. Se antal kunder och pris direkt.
+      <section className="border-b border-line bg-white">
+        <div className="mx-auto grid max-w-6xl items-start gap-x-8 gap-y-6 px-4 pt-4 pb-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,38rem)] lg:pt-5 lg:pb-8">
+        <div className="min-w-0 lg:pt-2">
+          <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Hitta er nästa kund idag</p>
+          <h1 className="hero-title mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] sm:text-5xl lg:text-6xl">
+            Alla Sveriges företag.
           </h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-            Ingen prenumeration och ingen bindningstid. Ni ser hur många bolag som matchar, och vad filen kostar, innan ni går vidare.
+          <p className="mt-4 max-w-xl text-base leading-7 text-ink">
+            Välj bransch. Se priset. Köp direkt.
           </p>
-          <ul className="mt-4 flex flex-wrap gap-2 text-sm">
-            <li className="promise bg-foam px-3 py-1 font-medium">Fyll i utdraget</li>
-            <li className="promise bg-green-soft px-3 py-1 font-medium text-green">Se antal och pris direkt</li>
-            <li className="promise bg-amber-soft px-3 py-1 font-medium">Ingen bindningstid</li>
-          </ul>
-          <div className="mt-4">
-            <StatusChip updatedLabel={updatedLabel} registerReady={registerReady} exampleData={exampleData} />
-          </div>
-          <Link href="/#urval" className="btn-fade-sea mt-5 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
-            Skapa ert utdrag
-          </Link>
-          <dl id="pris" className="mt-6 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-3">
-            <div className="wash-sea rounded-2xl px-3 py-3">
-              <dt className="text-sm text-muted">Lägsta order</dt>
-              <dd className="mt-1 text-2xl tracking-tight text-sea">{(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr</dd>
-            </div>
-            <PriceUnit label="Grunduppgifter" ore={BASE_ORE} detail="per komplett rad" tone="green" />
-            <PriceUnit label="Kontaktnummer" ore={PHONE_ORE} detail="per nummer" tone="blue" />
-            <PriceUnit label="E-postkontakt" ore={EMAIL_ORE} detail="per adress" tone="green" />
-            <PriceUnit label="Beslutsfattare" ore={SIGNATORY_ORE} detail="per nummer" tone="yellow" />
-          </dl>
-          <p className="mt-2 text-xs text-muted">Priser exklusive moms. Lägsta order 399 kr.</p>
-        </article>
-
-        <div className="builder-slot min-w-0">
-          <ListBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} exampleData={exampleData} />
-        </div>
-      </section>
-
-      <UrvalWalkthrough onUse={patch} />
-
-      <section id="sa-funkar-det" className="band-white">
-        <div className="mx-auto max-w-6xl px-4 py-8 sm:py-10">
-          <h2 className="text-2xl tracking-tight">Tre steg till filen</h2>
-          <ol className="mt-4 grid gap-3 md:grid-cols-3">
-            {STEPS.map((step, index) => (
-              <li key={step.title} className="flex items-start gap-3 rounded-2xl bg-foam px-4 py-3">
-                <StepNumber n={String(index + 1)} />
-                <div>
-                  <h3 className="font-medium leading-7">{step.title}</h3>
-                  <p className="text-sm leading-6 text-muted">{step.text}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-          <Link href="/#urval" className="btn-fade-sea mt-5 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
-            Börja med bransch och ort
-          </Link>
-        </div>
-      </section>
-
-      <SampleOffer selection={counted ?? draft} />
-
-      <HomeMore updatedLabel={updatedLabel} />
-
-      <section aria-labelledby="utanfor" className="band-mint">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <h2 id="utanfor" className="max-w-3xl text-3xl tracking-tight">
-            Det som inte ska med i filen
-          </h2>
-          <p className="mt-3 max-w-2xl leading-7 text-muted">
-            Utdraget ska gå att använda direkt. Därför tas bolag ni inte ska kontakta bort, och en uppgift som saknas
-            lämnas tom.
+          <p className="mt-3 max-w-xl text-base leading-7 text-muted">
+            Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.{" "}
+            {urval.source === "register" ? (
+              <>Bolagsregistret innehåller {urval.companies.toLocaleString("sv-SE")} aktiva företag.</>
+            ) : (
+              <>Bolagsregistret är inte inkopplat.</>
+            )}{" "}
+            Välj vilka ni vill nå idag. Ingen prenumeration. Inga dolda avgifter.
           </p>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-            {LEFT_OUT.map((item) => (
-              <li
-                key={item.title}
-                className={`rounded-2xl border px-4 py-4 ${
-                  item.title === "Konkurs och näringsförbud" ? "wash-rust border-rust/25" : "border-line bg-white/80"
-                }`}
-              >
-                <h3 className={`text-lg tracking-tight ${item.title === "Konkurs och näringsförbud" ? "text-rust" : ""}`}>{item.title}</h3>
-                <p className="mt-1.5 text-sm leading-6 text-muted">{item.text}</p>
+          <ul className="mt-4 space-y-1 text-sm text-ink/80">
+            {ACCESS_POINTS.map((point) => (
+              <li key={point} className="flex items-center gap-2">
+                <span aria-hidden="true" className="text-[#9a1458]">✓</span>
+                {point}
               </li>
             ))}
           </ul>
-          <Link href="/#urval" className="btn-fade-sea mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
-            Se antalet i utdraget
-          </Link>
-        </div>
-      </section>
-
-      <section aria-labelledby="fragor" className="band-white">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <h2 id="fragor" className="text-4xl tracking-tight">Vanliga frågor</h2>
-          <div className="mt-6 max-w-3xl divide-y divide-line rounded-3xl border border-line bg-white">
-            {PUBLIC_FAQ.map((item) => (
-              <details key={item.q} className="px-5 py-4">
-                <summary className="cursor-pointer text-lg tracking-tight">{item.q}</summary>
-                <p className="mt-2 text-sm leading-6 text-muted">{item.a}</p>
-              </details>
-            ))}
+          <p className="mt-2 text-xs text-muted">
+            <Link href="/konto" className="underline-offset-4 hover:underline">
+              Skapa konto för köphistorik
+            </Link>
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <a href="#urval" className="btn-neon inline-flex h-11 items-center rounded-lg px-5 text-sm font-semibold">
+              Skapa utdrag
+            </a>
+            <a href="#urval" className="text-sm font-semibold text-ink underline-offset-4 hover:underline">
+              Bygg din lista
+            </a>
+            <a href="#fortroende" className="text-sm font-semibold text-ink underline-offset-4 hover:underline">
+              Källa och uppdatering
+            </a>
           </div>
-          <Link href="/#urval" className="btn-fade-sea mt-6 inline-flex h-12 items-center rounded-full bg-sea px-5 font-medium text-white">
-            Skapa ert utdrag
-          </Link>
+        </div>
+        <div className="min-w-0">
+          <AuroraBuilder draft={draft} onChange={patch} urval={urval} loading={loading} updatedLabel={updatedLabel} exampleDate={exampleDate} />
+        </div>
         </div>
       </section>
 
-      <section id="branscher" className="band-lime">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-        <h2 className="text-3xl tracking-tight">Välj en bransch och se priset</h2>
-        <p className="mt-3 max-w-2xl text-muted">
-          Varje bransch öppnar utdraget med den SNI-koden ifylld. Antalet räknas direkt.
-        </p>
-        <ul className="mt-6 flex flex-wrap gap-2">
-          {linkedIndustries().map((topic) => (
-            <li key={topic.slug}>
-              <Link href={topicBuilderHref(topic)} className="inline-flex rounded-full border border-line bg-card px-3 py-2 text-sm">
-                {topic.nav}
-              </Link>
+      <section id="sa-funkar-det" aria-labelledby="steg" className="mx-auto max-w-6xl px-4 pt-16 pb-20">
+        <h2 id="steg" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
+          Så fungerar det
+        </h2>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">Hitta er nästa kund idag, i tre steg. Listan är färsk, så ni når bolag som finns kvar.</p>
+        <ol className="mt-10 grid gap-5 md:grid-cols-3">
+          {STEPS.map((step, index) => (
+            <li
+              key={step.no}
+              data-step={index + 1}
+              className="step-card flex flex-col rounded-3xl bg-white px-7 py-8 shadow-[0_18px_40px_-32px_rgba(27,16,35,0.45)] ring-1 ring-ink/8"
+              style={{ animationDelay: `${index * 140}ms` }}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <span className={`inline-flex h-11 w-11 items-center justify-center rounded-2xl ${step.wash} ${step.tone}`}>
+                  <StepIcon name={step.icon} />
+                </span>
+                <p className={`step-index font-display text-5xl leading-none font-extrabold tracking-[-0.04em] ${step.tone}`}>{step.no}</p>
+              </div>
+              <h3 className="mt-8 text-xl font-extrabold tracking-tight text-ink">{step.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-ink/80">{step.text}</p>
             </li>
           ))}
-        </ul>
-        <Link href="/#urval" className="btn-fade-amber mt-6 inline-flex h-12 items-center rounded-full bg-amber px-5 font-medium text-ink">
-          Skapa ert utdrag
-        </Link>
-        <p className="mt-4 flex flex-wrap gap-4 text-sm font-medium">
-          <Link href="/bransch" className="text-sea">
-            Alla branscher
-          </Link>
-          <Link href="/sni" className="text-sea">
-            SNI-koder
-          </Link>
-          <Link href="/ord" className="text-sea">
-            Ord om företagsdata
-          </Link>
+        </ol>
+      </section>
+
+      <section id="anvandning" aria-labelledby="anvandning-rubrik" className="border-t border-line">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+          <h2 id="anvandning-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">Hitta er nästa kund idag, på ert sätt.</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">Fyra sätt ni kan använda listan. Den är färsk, så ni kan höra av er idag.</p>
+          <ul className="mt-10 grid gap-5 md:grid-cols-2">
+            {USE_CASES.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.title} className="rounded-3xl bg-white px-7 py-8 ring-1 ring-ink/8">
+                  <Icon className="h-5 w-5 text-[#d6007a]" aria-hidden="true" />
+                  <h3 className="mt-4 text-xl font-extrabold tracking-tight">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-ink/80">{item.text}</p>
+                  {item.href === "/#urval" ? (
+                    <BuilderLink className="mt-4 inline-flex text-sm font-semibold text-ink underline-offset-4 hover:underline">Bygg din lista</BuilderLink>
+                  ) : (
+                    <Link href={item.href} className="mt-4 inline-flex text-sm font-semibold text-ink underline-offset-4 hover:underline">
+                      {item.href === "/nystartade-bolag" ? "Se nystartade bolag" : "Se hur sälj använder listan"}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+
+      <section id="fortroende" aria-labelledby="fortroende-rubrik" className="border-y border-line bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+          <h2 id="fortroende-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
+            Vad utdraget bygger på
+          </h2>
+          <p className="soft-copy mt-3 max-w-2xl text-sm leading-6 text-muted">Ring idag. Listan är verifierad och tagen från den senaste uppdateringen.</p>
+          <div className="mt-12 grid gap-12 md:grid-cols-3">
+            <div className="border-t-2 border-ink pt-6">
+              <h3 className="text-xl font-extrabold tracking-tight">Källa</h3>
+              <p className="soft-copy mt-3 text-sm leading-7 text-ink/80">
+                Namn, adress, ort, län, bolagsform och SNI hämtas från SCB:s allmänna företagsregister, och bara för företag som är verksamma. Telefon, e-post och beslutsfattare skrivs bara in när källan har värdet. Saknas uppgiften lämnas fältet tomt.
+              </p>
+            </div>
+            <div className="border-t-2 border-[#c4892a] pt-6">
+              <h3 className="text-xl font-extrabold tracking-tight">Uppdatering</h3>
+              <p className="soft-copy mt-3 text-sm leading-7 text-ink/80">
+                {exampleDate
+                  ? "Registret är inte inkopplat. När det är inkopplat synkas det en gång i veckan och räknar bara aktiva företag som inte spärrat reklam."
+                  : "Registret synkas en gång i veckan. Siffran på sidan följer den senaste uppdateringen och räknar bara aktiva företag som inte spärrat reklam. Utdraget tas från samma uppdatering, inte från en fil från förra året."}
+              </p>
+            </div>
+            <div className="border-t-2 border-[#0f6b45] pt-6">
+              <h3 className="text-xl font-extrabold tracking-tight">Reklamspärr</h3>
+              <p className="soft-copy mt-3 text-sm leading-7 text-ink/80">
+                Vilande, inaktiva, avregistrerade och bolag som spärrat reklam tas bort vid varje uppdatering. De ingår inte i siffran och följer inte med i filen ni köper.
+              </p>
+            </div>
+          </div>
+          <p className="mt-6 text-sm">
+            <Link href="/kallor" className="soft-copy text-ink hover:underline">
+              Så hämtas uppgifterna
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      <NaringslivSection stats={stats} />
+
+      <section id="nystartade" aria-labelledby="nystartade-rubrik" className="border-t border-line">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+          <div className="fresh-live px-7 py-9 sm:px-10 sm:py-12">
+            <div className="relative z-[1] flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 id="nystartade-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
+                  Nystartade bolag
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+                  Hitta er nästa kund bland bolag som just startat. De kommer in från Bolagsverket varje vecka, så informationen är färsk.
+                </p>
+                {fresh.example || exampleDate ? (
+                  <p className="mt-4 text-sm font-semibold">Bolagsregistret är inte inkopplat.</p>
+                ) : (
+                  <div className="mt-6">
+                    <p className="font-display text-6xl leading-none font-extrabold tracking-[-0.04em] text-ink sm:text-7xl">
+                      {fresh.companies.toLocaleString("sv-SE")}
+                    </p>
+                    <p className="mt-2 text-sm font-semibold">Bolag de senaste 30 dagarna</p>
+                    <p className="fresh-stamp mt-2 text-xs leading-5 text-muted">Från bolagsregistret. Senast uppdaterat {updatedLabel}.</p>
+                  </div>
+                )}
+              </div>
+              <Link href="/nystartade-bolag" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">
+                Se antal och pris
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="branscher" aria-labelledby="branscher-rubrik" className="border-t border-line bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 id="branscher-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
+                Vanliga urval
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+                {stats.source === "register"
+                  ? "Hitta er nästa kund i en bransch. Antalet är aktiva företag som inte spärrat reklam, från den senaste uppdateringen, så listan är färsk. Öppna raden om ni vill se priset."
+                  : "Hitta er nästa kund i en bransch. Bolagsregistret är inte inkopplat, så antalet visas inte."}
+              </p>
+            </div>
+          </div>
+          <ul className="mt-6 divide-y divide-line border-y border-line">
+            {industries.map((topic) => {
+              const count = stats.source === "register" ? stats.byIndustry.find((item) => item.sni === topic.sni)?.count : undefined;
+              return (
+                <li key={topic.slug}>
+                  <Link
+                    href={topic.sni ? builderHrefForSni(topic.sni) : "/#urval"}
+                    className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-1 py-4 sm:grid-cols-[minmax(0,1.4fr)_6.5rem_7rem_auto]"
+                  >
+                    <span className="font-semibold">{topic.nav}</span>
+                    <span className="col-start-1 text-xs text-muted sm:col-start-auto sm:text-sm">SNI {topic.sni ? sniLabel(topic.sni) : ""}</span>
+                    <span className="text-right text-sm font-semibold text-ink tabular-nums">{count ? formatCount(count) : ""}</span>
+                    <span className="hidden text-sm font-semibold text-ink sm:inline">Se pris</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
+            <Link href="/bransch" className="text-ink hover:underline">
+              Alla branscher
+            </Link>
+            <Link href="/sni" className="text-ink hover:underline">
+              SNI-koder
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      <section id="pris" aria-labelledby="pris-rubrik" className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.14em] text-ink uppercase">Innehåll och pris</p>
+            <h2 id="pris-rubrik" className="mt-3 text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
+              Ni betalar för det utdrag ni väljer.
+            </h2>
+            <p className="mt-4 max-w-md text-sm leading-6 text-muted">
+              När ni når er nästa kund ingår namn, organisationsnummer, adress, ort, bransch och SNI. Lägg till telefon, e-post och beslutsfattare. Ett tomt fält kostar inget. Uppgifterna är verifierade och uppdaterade, så ni kontaktar bolag som finns kvar.
+            </p>
+            <p className="mt-3 max-w-md text-sm leading-6 text-muted">
+              Priset är ett engångspris per utdrag, exklusive moms. Lägsta order {formatKronor(MINIMUM_ORE).replace(",00", "")} kr. Samma styckpris oavsett om urvalet är en bransch i en stad eller hela landet. Från 30 000 bolag räknas priset inte här. Ni behöver talas vid för rabatt.
+            </p>
+            <p className="mt-4 max-w-md text-sm text-ink/80">Inget konto krävs. Ingen prenumeration. Ingen bindningstid.</p>
+            <a href="#urval" className="btn-neon mt-5 inline-flex h-11 items-center rounded-lg px-5 text-sm font-semibold">
+              Räkna på ert urval
+            </a>
+          </div>
+          <dl className="rounded-3xl bg-white px-6 py-2 sm:px-8">
+            {PRICE_ROWS.map((row) => (
+              <div key={row.title} className="border-b border-line py-5 last:border-b-0">
+                <div className="flex items-baseline justify-between gap-3">
+                  <dt className="font-semibold">{row.title}</dt>
+                  <dd className="font-price shrink-0 text-xl font-bold tracking-tight text-ink">{row.price}</dd>
+                </div>
+                <dd className="mt-1 text-sm leading-6 text-muted">{row.text}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <p className="mt-8 max-w-2xl text-sm leading-6 text-muted">
+          Summan räknas i byggaren från registret. {stats.source === "register" ? "Siffran följer den senaste uppdateringen." : "Registret är inte inkopplat, så ingen summa visas."}
         </p>
+        <p className="mt-4 text-sm text-muted">
+          Filen har fasta kolumner.{" "}
+          <Link href="/smakprov" className="font-semibold text-ink hover:underline">
+            Ladda ner ett smakprov
+          </Link>{" "}
+          om ni vill se formatet.
+        </p>
+      </section>
+
+      <section id="nyheter" aria-labelledby="nyheter-rubrik" className="border-t border-line">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 id="nyheter-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
+                Nyheter och uppdateringar
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+                Se var era nya kunder har tillkommit. Siffrorna kommer från den senaste uppdateringen, och utan registret visas inga antal.
+              </p>
+            </div>
+            <Link href="/nyheter" className="text-sm font-semibold text-ink hover:underline">
+              Alla nyheter
+            </Link>
+          </div>
+          <ul className="mt-10 grid gap-4">
+            {news.map((post) => (
+              <li key={post.slug}>
+                <Link href={`/nyheter/${post.slug}`} className="grid gap-3 rounded-3xl border-l-4 border-[#1b1023] bg-white px-6 py-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8 sm:px-8">
+                  <span className="text-xs font-semibold text-muted">
+                    <span className="uppercase tracking-[0.14em]">{post.kind}</span>
+                    <time dateTime={post.date} className="mt-2 block font-price text-sm font-medium normal-case tracking-normal text-ink">
+                      {formatNewsDate(post.date)}
+                    </time>
+                    {post.example ? <span className="mt-3 inline-flex rounded-full bg-gold px-2 py-0.5 text-[0.68rem] font-bold text-night">Exempeltext</span> : null}
+                  </span>
+                  <span>
+                    <span className="block text-xl font-extrabold tracking-tight">{post.title}</span>
+                    <span className="mt-2 block text-sm leading-7 text-muted">{post.lead}</span>
+                    <span className="mt-2 block text-sm leading-7 text-ink/80">{post.body.find((line) => !line.startsWith("Exempeltext"))}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section id="fragor" aria-labelledby="fragor-rubrik" className="mx-auto max-w-3xl px-4 py-16 sm:py-20">
+        <h2 id="fragor-rubrik" className="text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
+          Vanliga frågor
+        </h2>
+        <p className="mt-2 text-sm leading-6 text-muted">Pris och format när ni hittar er nästa kund idag.</p>
+        <div className="mt-4 divide-y divide-line border-y border-line">
+          {PUBLIC_FAQ.map((item) => (
+            <details key={item.q} className="group py-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold">
+                {item.q}
+                <span aria-hidden="true" className="text-muted">+</span>
+              </summary>
+              <p className="mt-2 text-sm leading-6 text-muted">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="sista" className="border-t border-line bg-white">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-16 sm:flex-row sm:items-center sm:justify-between sm:py-20">
+          <div>
+            <h2 id="sista" className="max-w-xl text-4xl font-extrabold tracking-[-0.03em] text-ink sm:text-5xl">
+              Alla Sveriges företag, i ett utdrag.
+            </h2>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
+              {stats.source === "register"
+                ? `Hitta er nästa kund idag. ${formatCount(stats.total)} aktiva företag. Siffran är färsk för att den följer den senaste uppdateringen.`
+                : "Hitta er nästa kund idag. Bolagsregistret är inte inkopplat, så priset syns när registret finns."}
+            </p>
+          </div>
+          <a href="#urval" className="btn-neon inline-flex h-11 shrink-0 items-center rounded-lg px-5 text-sm font-semibold">
+            Skapa ert utdrag
+          </a>
         </div>
       </section>
     </main>
   );
 }
-
-function StepNumber({ n }: { n: string }) {
-  return (
-    <p className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sea text-sm font-medium text-white">
-      {n}
-    </p>
-  );
-}
-
-function PriceUnit({
-  label,
-  ore,
-  detail,
-  tone,
-}: {
-  label: string;
-  ore: number;
-  detail: string;
-  tone: "blue" | "green" | "yellow";
-}) {
-  const wash = tone === "green" ? "wash-green" : tone === "yellow" ? "wash-amber" : "wash-sea";
-  const number = tone === "green" ? "text-green" : tone === "yellow" ? "text-ink" : "text-sea";
-  return (
-    <div className={`rounded-2xl px-3 py-3 ${wash}`}>
-      <dt className="text-sm text-muted">{label}</dt>
-      <dd className={`mt-1 text-2xl tracking-tight ${number}`}>{formatKronor(ore)} kr</dd>
-      <p className="text-xs text-muted">
-        {ore} öre {detail}
-      </p>
-    </div>
-  );
-}
-

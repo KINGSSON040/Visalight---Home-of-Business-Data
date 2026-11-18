@@ -1,18 +1,30 @@
 import type { Metadata } from "next";
 import { CustomerHome } from "@/components/customer-home";
-import { selectionFromRecord } from "@/lib/catalog";
+import { selectionFromRecord, selectionToQuery } from "@/lib/catalog";
 import { PUBLIC_FAQ } from "@/lib/public-faq";
+import { allPosts } from "@/lib/nyheter";
+import { loadStats } from "@/lib/register-stats";
+import { countNewCompanies } from "@/lib/nystartade";
 import { loadUrval } from "@/lib/register-urval";
-import { registerDatabasePath } from "@/lib/register-path";
-import { registerStamp } from "@/lib/register-status";
+import { EXAMPLE_FIGURES_LINE, registerStamp } from "@/lib/register-status";
 import { siteOrigin } from "@/lib/topics";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/" },
-  title: "VisaLight — Färsk företagsdata för svenska bolag",
-  description:
-    "Skapa ett utdrag av företagsregistret. Välj bransch, ort och SNI, se priset exklusive moms och betala utan abonnemang.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const example = registerStamp().example || loadStats().source === "example";
+  return {
+    alternates: { canonical: "/" },
+    title: "Hitta er nästa kund idag — VisaLight",
+    description: example
+      ? `${EXAMPLE_FIGURES_LINE} Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.`
+      : "Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska. Välj bransch, se antal och pris.",
+    openGraph: {
+      title: "Hitta er nästa kund idag",
+      description: example
+        ? `${EXAMPLE_FIGURES_LINE} Hitta er nästa kund idag.`
+        : "Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.",
+    },
+  };
+}
 
 export default async function Home({
   searchParams,
@@ -20,8 +32,11 @@ export default async function Home({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const stamp = registerStamp();
+  const fresh = countNewCompanies({ days: 30, sni: "", city: "" });
   const selection = selectionFromRecord(await searchParams);
   const initialUrval = loadUrval(selection);
+  const stats = loadStats();
+  const news = allPosts(stats, stamp.when, stamp.isoDate).slice(0, 3);
   const origin = siteOrigin();
   const jsonLd = {
     "@context": "https://schema.org",
@@ -31,7 +46,9 @@ export default async function Home({
         name: "VisaLight",
         url: origin,
         inLanguage: "sv-SE",
-        description: "Färsk företagsdata för svenska bolag, utan abonnemang.",
+        description: stamp.example
+          ? `${EXAMPLE_FIGURES_LINE} Hitta er nästa kund idag. Uppgifterna är verifierade och färska, utan abonnemang.`
+          : "Hitta er nästa kund idag. Uppgifterna är verifierade och färska, utan abonnemang.",
       },
       {
         "@type": "FAQPage",
@@ -47,11 +64,14 @@ export default async function Home({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <CustomerHome
+        key={selectionToQuery(selection)}
         initial={selection}
         initialUrval={initialUrval}
         updatedLabel={stamp.when}
-        exampleData={stamp.example}
-        registerReady={registerDatabasePath() !== null}
+        exampleDate={stamp.example}
+        stats={stats}
+        news={news}
+        fresh={{ companies: fresh.companies, example: fresh.source === "example" }}
       />
     </>
   );

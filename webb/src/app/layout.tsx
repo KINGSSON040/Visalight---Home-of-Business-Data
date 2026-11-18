@@ -1,28 +1,56 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { SiteFrame } from "@/components/site-frame";
 import { registerDatabasePath } from "@/lib/register-path";
 import { registerStamp } from "@/lib/register-status";
 import { siteOrigin } from "@/lib/topics";
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: [
+    { path: "../fonts/Inter-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Inter-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/Inter-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/Inter-Bold.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const schibsted = localFont({
+  src: [
+    { path: "../fonts/SchibstedGrotesk-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/SchibstedGrotesk-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/SchibstedGrotesk-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/SchibstedGrotesk-Bold.woff2", weight: "700", style: "normal" },
+    { path: "../fonts/SchibstedGrotesk-ExtraBold.woff2", weight: "800", style: "normal" },
+  ],
+  variable: "--font-schibsted",
+  display: "swap",
+});
+
+const figtree = localFont({
+  src: [
+    { path: "../fonts/Figtree-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Figtree-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/Figtree-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/Figtree-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-figtree",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin()),
-  title: "VisaLight — Företagsinformation och företagsdata",
+  title: "Hitta er nästa kund idag — VisaLight",
   description:
-    "Färsk företagsdata för svenska bolag. Välj bransch eller SNI, se antal och pris exklusive moms, och få utdraget utan abonnemang.",
+    "Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska. Välj bransch, se antal och pris, utan abonnemang.",
   openGraph: {
     locale: "sv_SE",
     type: "website",
     siteName: "VisaLight",
-    title: "VisaLight — Färsk företagsdata för svenska bolag",
-    description:
-      "Välj bransch och ort. Se antalet och priset direkt. Utdraget tas från den senaste uppdateringen av företagsregistret.",
+    title: "Hitta er nästa kund idag — VisaLight",
+    description: "Hitta er nästa kund idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.",
   },
 };
 
@@ -33,8 +61,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv">
-      <body className={`${inter.variable} ${inter.className} antialiased`}>
-        <SiteFrame registerReady={registerDatabasePath() !== null} updatedLabel={registerStamp().when} exampleData={registerStamp().example}>
+      <body className={`${inter.variable} ${schibsted.variable} ${figtree.variable} ${inter.className} antialiased`}>
+        <SiteFrame
+          registerReady={registerDatabasePath() !== null}
+          updatedLabel={registerStamp().example ? null : registerStamp().when}
+          exampleData={registerStamp().example}
+        >
           {children}
         </SiteFrame>
       </body>

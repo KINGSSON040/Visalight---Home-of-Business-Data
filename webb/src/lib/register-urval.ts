@@ -1,5 +1,6 @@
+import fs from "node:fs";
 import Database from "better-sqlite3";
-import { COMPANIES, countyCode, selectionSniFilter, type Selection } from "@/lib/catalog";
+import { EMPLOYEE_RANGES, countyCode, employeeBands, listParts, selectionSniFilter, type Selection } from "@/lib/catalog";
 import { registerDatabasePath } from "@/lib/register-path";
 import type { UrvalPreview, UrvalResult } from "@/lib/urval";
 
@@ -40,13 +41,41 @@ const SIZE_VALUES: Record<string, string[]> = {
 const NOT_A_COMPANY =
   "Vi säljer inte enskilda företag. Välj bransch, ort, län, bolagsform eller storlek i förslagen.";
 
+const NO_SNI_YET =
+  "Branschen är ifylld, men den har ingen SNI-kod i urvalet ännu. Antalet kan inte räknas.";
+
+function emptyNote(selection: Selection): string {
+  const name = (selection.bransch ?? "").trim();
+  if (name && selectionSniFilter(selection).kind === "none") return NO_SNI_YET;
+  return NOT_A_COMPANY;
+}
+
 const CITY_SQL =
   "lower(replace(replace(replace(replace(replace(replace(c.city, 'Ö', 'o'), 'ö', 'o'), 'Ä', 'a'), 'ä', 'a'), 'Å', 'a'), 'å', 'a'))";
 
-const SELLABLE = [
+/** Datum som redan finns i registret. Ingen ny hämtning. */
+const START_DATE = `(CASE
+  WHEN length(trim(coalesce(nullif(c.registered_on, ''), c.started_on, ''))) = 8
+    THEN substr(coalesce(nullif(c.registered_on, ''), c.started_on), 1, 4) || '-' || substr(coalesce(nullif(c.registered_on, ''), c.started_on), 5, 2) || '-' || substr(coalesce(nullif(c.registered_on, ''), c.started_on), 7, 2)
+  ELSE substr(coalesce(nullif(c.registered_on, ''), c.started_on, ''), 1, 10)
+END)`;
+
+function foundedMonths(value: string | undefined): string {
+  return value === "3" || value === "6" || value === "12" ? value : "";
+}
+
+/**
+ * Bara aktiva företag som inte spärrat reklam.
+ * SCB FtgStat 1 (och exempelvärdet "verksam") betyder verksamt.
+ * 0 har aldrig varit verksamt, 9 är inte längre verksamt. De, liksom
+ * avregistrerade, vilande, inaktiva och reklamspärrade, räknas inte och följer inte med i utdraget.
+ */
+export const ACTIVE_STATUS = "lower(trim(coalesce(c.status_code, ''))) IN ('1', 'verksam')";
+
+export const SELLABLE = [
   "c.manual_exclude = 0",
   "(c.ended_on IS NULL OR trim(c.ended_on) = '')",
-  "(c.status_code IS NULL OR c.status_code != 'avregistrerad')",
+  ACTIVE_STATUS,
   "c.reklam_block = 0",
   "trim(c.name) != ''",
   "c.street IS NOT NULL AND trim(c.street) != ''",
@@ -70,22 +99,6 @@ function formatOrg(orgNr: string): string {
   const digits = orgNr.replace(/\D/g, "");
   if (digits.length === 10) return `${digits.slice(0, 6)}-${digits.slice(6)}`;
   return orgNr;
-}
-
-function idle(source: UrvalResult["source"], note: string): UrvalResult {
-  return {
-    source,
-    status: "idle",
-    companies: 0,
-    phones: 0,
-    signatoryPhones: 0,
-    emails: 0,
-    withPhone: 0,
-    withEmail: 0,
-    withSignatory: 0,
-    preview: [],
-    note,
-  };
 }
 
 function ready(
@@ -130,21 +143,47 @@ type BuiltWhere =
   | { idle: false; empty: true }
   | { idle: false; empty: false; sql: string; args: Record<string, string> };
 
+function employeeClassValues(label: string): string[] {
+  return [...new Set(employeeBands(label).flatMap((band) => SIZE_VALUES[band] ?? []))];
+}
+
+/** Vilket storleksintervall i byggaren en registerklass hör till. */
+export function employeeRangeForClass(raw: string): string | null {
+  const value = raw.trim();
+  if (!value) return null;
+  for (const range of EMPLOYEE_RANGES) {
+    for (const band of range.bands) {
+      if (band === value || (SIZE_VALUES[band] ?? []).includes(value)) return range.label;
+    }
+  }
+  return null;
+}
+
 function where(selection: Selection): BuiltWhere {
   const filter = selectionSniFilter(selection);
   if (filter.kind === "none") return { idle: false, empty: true };
-  const city = selection.city.trim();
+  const cities = listParts(selection.city);
   const forms = selection.forms ?? [];
-  const county = countyCode(selection.county ?? "");
-  const sizes = SIZE_VALUES[selection.employees ?? ""] ?? [];
-  const narrowed = Boolean(city || forms.length > 0 || county || sizes.length > 0);
+  const counties = listParts(selection.county ?? "").map(countyCode).filter((code): code is string => Boolean(code));
+  const sizes = employeeClassValues(selection.employees ?? "");
+  const months = foundedMonths(selection.founded);
+  const narrowed = Boolean(cities.length || forms.length > 0 || counties.length || sizes.length > 0 || months);
   if (filter.kind === "any" && !narrowed) return { idle: true };
 
   const clauses = [SELLABLE];
   const args: Record<string, string> = {};
-  if (city) {
-    clauses.push(`${CITY_SQL} LIKE @city`);
-    args.city = `%${foldCity(city)}%`;
+  if (cities.length || counties.length) {
+    const parts: string[] = [];
+    cities.forEach((city, index) => {
+      args[`city${index}`] = `%${foldCity(city)}%`;
+      parts.push(`${CITY_SQL} LIKE @city${index}`);
+    });
+    counties.forEach((code, index) => {
+      args[`county${index}`] = code;
+      args[`countyShort${index}`] = code.replace(/^0/, "");
+      parts.push(`(c.county_code = @county${index} OR c.county_code = @countyShort${index})`);
+    });
+    clauses.push(`(${parts.join(" OR ")})`);
   }
   if (filter.kind === "codes") {
     filter.codes.forEach((code, index) => {
@@ -160,11 +199,6 @@ function where(selection: Selection): BuiltWhere {
     clauses.push(
       "EXISTS (SELECT 1 FROM industries i WHERE i.org_nr = c.org_nr AND (i.sni LIKE @prefix OR replace(i.sni, '.', '') LIKE @prefix))",
     );
-  }
-  if (county) {
-    args.county = county;
-    args.countyShort = county.replace(/^0/, "");
-    clauses.push("(c.county_code = @county OR c.county_code = @countyShort)");
   }
   if (sizes.length > 0) {
     sizes.forEach((value, index) => {
@@ -182,6 +216,10 @@ function where(selection: Selection): BuiltWhere {
     const names = codes.map((_, index) => `@form${index}`);
     clauses.push(`c.legal_form IN (${names.join(", ")})`);
   }
+  if (months) {
+    args.startedAfter = `-${months} months`;
+    clauses.push(`length(trim(${START_DATE})) >= 10 AND ${START_DATE} >= date('now', @startedAfter)`);
+  }
   return { idle: false, empty: false, sql: clauses.join(" AND "), args };
 }
 
@@ -189,9 +227,7 @@ function fromDatabase(selection: Selection): UrvalResult | null {
   const file = registerDatabasePath();
   if (!file) return null;
   const built = where(selection);
-  if (built.idle) {
-    return idle("register", "Välj bransch eller ort och tryck Sök bolag. Antal och pris räknas då här.");
-  }
+  if (built.idle) return wholeRegister(file);
   if (built.empty) {
     return ready(
       "register",
@@ -200,9 +236,26 @@ function fromDatabase(selection: Selection): UrvalResult | null {
       0,
       0,
       [],
-      NOT_A_COMPANY,
+      emptyNote(selection),
     );
   }
+  return countWhere(file, built.sql, built.args, true);
+}
+
+let wholeCache: { key: string; result: UrvalResult } | null = null;
+
+/** Aktiva, säljbara företag utan urval. Räknas en gång per registerfil. */
+function wholeRegister(file: string): UrvalResult {
+  const key = `${file}:${fs.statSync(file).mtimeMs}`;
+  if (wholeCache?.key === key) return wholeCache.result;
+  const result = countWhere(file, SELLABLE, {}, false);
+  result.note = "Aktiva företag i dag som inte spärrat reklam. Vilande, inaktiva, avregistrerade och reklamspärrade ingår inte. Siffran följer den senaste uppdateringen. Välj bransch eller ort för att smalna av.";
+  wholeCache = { key, result };
+  return result;
+}
+
+function countWhere(file: string, sql: string, args: Record<string, string>, withPreview: boolean): UrvalResult {
+  const built = { sql, args };
   const db = openDatabase(file);
   const base = `FROM companies c WHERE ${built.sql}`;
   const companies = (db.prepare(`SELECT COUNT(*) AS n ${base}`).get(built.args) as { n: number }).n;
@@ -258,7 +311,7 @@ function fromDatabase(selection: Selection): UrvalResult | null {
       )
       .get(built.args) as { n: number }
   ).n;
-  const rows = db
+  const rows = !withPreview ? [] : db
     .prepare(
       `SELECT c.org_nr AS orgNr, c.name AS name, c.city AS city,
          (SELECT i.sni FROM industries i WHERE i.org_nr = c.org_nr ORDER BY i.rank LIMIT 1) AS sni
@@ -275,7 +328,7 @@ function fromDatabase(selection: Selection): UrvalResult | null {
   }));
   const note =
     companies === 0
-      ? "Inget säljbart bolag matchar. Ett bolag räknas när namn, gatuadress, ort och SNI finns, och det inte är avregistrerat eller reklamspärrat."
+      ? "Inget aktivt, säljbart bolag matchar. Ett bolag räknas bara när det är verksamt, har namn, gatuadress, ort och SNI, och inte är vilande, inaktivt, avregistrerat eller reklamspärrat."
       : "Namnen kommer från det lokala registret. Filen innehåller hela urvalet, inte bara raderna som visas.";
   return ready("register", companies, phones, signatoryPhones, emails, preview, note, {
     withPhone,
@@ -286,52 +339,20 @@ function fromDatabase(selection: Selection): UrvalResult | null {
 
 function exampleUrval(selection: Selection): UrvalResult {
   const filter = selectionSniFilter(selection);
-  const city = foldCity(selection.city.trim());
-  const forms = selection.forms ?? [];
-  const county = (selection.county ?? "").trim();
-  const employees = (selection.employees ?? "").trim();
-  const narrowed = Boolean(city || forms.length > 0 || county || employees);
-  if (filter.kind === "any" && !narrowed) {
-    return idle(
-      "example",
-      "Registret är inte inkopplat i den här körningen, så bara exempelbolag kan visas. Välj bransch, område eller segment och tryck Sök bolag.",
-    );
-  }
-  if (filter.kind === "none") {
-    return ready("example", 0, 0, 0, 0, [], NOT_A_COMPANY);
-  }
-  const rows = COMPANIES.filter((company) => {
-    if (forms.length > 0 && !forms.includes(company.form)) return false;
-    if (city && !foldCity(company.city).includes(city)) return false;
-    if (county && company.county !== county) return false;
-    if (employees && company.employees !== employees) return false;
-    if (filter.kind === "codes" && !filter.codes.includes(company.sni)) return false;
-    if (filter.kind === "prefix" && !company.sni.startsWith(filter.prefix)) return false;
-    return true;
-  });
-  const note =
-    rows.length === 0
-      ? "Registret är inte inkopplat. Inget exempelbolag matchar de här filtren."
-      : "Registret är inte inkopplat. Antalet gäller exempelbolag.";
-  return ready(
-    "example",
-    rows.length,
-    rows.reduce((sum, row) => sum + row.phones.length, 0),
-    rows.reduce((sum, row) => sum + row.signatoryPhones.length, 0),
-    rows.reduce((sum, row) => sum + row.emails.length, 0),
-    rows.slice(0, 8).map((row) => ({
-      orgNr: row.orgNr,
-      name: row.name,
-      city: row.city,
-      sni: row.sni,
-    })),
-    note,
-    {
-      withPhone: rows.filter((row) => row.phones.length > 0).length,
-      withEmail: rows.filter((row) => row.emails.length > 0).length,
-      withSignatory: rows.filter((row) => row.signatoryPhones.length > 0).length,
-    },
-  );
+  if (filter.kind === "none") return ready("example", 0, 0, 0, 0, [], emptyNote(selection));
+  return {
+    source: "example",
+    status: "idle",
+    companies: 0,
+    phones: 0,
+    signatoryPhones: 0,
+    emails: 0,
+    withPhone: 0,
+    withEmail: 0,
+    withSignatory: 0,
+    preview: [],
+    note: "Registret är inte inkopplat.",
+  };
 }
 
 export function loadUrval(selection: Selection): UrvalResult {

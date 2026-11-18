@@ -4,14 +4,16 @@ import { CheckoutForm } from "@/components/checkout-form";
 import { PricePanel } from "@/components/price-panel";
 import { StatusChip } from "@/components/status-chip";
 import { describeSelection, selectionFromRecord, selectionToQuery } from "@/lib/catalog";
+import { countNewCompanies, freshQuery } from "@/lib/nystartade";
 import { registerDatabasePath } from "@/lib/register-path";
 import { loadUrval } from "@/lib/register-urval";
 import { registerUpdatedLabel } from "@/lib/register-status";
-import { Mark, SELLER } from "@/lib/seller";
-import { pricedCounts } from "@/lib/urval";
+import { SELLER } from "@/lib/seller";
+import { pricedCounts, type UrvalResult } from "@/lib/urval";
 
 export const metadata: Metadata = {
   title: "Förhandsboka — VisaLight",
+  robots: { index: false, follow: false },
 };
 
 export default async function CheckoutPage({
@@ -19,10 +21,35 @@ export default async function CheckoutPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const selection = selectionFromRecord(await searchParams);
-  const urval = loadUrval(selection);
+  const params = await searchParams;
+  const dayValue = typeof params.dagar === "string" ? params.dagar : "";
+  const freshWindow = dayValue === "7" || dayValue === "30";
+  const fresh = freshQuery({
+    dagar: dayValue,
+    sni: typeof params.sni === "string" ? params.sni : undefined,
+    ort: typeof params.ort === "string" ? params.ort : undefined,
+  });
+  const selection = selectionFromRecord(params);
+  const freshCount = freshWindow ? countNewCompanies(fresh) : null;
+  const urval: UrvalResult = freshCount
+    ? {
+        source: freshCount.source,
+        status: "ready",
+        companies: freshCount.companies,
+        phones: 0,
+        signatoryPhones: 0,
+        emails: 0,
+        withPhone: 0,
+        withEmail: 0,
+        withSignatory: 0,
+        preview: [],
+        note: freshCount.note,
+      }
+    : loadUrval(selection);
   const companies = pricedCounts(urval, selection).companies;
-  const back = `/?${selectionToQuery(selection)}`;
+  const back = freshWindow
+    ? `/nystartade-bolag?dagar=${fresh.days}${fresh.sni ? `&sni=${fresh.sni}` : ""}${fresh.city ? `&ort=${encodeURIComponent(fresh.city)}` : ""}`
+    : `/?${selectionToQuery(selection)}`;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
@@ -32,21 +59,36 @@ export default async function CheckoutPage({
       <h1 className="mt-3 font-serif text-5xl tracking-tight">Förhandsboka</h1>
       <p className="mt-3 max-w-xl text-muted">
         Beställning öppnar snart. Ingen betalning dras och ingen fil skickas. Ni lämnar urvalet och en e-postadress.{" "}
-        {describeSelection(selection)}. {companies.toLocaleString("sv-SE")}{" "}
-        {urval.source === "register" ? "bolag" : "exempelbolag"} i urvalet.
+        {freshWindow ? `Registrerade de senaste ${fresh.days} dagarna. ` : ""}
+        {describeSelection(selection)}.
+        {urval.source === "register" ? ` ${companies.toLocaleString("sv-SE")} bolag i urvalet.` : " Registret är inte inkopplat."}
       </p>
       <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
-        {SELLER.tradeName} är inte ett registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark>{" "}
-        · <Mark>{SELLER.vatNr}</Mark>
+        {SELLER.line}
       </p>
       <div className="mt-4">
-        <StatusChip updatedLabel={registerUpdatedLabel()} registerReady={registerDatabasePath() !== null} />
+        {freshWindow ? (
+          <p className="max-w-xl text-xs leading-5 text-muted">
+            {freshCount?.source === "example" ? "Registret är inte inkopplat. " : "Antalet kommer från registret på den här datorn. "}
+            Antalet är bolag med registreringsdatum i perioden.
+          </p>
+        ) : (
+          <StatusChip updatedLabel={registerUpdatedLabel()} registerReady={registerDatabasePath() !== null} />
+        )}
       </div>
-      {companies === 0 ? (
+      {urval.source !== "register" ? (
+        <div className="mt-8 rounded-3xl border border-dashed border-line bg-card px-6 py-12">
+          <p className="font-serif text-3xl">Registret är inte inkopplat.</p>
+          <p className="mt-2 text-muted">Antal och pris visas när registret finns.</p>
+          <Link href={back} className="btn-fade-sea mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
+            Till urvalet
+          </Link>
+        </div>
+      ) : companies === 0 ? (
         <div className="mt-8 rounded-3xl border border-dashed border-line bg-card px-6 py-12">
           <p className="font-serif text-3xl">Urvalet är tomt</p>
           <p className="mt-2 text-muted">Gå tillbaka och välj minst ett bolag.</p>
-          <Link href="/" className="btn-fade-sea mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
+          <Link href={back} className="btn-fade-sea mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
             Till urvalet
           </Link>
         </div>

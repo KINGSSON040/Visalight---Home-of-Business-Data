@@ -8,6 +8,7 @@
     "start": "next start -p 4317",
     "lint": "eslint",
     "sync": "tsx scripts/sync.ts",
+    "sync:bolagsverket": "tsx scripts/sync-bolagsverket.ts",
     "test": "tsx src/lib/pricing.test.ts"
   },
   "dependencies": {

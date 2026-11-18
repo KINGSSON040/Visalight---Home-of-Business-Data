@@ -9,7 +9,7 @@ import {
   selectionToQuery,
   type OrderDraft,
 } from "@/lib/catalog";
-import { Mark, SELLER } from "@/lib/seller";
+import { SELLER } from "@/lib/seller";
 
 export default function ConfirmationPage() {
   const [order, setOrder] = useState<OrderDraft | null | undefined>(undefined);
@@ -57,40 +57,24 @@ export default function ConfirmationPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
-      <p className="text-sm uppercase tracking-[0.16em] text-green">Förhandsbokning</p>
+      <p className="text-sm uppercase tracking-[0.16em] text-ink">Förhandsbokning</p>
       <h1 className="mt-3 font-serif text-5xl tracking-tight">Förhandsbokningen är sparad i den här webbläsaren.</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
         Beställning öppnar snart. Ingen betalning har dragits och ingen fil har skickats. Det här är en förhandsbokning,
         inte ett kvitto.
       </p>
       <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">
-        {SELLER.tradeName} är inte ett registrerat bolag ännu. <Mark>{SELLER.orgNr}</Mark> · <Mark>{SELLER.address}</Mark>{" "}
-        · <Mark>{SELLER.vatNr}</Mark>
+        {SELLER.line}
       </p>
       <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <article className="rounded-3xl border border-line bg-card p-5 sm:p-6">
-          <p className="font-mono text-sm text-muted">{order.id}</p>
-          <h2 className="mt-2 font-serif text-3xl">{order.email}</h2>
-          <dl className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
-            <div>
-              <dt className="text-muted">E-post</dt>
-              <dd className="mt-1">{order.email}</dd>
-            </div>
-            <div>
-              <dt className="text-muted">Skapad</dt>
-              <dd className="mt-1">{when}</dd>
-            </div>
-            <div className="sm:col-span-2">
-              <dt className="text-muted">Urval</dt>
-              <dd className="mt-1">{describeSelection(order.selection)}</dd>
-            </div>
-            {order.contact ? (
-              <div>
-                <dt className="text-muted">Namn</dt>
-                <dd className="mt-1">{order.contact}</dd>
-              </div>
-            ) : null}
-          </dl>
+          <h2 className="font-serif text-3xl">Sparat här, inte hos VisaLight</h2>
+          <p className="mt-4 text-sm leading-6 text-muted">
+            E-postadressen {order.email} ligger bara kvar i den här webbläsaren. Det finns inget ordernummer och ingen
+            faktura. Urvalet: {describeSelection(order.selection)}.
+          </p>
+          {order.contact ? <p className="mt-2 text-sm text-muted">Namn som skrevs in: {order.contact}.</p> : null}
+          <p className="mt-2 text-sm text-muted">Sparat {when}.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href={`/?${selectionToQuery(order.selection)}`}

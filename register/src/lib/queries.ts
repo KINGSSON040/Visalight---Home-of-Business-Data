@@ -39,8 +39,14 @@ export function filtersToSearch(filters: Filters): string {
   return params.toString();
 }
 
-/** Bolag med organisationsnummer, namn, gatuadress, ort och SNI. Organisationsnummer finns på varje rad. */
+/**
+ * Aktiva företag som går att sälja. Samma regel som kundsidans urval:
+ * SCB FtgStat 1 eller exempelvärdet "verksam", inte avslutade, och inte reklamspärrade.
+ */
 export const SELLABLE_SQL = `c.manual_exclude = 0
+  AND (c.ended_on IS NULL OR trim(c.ended_on) = '')
+  AND lower(trim(coalesce(c.status_code, ''))) IN ('1', 'verksam')
+  AND c.reklam_block = 0
   AND trim(c.name) != ''
   AND c.street IS NOT NULL AND trim(c.street) != ''
   AND c.city IS NOT NULL AND trim(c.city) != ''
@@ -281,5 +287,9 @@ export function suppressionReason(company: CompanyRow & { sni?: string | null })
   if (!company.city?.trim()) reasons.push("saknar ort");
   if (!company.sni?.trim()) reasons.push("saknar SNI-kod");
   if (company.manual_exclude) reasons.push("manuellt utesluten");
+  if (company.reklam_block) reasons.push("reklamspärr");
+  if (company.ended_on?.trim() || (company.status_code ?? "").trim().toLowerCase() === "avregistrerad") reasons.push("avregistrerat");
+  const status = (company.status_code ?? "").trim().toLowerCase();
+  if (status !== "1" && status !== "verksam") reasons.push("inte aktivt");
   return reasons.join(", ") || "ofullständig";
 }

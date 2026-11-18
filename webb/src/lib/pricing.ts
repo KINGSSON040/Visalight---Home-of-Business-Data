@@ -8,6 +8,9 @@ export const SIGNATORY_ORE = 40;
 export const EMAIL_ORE = 40;
 /** Lägsta order, öre. */
 export const MINIMUM_ORE = 39900;
+/** Från den här storleken räknas priset inte på sidan. */
+export const VOLUME_TALK_FROM = 30000;
+export const VOLUME_TALK_LINE = "Urvalet är 30 000 bolag eller mer. Ni behöver talas vid för rabatt.";
 
 export const VOLUME_DISCOUNTS: { fromCompanies: number; factor: number }[] = [];
 
@@ -23,9 +26,15 @@ export type PriceQuote = {
   discountOre: number;
   totalOre: number;
   minimumApplied: boolean;
+  /** Stort urval. Ingen summa räknas här. */
+  talk: boolean;
 };
 
 export function quote(counts: PriceCounts): PriceQuote {
+  if (counts.companies >= VOLUME_TALK_FROM) {
+    return { rawOre: 0, discountOre: 0, totalOre: 0, minimumApplied: false, talk: true };
+  }
+
   const rawOre =
     counts.companies * BASE_ORE +
     counts.phones * PHONE_ORE +
@@ -33,7 +42,7 @@ export function quote(counts: PriceCounts): PriceQuote {
     counts.emails * EMAIL_ORE;
 
   if (counts.companies <= 0) {
-    return { rawOre: 0, discountOre: 0, totalOre: 0, minimumApplied: false };
+    return { rawOre: 0, discountOre: 0, totalOre: 0, minimumApplied: false, talk: false };
   }
 
   let factor = 1;
@@ -47,6 +56,7 @@ export function quote(counts: PriceCounts): PriceQuote {
     discountOre: rawOre - discounted,
     totalOre: minimumApplied ? MINIMUM_ORE : discounted,
     minimumApplied,
+    talk: false,
   };
 }
 

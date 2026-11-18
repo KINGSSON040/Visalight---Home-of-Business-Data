@@ -4,15 +4,38 @@ import { registerDatabasePath } from "@/lib/register-path";
 /** Exempelvärde när registret inte är inkopplat. Ska aldrig se ut som en riktig import. */
 export const EXAMPLE_REGISTER_WHEN = "12 mars 2026 kl. 09.00";
 
+/** Syns när registret saknas. Inga tal följer med meningen. */
+export const EXAMPLE_FIGURES_LINE = "Registret är inte inkopplat.";
+
 /** En tidpunkt för kundsidan. example är true när siffran inte kommer från registret. */
-export function registerStamp(): { when: string; example: boolean } {
-  const when = registerUpdatedLabel();
-  if (when) return { when, example: false };
-  return { when: EXAMPLE_REGISTER_WHEN, example: true };
+export function registerStamp(): { when: string; example: boolean; isoDate: string } {
+  const at = registerUpdatedAt();
+  if (at) return { when: formatStamp(at), example: false, isoDate: at.toISOString().slice(0, 10) };
+  return { when: EXAMPLE_REGISTER_WHEN, example: true, isoDate: "2026-03-12" };
 }
 
 /** Tidpunkt för senaste lyckade synk, formaterad på svenska. Null om registret saknas. */
 export function registerUpdatedLabel(): string | null {
+  const at = registerUpdatedAt();
+  return at ? formatStamp(at) : null;
+}
+
+function formatStamp(date: Date): string {
+  const day = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Europe/Stockholm",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+  const time = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Europe/Stockholm",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+  return `${day} kl. ${time}`;
+}
+
+function registerUpdatedAt(): Date | null {
   const file = registerDatabasePath();
   if (!file) return null;
   const connection = new Database(file, { readonly: true, fileMustExist: true });
@@ -29,18 +52,7 @@ export function registerUpdatedLabel(): string | null {
     if (!iso) return null;
     const date = new Date(iso);
     if (Number.isNaN(date.getTime())) return null;
-    const day = new Intl.DateTimeFormat("sv-SE", {
-      timeZone: "Europe/Stockholm",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(date);
-    const time = new Intl.DateTimeFormat("sv-SE", {
-      timeZone: "Europe/Stockholm",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-    return `${day} kl. ${time}`;
+    return date;
   } catch {
     return null;
   } finally {

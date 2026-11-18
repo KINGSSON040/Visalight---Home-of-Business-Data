@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/page-intro";
-import { Mark, SELLER } from "@/lib/seller";
+import { SELLER, SellerFacts } from "@/lib/seller";
 
 export const metadata: Metadata = {
   title: "Köpvillkor — VisaLight",
@@ -14,23 +14,21 @@ export default function TermsPage() {
     <PageIntro
       eyebrow="Köpvillkor"
       title="Villkor för utdraget."
-      lead="VisaLight är ännu inte ett registrerat bolag. Beställning öppnar snart. Tills dess kan ni förhandsboka ett utdrag med e-post. Ingen betalning dras."
+      lead={`${SELLER.line} Beställning öppnar snart. Tills dess kan ni förhandsboka ett utdrag med e-post. Ingen betalning dras.`}
     >
       <section>
         <h2 className="text-2xl tracking-tight">Vem som säljer</h2>
         <p className="mt-2 leading-7 text-muted">
-          {SELLER.tradeName} har inget organisationsnummer, ingen adress och inget momsregistreringsnummer ännu. De
-          fylls i här när bolaget finns: <Mark>{SELLER.orgNr}</Mark>, <Mark>{SELLER.address}</Mark>,{" "}
-          <Mark>{SELLER.vatNr}</Mark>.
+          {SELLER.line}
+          <SellerFacts />
         </p>
       </section>
       <section>
         <h2 className="text-2xl tracking-tight">Pris och moms</h2>
         <p className="mt-2 leading-7 text-muted">
-          Priset ni ser i utdraget är exklusive moms. Grunduppgifter kostar 10 öre per bolag. Kontaktnummer kostar 30
-          öre per nummer, e-postkontakt 40 öre per adress och beslutsfattare 40 öre per nummer. Ett tomt fält kostar
-          inget. Lägsta order är 399 kr exklusive moms. Moms kan läggas till först när{" "}
-          <Mark>{SELLER.vatNr}</Mark> finns.
+          Priset ni ser i utdraget är exklusive moms. Grunduppgifter kostar 0,10 kr per bolag. Kontaktnummer kostar 0,30
+          kr per nummer, e-postkontakt 0,40 kr per adress och beslutsfattare 0,40 kr per nummer. Ett tomt fält kostar
+          inget. Lägsta order är 399 kr exklusive moms.
         </p>
       </section>
       <section>
@@ -51,8 +49,8 @@ export default function TermsPage() {
       <section>
         <h2 className="text-2xl tracking-tight">Hur färskt underlaget är</h2>
         <p className="mt-2 leading-7 text-muted">
-          Filen tas från den senaste uppdateringen av företagsregistret. Äldre årgångar används inte. Det är inte en
-          direktuppdatering varje minut. Datumet för senaste uppdatering visas på sidan.
+          Filen är uppdaterad företagsinformation från den senaste uppdateringen av företagsregistret. Äldre årgångar används inte. Det är inte en
+          direktuppdatering varje minut. Datumet för senaste uppdatering visas på sidan. Det hänger ihop med att jobba med färsk information.
         </p>
       </section>
     </PageIntro>

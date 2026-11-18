@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { INDUSTRIES, type Industry } from "@/lib/catalog";
+import { INDUSTRIES, selectionIndustries, type Industry } from "@/lib/catalog";
 import { BASE_ORE, EMAIL_ORE, MINIMUM_ORE, PHONE_ORE, SIGNATORY_ORE } from "@/lib/pricing";
 import {
   dottedSni,
@@ -22,14 +22,17 @@ function ore(value: number): string {
 export function topicMetadata(kind: TopicKind, slug: string): Metadata {
   const topic = getTopic(kind, slug);
   if (!topic) return {};
-  const industry = INDUSTRIES.find((item) => item.sni === topic.sni);
-  const code = industry ? dottedSni(industry.sni) : "";
-  const title = industry
-    ? `Företagsinformation om ${industry.label.toLowerCase()} (SNI ${code})`
-    : topic.title;
-  const description = industry
-    ? `Företagsdata för ${industry.label.toLowerCase()}, SNI ${code}. Namn, organisationsnummer, adress och bransch. Telefon och e-post där uppgiften finns. Priset visas innan köp.`
-    : topic.description;
+  const known = selectionIndustries().find((item) => item.sni === topic.sni);
+  const code = known ? dottedSni(known.sni) : "";
+  const name = (known?.label ?? (topic.kind === "bransch" ? topic.nav : "")).toLowerCase();
+  const title =
+    topic.kind === "bransch"
+      ? `Företagslista och utdrag för ${name}${code ? ` (SNI ${code})` : ""}`
+      : topic.title;
+  const description =
+    topic.kind === "bransch"
+      ? `Företagslista och utdrag för ${name}${code ? `, SNI ${code}` : ""}. Aktiva bolag med namn, adress och bransch. Antal och pris syns innan köp.`
+      : topic.description;
   const path = topicPath(topic);
   return {
     title: `${title} — VisaLight`,
@@ -44,13 +47,13 @@ export function TopicIndex({ kind }: { kind: TopicKind }) {
   const isIndustry = kind === "bransch";
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
-      <p className="text-sm uppercase tracking-[0.16em] text-green">{isIndustry ? "Branscher" : "Ord"}</p>
+      <p className="text-sm uppercase tracking-[0.16em] text-ink">{isIndustry ? "Branscher" : "Ord"}</p>
       <h1 className="mt-3 font-serif text-5xl tracking-tight">
         {isIndustry ? "Företagsdata per bransch" : "Ord om företagsdata"}
       </h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
         {isIndustry
-          ? "Varje bransch har en egen sida, och varje SNI-kod leder dit. Sidorna beskriver utdraget: vilka bolag som ingår, vad raden innehåller och vad det kostar."
+          ? "Varje bransch har en egen sida, så ni kan hitta kunder där. SNI-koden leder dit, och där står vad raden innehåller och vad det kostar."
           : "Sidorna förklarar orden som hör till företagsinformation, företagsregister och utdrag."}
       </p>
       {isIndustry ? (
@@ -90,7 +93,7 @@ export function TopicArticle({ kind, slug }: { kind: TopicKind; slug: string }) 
       <h1 className="mt-3 max-w-3xl font-serif text-5xl tracking-tight">{topic.title}</h1>
       <p className="mt-5 max-w-2xl text-lg leading-8">{topic.lead}</p>
       <p className="mt-4 max-w-2xl leading-8 text-muted">
-        Utdraget tas från den senaste uppdateringen av företagsregistret. Ett telefonnummer eller en e-postadress som inte finns lämnas tom och kostar inget.
+        Hitta er nästa kund här idag. Utdraget tas från den senaste uppdateringen, så uppgifterna är färska. Ett telefonnummer eller en e-postadress som inte finns lämnas tom och kostar inget.
       </p>
       {topic.sni ? <p className="mt-4 font-mono text-sm text-sea">SNI {topic.sni}</p> : null}
       <Link href={topicBuilderHref(topic)} className="btn-fade-sea mt-6 inline-flex rounded-full bg-sea px-4 py-2 text-sm text-white">
@@ -177,7 +180,8 @@ function IndustryArticle({
       </h1>
       <p className="mt-5 max-w-2xl text-lg leading-8">{topic.lead}</p>
       <p className="mt-4 max-w-2xl leading-8 text-muted">
-        Sökningar på företagsinformation, företagsdata och företagsregister för den här branschen landar här.
+        Hitta er nästa kund i den här branschen idag. Det går för att uppgifterna är verifierade, uppdaterade och färska.
+        Sökningar på företagsinformation och företagsregister för den här branschen landar här.
         Utdraget avgränsas med SNI {code}
         {older.length ? `, även om en äldre källa fortfarande skriver ${older.join(" eller ")}` : ""}.
       </p>
@@ -203,7 +207,7 @@ function IndustryArticle({
         <article className="rounded-2xl border border-line bg-white p-4">
           <h2 className="text-lg tracking-tight">Pris</h2>
           <p className="mt-2 text-sm leading-6 text-muted">
-            Grunduppgifter {ore(BASE_ORE)} per bolag. Telefon {ore(PHONE_ORE)}, e-post {ore(EMAIL_ORE)} och beslutsfattare {ore(SIGNATORY_ORE)}. Lägsta order {(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr. Priset visas innan ni köper.
+            Grunduppgifter {ore(BASE_ORE)} per bolag. Telefon {ore(PHONE_ORE)}, e-post {ore(EMAIL_ORE)} och beslutsfattare {ore(SIGNATORY_ORE)}. Lägsta order {(MINIMUM_ORE / 100).toLocaleString("sv-SE", { maximumFractionDigits: 0 })} kr. Priset visas innan ni köper. Från 30 000 bolag räknas priset inte här. Ni behöver talas vid för rabatt.
           </p>
         </article>
       </section>

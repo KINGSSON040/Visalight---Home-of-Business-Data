@@ -1,37 +1,38 @@
 import Link from "next/link";
+import { BuilderLink } from "@/components/builder-link";
 import { BrandLockup } from "@/components/logo-mark";
+
+const LINKS = [
+  { href: "/priser", label: "Priser" },
+  { href: "/nystartade-bolag", label: "Nystartade" },
+  { href: "/bransch", label: "Branscher" },
+  { href: "/om-oss", label: "Om oss" },
+  { href: "/kontakt", label: "Kontakt" },
+];
 
 export function SiteHeader() {
   return (
-    <div className="site-header sticky top-0 z-40 text-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-2.5 sm:gap-4 sm:py-3">
+    <header className="site-header sticky top-0 z-40">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2.5">
         <Link href="/" className="min-w-0">
-          <BrandLockup tone="white" subtitle="Företagsdata" compact />
+          <BrandLockup subtitle="Kontakta er nästa kund idag" compact />
         </Link>
-        <nav className="flex shrink-0 items-center gap-2 text-sm sm:gap-4">
-          <Link className="hidden text-white hover:text-white sm:inline" href="/#pris">
-            Pris
-          </Link>
-          <Link className="hidden text-white hover:text-white md:inline" href="/#sa-funkar-det">
-            Så funkar det
-          </Link>
-          <Link className="hidden text-white hover:text-white md:inline" href="/#smakprov">
-            Smakprov
-          </Link>
-          <Link className="hidden text-white hover:text-white lg:inline" href="/#branscher">
-            Branscher
-          </Link>
-          <Link href="/crm" className="whitespace-nowrap text-white/90 hover:text-white">
-            Logga in
-          </Link>
-          <Link
-            href="/#urval"
-            className="btn-fade-amber whitespace-nowrap rounded-full bg-amber px-3 py-2 font-medium text-ink shadow-[0_0_0_2px_rgba(255,255,255,0.92)] sm:px-3.5"
-          >
-            Skapa utdrag
-          </Link>
+        <nav aria-label="Huvudmeny" className="flex shrink-0 items-center gap-1 text-sm font-medium sm:gap-2">
+          {LINKS.map((link) => (
+            <Link key={link.href} href={link.href} className="hidden rounded-full px-3 py-2 text-ink hover:bg-white md:inline">
+              {link.label}
+            </Link>
+          ))}
+          <BuilderLink className="btn-neon whitespace-nowrap rounded-full px-4 py-2 font-semibold">Till listbyggaren</BuilderLink>
         </nav>
       </div>
-    </div>
+      <nav aria-label="Genvägar" className="flex gap-1 overflow-x-auto px-3 pb-2 text-sm font-medium md:hidden">
+        {LINKS.map((link) => (
+          <Link key={link.href} href={link.href} className="chip shrink-0 rounded-full px-3 py-1">
+            {link.label}
+          </Link>
+        ))}
+      </nav>
+    </header>
   );
 }

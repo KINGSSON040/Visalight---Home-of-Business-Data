@@ -48,11 +48,13 @@ function csvCell(value: string): string {
 }
 
 /** Semikolon och BOM, så filen öppnas kolumnvis i svensk Excel. */
-export function sampleCsv(selection?: Selection): string {
-  const body = sampleRows(selection)
-    .map((row) => row.map(csvCell).join(";"))
-    .join("\r\n");
+export function csvFromRows(rows: string[][]): string {
+  const body = rows.map((row) => row.map(csvCell).join(";")).join("\r\n");
   return `\uFEFF${body}\r\n`;
+}
+
+export function sampleCsv(selection?: Selection): string {
+  return csvFromRows(sampleRows(selection));
 }
 
 function xml(value: string): string {

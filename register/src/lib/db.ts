@@ -35,6 +35,7 @@ export function db(): Database.Database {
       started_on TEXT,
       ended_on TEXT,
       registered_on TEXT,
+      first_seen_at TEXT,
       manual_exclude INTEGER NOT NULL DEFAULT 0,
       internal_note TEXT NOT NULL DEFAULT '',
       source TEXT NOT NULL,
@@ -147,11 +148,20 @@ export function db(): Database.Database {
       INSERT INTO company_fts_row(org_nr, fts_rowid) VALUES (new.org_nr, last_insert_rowid());
     END;
   `);
+  ensureFirstSeen(connection);
   const count = connection.prepare("SELECT COUNT(*) AS n FROM companies").get() as { n: number };
   if (count.n === 0) seed(connection);
   ensureCompanySearch(connection);
   database = connection;
   return connection;
+}
+
+function ensureFirstSeen(connection: Database.Database) {
+  const columns = connection.prepare("PRAGMA table_info(companies)").all() as { name: string }[];
+  if (!columns.some((column) => column.name === "first_seen_at")) {
+    connection.exec("ALTER TABLE companies ADD COLUMN first_seen_at TEXT");
+  }
+  connection.exec("CREATE INDEX IF NOT EXISTS companies_registered_on ON companies(registered_on)");
 }
 
 function ensureCompanySearch(connection: Database.Database) {
@@ -191,6 +201,8 @@ export type CompanyRow = {
   started_on: string | null;
   ended_on: string | null;
   registered_on: string | null;
+  /** När raden skrevs första gången. SCB-synken får inte skriva över den. */
+  first_seen_at: string | null;
   manual_exclude: number;
   internal_note: string;
   source: string;
@@ -203,8 +215,15 @@ export function companyIsSellable(company: {
   city?: string | null;
   sni?: string | null;
   manual_exclude?: number | null;
+  status_code?: string | null;
+  ended_on?: string | null;
+  reklam_block?: number | null;
 }): boolean {
   if (company.manual_exclude) return false;
+  if (company.reklam_block) return false;
+  if (company.ended_on?.trim()) return false;
+  const status = (company.status_code ?? "").trim().toLowerCase();
+  if (status !== "1" && status !== "verksam") return false;
   return Boolean(company.name?.trim() && company.street?.trim() && company.city?.trim() && company.sni?.trim());
 }
 
