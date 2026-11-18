@@ -213,7 +213,7 @@ export function CustomerHome({
               Nystartade bolag
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-              Nya bolag kommer in dagligen från Bolagsverket. De behöver ofta bank, redovisning, försäkring, telefoni, webb och lokal.
+              Nya bolag kommer in från Bolagsverket, och filen uppdateras varje vecka. De behöver ofta bank, redovisning, försäkring, telefoni, webb och lokal.
               {fresh.example ? " Exempelsiffror. Registret är inte inkopplat." : ""}
             </p>
             <p className="mt-3 text-sm font-semibold">

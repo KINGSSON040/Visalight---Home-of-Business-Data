@@ -7,7 +7,7 @@ import { formatKronor } from "@/lib/pricing";
 export const metadata: Metadata = {
   title: "Nystartade bolag — VisaLight",
   description:
-    "Nya bolag kommer in dagligen från Bolagsverket. Filtrera på 7 eller 30 dagar, bransch och ort, och se priset innan betalning.",
+    "Nya bolag kommer in från Bolagsverket, och filen uppdateras varje vecka. Filtrera på 7 eller 30 dagar, bransch och ort, och se priset innan betalning.",
 };
 
 export default async function NewCompaniesPage({
@@ -29,7 +29,7 @@ export default async function NewCompaniesPage({
       <p className="text-xs font-semibold tracking-[0.14em] text-muted uppercase">Bolagsverket</p>
       <h1 className="mt-3 text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">Nystartade bolag</h1>
       <p className="mt-4 max-w-2xl text-base leading-7 text-muted">
-        Nya bolag kommer in dagligen från Bolagsverket. Ett nytt bolag behöver ofta bank, redovisning, försäkring, telefoni, webb och lokal.
+        Nya bolag kommer in från Bolagsverket, och filen uppdateras varje vecka. Ett nytt bolag behöver ofta bank, redovisning, försäkring, telefoni, webb och lokal.
       </p>
       <form method="get" className="mt-8 flex flex-wrap items-end gap-3">
         <fieldset className="flex gap-2">
