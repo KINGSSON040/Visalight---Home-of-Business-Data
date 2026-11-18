@@ -48,8 +48,8 @@ export default function TermsPage() {
       <section>
         <h2 className="text-2xl tracking-tight">Hur färskt underlaget är</h2>
         <p className="mt-2 leading-7 text-muted">
-          Filen tas från den senaste uppdateringen av företagsregistret. Äldre årgångar används inte. Det är inte en
-          direktuppdatering varje minut. Datumet för senaste uppdatering visas på sidan.
+          Filen är uppdaterad företagsinformation från den senaste uppdateringen av företagsregistret. Äldre årgångar används inte. Det är inte en
+          direktuppdatering varje minut. Datumet för senaste uppdatering visas på sidan. Det hänger ihop med att jobba med färsk information.
         </p>
       </section>
     </PageIntro>

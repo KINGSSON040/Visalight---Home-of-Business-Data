@@ -70,7 +70,7 @@ function bransch(slug: string, sni: string, lead: string): Topic {
     kind: "bransch",
     nav,
     title: `Företagslista och utdrag för ${nav}`,
-    description: `Företagslista och utdrag för ${nav}. ${lead} Antal och pris syns innan köp när registret är inkopplat.`,
+    description: `Verifierad, uppdaterad och färsk företagsinformation om ${nav}. ${lead} Ni köper för att hitta er nästa kund redan idag. Antal och pris syns innan köp när registret är inkopplat.`,
     lead,
     sni,
   };

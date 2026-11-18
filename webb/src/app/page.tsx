@@ -13,15 +13,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const example = registerStamp().example || loadStats().source === "example";
   return {
     alternates: { canonical: "/" },
-    title: "Företagslista och utdrag utan prenumeration — VisaLight",
+    title: "Verifierad och färsk företagsinformation — VisaLight",
     description: example
-      ? `${EXAMPLE_FIGURES_LINE} För företag och personer som vill sälja och hitta kunder. Inget konto krävs.`
-      : "För företag och personer som vill sälja och hitta kunder. Välj bransch, se antal och pris, och köp utan konto.",
+      ? `${EXAMPLE_FIGURES_LINE} VisaLight säljer verifierad, uppdaterad och färsk företagsinformation. Ni köper för att hitta er nästa kund redan idag.`
+      : "VisaLight säljer verifierad, uppdaterad och färsk företagsinformation. Ni köper för att hitta er nästa kund redan idag. Välj bransch, se antal och pris.",
     openGraph: {
-      title: "Företagslista och utdrag utan prenumeration",
+      title: "Verifierad och färsk företagsinformation",
       description: example
-        ? `${EXAMPLE_FIGURES_LINE} För företag och personer som vill sälja och hitta kunder.`
-        : "För företag och personer som vill sälja och hitta kunder. Antal och pris syns innan köp.",
+        ? `${EXAMPLE_FIGURES_LINE} Ni köper för att hitta er nästa kund redan idag.`
+        : "Ni köper för att hitta er nästa kund redan idag. Det hänger ihop med att jobba med färsk information.",
     },
   };
 }
@@ -47,8 +47,8 @@ export default async function Home({
         url: origin,
         inLanguage: "sv-SE",
         description: stamp.example
-          ? `${EXAMPLE_FIGURES_LINE} Färsk företagsdata för svenska bolag, utan abonnemang.`
-          : "Färsk företagsdata för svenska bolag, utan abonnemang.",
+          ? `${EXAMPLE_FIGURES_LINE} Verifierad, uppdaterad och färsk företagsinformation, utan abonnemang.`
+          : "Verifierad, uppdaterad och färsk företagsinformation, utan abonnemang.",
       },
       {
         "@type": "FAQPage",

@@ -22,7 +22,7 @@ export const NEWS_POSTS: NewsPost[] = [
     date: "2026-11-10",
     kind: "Statistik",
     title: "Dataprogrammering startar flest nya bolag i höst",
-    lead: "Bland branscherna i registret växer dataprogrammering snabbast det senaste kvartalet.",
+    lead: "Exempeltext om nya bolag inom dataprogrammering. Siffrorna byts när registret är inkopplat.",
     body: [
       "Exempeltext. När registret är inkopplat skrivs den här texten om med riktiga siffror från den senaste uppdateringen.",
       "Nya bolag är ofta små och har färre kontaktuppgifter. Därför syns det tydligt i utdraget hur många som har telefon och e-post innan ni köper.",

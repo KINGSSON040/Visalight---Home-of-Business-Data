@@ -6,7 +6,7 @@ import { dottedSni, topicPath, TOPICS } from "@/lib/topics";
 export const metadata: Metadata = {
   title: "SNI-koder för företagsinformation — VisaLight",
   description:
-    "Varje SNI-kod har en sida med företagsinformation: vad koden betyder, vilka bolag som ingår och vad utdraget kostar.",
+    "Varje SNI-kod har en sida med verifierad och färsk företagsinformation: vad koden betyder, vilka bolag som ingår och vad utdraget kostar.",
   alternates: { canonical: "/sni" },
 };
 

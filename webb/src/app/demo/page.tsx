@@ -29,7 +29,7 @@ export default async function DemoPage({
       <p className="text-sm font-medium uppercase tracking-[0.16em] text-sea">Kontakt</p>
       <h1 className="mt-3 text-4xl tracking-tight sm:text-5xl">{HEADING[kind]}</h1>
       <p className="mt-4 text-lg leading-8 text-muted">
-        De flesta köper utdraget direkt. Telefon: numret läggs in när det finns. Meddelande och mötesönskemål sparas i den här webbläsaren tills en inkorg finns. Inget skickas ännu.
+        VisaLight säljer verifierad, uppdaterad och färsk företagsinformation. Telefon: numret läggs in när det finns. Meddelande och mötesönskemål sparas i den här webbläsaren tills en inkorg finns. Inget skickas ännu.
       </p>
       <div className="mt-8">
         <DemoForm kind={kind} />

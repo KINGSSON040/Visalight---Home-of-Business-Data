@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Sveriges näringsliv i siffror — VisaLight",
     description: example
       ? `${EXAMPLE_FIGURES_LINE} Antal företag i Sverige, nya företag per månad, fördelning per bransch och län.`
-      : "Antal företag i Sverige, nya företag per månad, fördelning per bransch och län, och de branscher som växer mest.",
+      : "Antal aktiva företag, nya företag per månad och fördelning per bransch och län, från den senaste uppdateringen.",
   };
 }
 
@@ -29,7 +29,7 @@ export default function StatistikPage() {
       </h1>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
         {example
-          ? "Registret är inte inkopplat. Antal per bransch, per område och per storlek visas när registret finns."
+          ? "Bolagsregistret är inte inkopplat. Antal per bransch, per område och per storlek visas när registret finns."
           : "Här ser ni hur många aktiva företag som finns i registret, uppdelat på bransch, län och antal anställda. Vilande, inaktiva, avregistrerade och reklamspärrade ingår inte. Siffrorna kommer från den senaste uppdateringen. Klicka på en rad för att öppna byggaren med det urvalet."}
       </p>
       {example ? null : (
@@ -49,7 +49,7 @@ export default function StatistikPage() {
         </>
       )}
       <div className="builder-card mt-10 flex flex-col items-start gap-4 rounded-[2rem] p-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="font-display text-2xl font-bold">Hittat en bransch som växer? Se vad ett utdrag kostar.</p>
+        <p className="font-display text-2xl font-bold">Hittat en bransch? Se vad den färska företagsinformationen kostar.</p>
         <BuilderLink className="btn-neon inline-flex h-12 shrink-0 items-center rounded-full px-6 font-bold">
           Till listbyggaren
         </BuilderLink>

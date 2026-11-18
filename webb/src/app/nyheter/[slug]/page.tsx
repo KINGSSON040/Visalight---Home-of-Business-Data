@@ -48,7 +48,7 @@ export default async function NyhetPage({ params }: { params: Promise<{ slug: st
         ))}
       </div>
       <div className="builder-card mt-10 rounded-[2rem] p-6">
-        <p className="font-display text-2xl font-bold">Alla Sveriges företag. Ett utdrag bort.</p>
+        <p className="font-display text-2xl font-bold">Färsk företagsinformation. Hitta er nästa kund redan idag.</p>
         <Link href={post.cta?.href ?? "/#urval"} className="btn-neon mt-4 inline-flex h-12 items-center rounded-full px-6 font-bold">
           {post.cta?.label ?? "Öppna listbyggaren"}
         </Link>

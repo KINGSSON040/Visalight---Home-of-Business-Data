@@ -42,16 +42,16 @@ const figtree = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin()),
-  title: "VisaLight — Företagsinformation och företagsdata",
+  title: "VisaLight — Verifierad, uppdaterad och färsk företagsinformation",
   description:
-    "Färsk företagsdata för svenska bolag. Välj bransch eller SNI, se antal och pris exklusive moms, och få utdraget utan abonnemang.",
+    "VisaLight säljer verifierad, uppdaterad och färsk företagsinformation. Ni köper för att hitta er nästa kund redan idag. Välj bransch, se antal och pris, utan abonnemang.",
   openGraph: {
     locale: "sv_SE",
     type: "website",
     siteName: "VisaLight",
-    title: "VisaLight — Färsk företagsdata för svenska bolag",
+    title: "VisaLight — Verifierad, uppdaterad och färsk företagsinformation",
     description:
-      "Välj bransch och ort. Se antalet och priset direkt. Utdraget tas från den senaste uppdateringen av företagsregistret.",
+      "Ni köper för att hitta er nästa kund redan idag. Det hänger ihop med att jobba med färsk information.",
   },
 };
 

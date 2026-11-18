@@ -12,8 +12,8 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: { canonical: "/nyheter" },
     title: "Nyheter och uppdateringar — VisaLight",
     description: example
-      ? "Exempeltexter. Registret är inte inkopplat. Uppdateringar av registret, statistik och nyheter om Sveriges näringsliv."
-      : "Uppdateringar av registret, statistik och nyheter om Sveriges näringsliv.",
+      ? "Bolagsregistret är inte inkopplat. Uppdateringar av den färska företagsinformationen publiceras när registret finns."
+      : "Uppdateringar av den färska företagsinformationen, från den senaste synken av bolagsregistret.",
     robots: example ? { index: false, follow: true } : undefined,
   };
 }
@@ -26,7 +26,7 @@ export default function NyheterPage() {
       <p className="text-sm font-semibold tracking-[0.18em] text-ink uppercase">Nyheter</p>
       <h1 className="mt-2 text-5xl font-extrabold tracking-tight sm:text-6xl">Nyheter och uppdateringar</h1>
       <p className="mt-3 max-w-2xl text-lg text-muted">
-        Uppdateringar från registret. Utan register visas inga antal.
+        Uppdateringar av verifierad företagsinformation. Utan register visas inga antal.
       </p>
       <ol className="mt-10 space-y-3">
         {posts.map((post) => (

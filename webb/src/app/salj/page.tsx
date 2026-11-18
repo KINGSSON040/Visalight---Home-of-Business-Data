@@ -4,7 +4,7 @@ import { PageIntro } from "@/components/page-intro";
 export const metadata: Metadata = {
   title: "För sälj och marknad — VisaLight",
   description:
-    "Bygg en aktuell prospekteringslista på bransch, län och storlek. Beslutsfattarnummer och e-post följer med när källan har dem.",
+    "Verifierad och färsk företagsinformation för sälj och marknad. Välj bransch, län och storlek, och hitta er nästa kund redan idag.",
 };
 
 export default function SalesPage() {
@@ -12,7 +12,7 @@ export default function SalesPage() {
     <PageIntro
       eyebrow="Säljare och marknadschefer"
       title="En lista att ringa, mejla och segmentera i dag."
-      lead="Välj bransch och län, se hur många träffar det blir, och betala för de kontaktfält som faktiskt är ifyllda."
+      lead="VisaLight säljer verifierad, uppdaterad och färsk företagsinformation. Välj bransch och län, se hur många träffar det blir, och betala för de kontaktfält som faktiskt är ifyllda."
     >
       <section>
         <h2 className="text-2xl tracking-tight">Prospektering utan gamla bolag</h2>

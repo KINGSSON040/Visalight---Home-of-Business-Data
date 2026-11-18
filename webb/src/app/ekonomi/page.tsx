@@ -12,7 +12,7 @@ export default function FinancePage() {
     <PageIntro
       eyebrow="Ekonomi och kredit"
       title="Rätt bolag och rätt adress, utan utlovade kredituppgifter."
-      lead="Ekonomifunktionen använder listan för att nå aktiva bolag och stämma av grunduppgifter. Kreditbeslut kräver andra källor."
+      lead="Listan är uppdaterad företagsinformation om aktiva bolag, för att stämma av grunduppgifter. Kreditbeslut kräver andra källor."
     >
       <section>
         <h2 className="text-2xl tracking-tight">Det som finns i filen</h2>
