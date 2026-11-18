@@ -19,18 +19,34 @@ const STEPS = [
     no: "01",
     title: "Ange sökord",
     text: "Skriv bransch, ort eller SNI-kod i byggaren. Sökningen gäller aktiva företag som inte spärrat reklam.",
+    icon: "search",
   },
   {
     no: "02",
     title: "Välj filter",
     text: "Begränsa med län, bolagsform eller storlek. Lägg till telefon, e-post eller beslutsfattare om ni behöver det.",
+    icon: "filter",
   },
   {
     no: "03",
     title: "Se pris direkt",
     text: "Antal och pris står under urvalet, exklusive moms, innan ni förhandsbokar. Ingen prenumeration krävs.",
+    icon: "price",
   },
-];
+] as const;
+
+function StepIcon({ name }: { name: (typeof STEPS)[number]["icon"] }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+      {name === "search" ? <circle cx="11" cy="11" r="6" {...common} /> : null}
+      {name === "search" ? <path d="M16 16.5 20 20.5" {...common} /> : null}
+      {name === "filter" ? <path d="M4 6h16M7 12h10M10 18h4" {...common} /> : null}
+      {name === "price" ? <path d="M6 5.5h12v13l-6-2.5-6 2.5Z" {...common} /> : null}
+      {name === "price" ? <path d="M9 10h6" {...common} /> : null}
+    </svg>
+  );
+}
 
 function sniLabel(sni: string) {
   return sni.length === 5 ? `${sni.slice(0, 2)}.${sni.slice(2)}` : sni;
@@ -153,45 +169,54 @@ export function CustomerHome({
         </div>
       </section>
 
-      <section id="sa-funkar-det" aria-labelledby="steg" className="mx-auto max-w-6xl px-4 pt-2 pb-12">
+      <section id="sa-funkar-det" aria-labelledby="steg" className="mx-auto max-w-6xl px-4 pt-6 pb-16">
         <h2 id="steg" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
           Så fungerar det
         </h2>
-        <ol className="mt-6 grid gap-6 md:grid-cols-3">
-          {STEPS.map((step) => (
-            <li key={step.no} className="border-t border-line pt-4">
-              <p className="font-price text-xs font-bold text-ink">{step.no}</p>
-              <h3 className="mt-2 text-lg font-bold">{step.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-muted">{step.text}</p>
+        <ol className="mt-8 grid gap-5 md:grid-cols-3">
+          {STEPS.map((step, index) => (
+            <li
+              key={step.no}
+              className="step-card rounded-2xl bg-white px-6 py-7 ring-1 ring-ink/10"
+              style={{ animationDelay: `${index * 90}ms` }}
+            >
+              <div className="flex items-center gap-3 text-magenta">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#fdeef7]">
+                  <StepIcon name={step.icon} />
+                </span>
+                <p className="font-price text-xs font-bold tracking-[0.14em]">{step.no}</p>
+              </div>
+              <h3 className="mt-5 text-lg font-bold">{step.title}</h3>
+              <p className="mt-2 text-sm leading-7 text-ink/80">{step.text}</p>
             </li>
           ))}
         </ol>
       </section>
 
       <section id="fortroende" aria-labelledby="fortroende-rubrik" className="border-y border-line bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <h2 id="fortroende-rubrik" className="text-2xl font-extrabold tracking-tight sm:text-3xl">
             Vad utdraget bygger på
           </h2>
-          <p className="soft-copy mt-2 max-w-2xl text-sm text-muted">Tre saker som gäller varje fil, oavsett vilket urval ni gör.</p>
-          <div className="mt-8 grid gap-8 md:grid-cols-3">
-            <div>
-              <h3 className="text-sm font-semibold">Källa</h3>
-              <p className="soft-copy mt-2 text-sm text-muted">
+          <p className="soft-copy mt-3 max-w-2xl text-sm leading-6 text-muted">Tre saker som gäller varje fil, oavsett vilket urval ni gör.</p>
+          <div className="mt-10 grid gap-10 md:grid-cols-3">
+            <div className="border-t border-ink/15 pt-5">
+              <h3 className="text-base font-bold">Källa</h3>
+              <p className="soft-copy mt-3 text-sm leading-7 text-ink/80">
                 Namn, adress, ort, län, bolagsform och SNI hämtas från SCB:s allmänna företagsregister, och bara för företag som är verksamma. Telefon, e-post och beslutsfattare skrivs bara in när källan har värdet. Saknas uppgiften lämnas fältet tomt.
               </p>
             </div>
-            <div>
-              <h3 className="text-sm font-semibold">Uppdatering</h3>
-              <p className="soft-copy mt-2 text-sm text-muted">
+            <div className="border-t border-ink/15 pt-5">
+              <h3 className="text-base font-bold">Uppdatering</h3>
+              <p className="soft-copy mt-3 text-sm leading-7 text-ink/80">
                 {exampleDate
                   ? "När registret är inkopplat synkas det en gång i veckan. Siffrorna ni ser nu är exempel och räknar aktiva företag som inte spärrat reklam."
                   : "Registret synkas en gång i veckan. Siffran på sidan följer den senaste uppdateringen och räknar bara aktiva företag som inte spärrat reklam. Utdraget tas från samma uppdatering, inte från en fil från förra året."}
               </p>
             </div>
-            <div>
-              <h3 className="text-sm font-semibold">Reklamspärr</h3>
-              <p className="soft-copy mt-2 text-sm text-muted">
+            <div className="border-t border-ink/15 pt-5">
+              <h3 className="text-base font-bold">Reklamspärr</h3>
+              <p className="soft-copy mt-3 text-sm leading-7 text-ink/80">
                 Vilande, inaktiva, avregistrerade och bolag som spärrat reklam tas bort vid varje uppdatering. De ingår inte i siffran och följer inte med i filen ni köper.
               </p>
             </div>

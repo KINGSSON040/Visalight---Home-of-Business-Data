@@ -387,8 +387,8 @@ body:has(.customer-site) {
 .chip:hover { background: #faf7f8; }
 
 .chip[aria-pressed="true"] {
-  border-color: #00a85e;
-  background: #00a85e;
+  border-color: #3dcc8a;
+  background: #3dcc8a;
   color: #1b1023;
 }
 
@@ -402,8 +402,8 @@ body:has(.customer-site) {
 .addon-chip:hover { background: #faf7f8; }
 
 .addon-chip[aria-pressed="true"] {
-  border-color: #00a85e;
-  background: #00a85e;
+  border-color: #3dcc8a;
+  background: #3dcc8a;
   color: #1b1023;
 }
 
@@ -413,9 +413,18 @@ body:has(.customer-site) {
 
 .brick,
 .brick.region {
-  background: #00a85e;
+  background: #3dcc8a;
   color: #1b1023;
   box-shadow: inset 0 0 0 1px #fff;
+}
+
+.step-card {
+  animation: step-in 0.55s ease both;
+}
+
+@keyframes step-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
 }
 
 .field-box {
@@ -500,7 +509,8 @@ body:has(.customer-site) {
   .aurora-band,
   .marquee-track,
   .big-count.flare,
-  .float-in {
+  .float-in,
+  .step-card {
     animation: none !important;
   }
   .bar-fill,
