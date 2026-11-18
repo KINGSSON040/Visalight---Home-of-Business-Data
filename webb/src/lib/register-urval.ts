@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import Database from "better-sqlite3";
-import { COMPANIES, countyCode, selectionSniFilter, type Selection } from "@/lib/catalog";
+import { COMPANIES, countyCode, employeeBands, listParts, selectionSniFilter, type Selection } from "@/lib/catalog";
 import { registerDatabasePath } from "@/lib/register-path";
 import { exampleEstimate } from "@/lib/naringsliv";
 import type { UrvalPreview, UrvalResult } from "@/lib/urval";
@@ -53,6 +53,17 @@ function emptyNote(selection: Selection): string {
 
 const CITY_SQL =
   "lower(replace(replace(replace(replace(replace(replace(c.city, 'Ö', 'o'), 'ö', 'o'), 'Ä', 'a'), 'ä', 'a'), 'Å', 'a'), 'å', 'a'))";
+
+/** Datum som redan finns i registret. Ingen ny hämtning. */
+const START_DATE = `(CASE
+  WHEN length(trim(coalesce(nullif(c.registered_on, ''), c.started_on, ''))) = 8
+    THEN substr(coalesce(nullif(c.registered_on, ''), c.started_on), 1, 4) || '-' || substr(coalesce(nullif(c.registered_on, ''), c.started_on), 5, 2) || '-' || substr(coalesce(nullif(c.registered_on, ''), c.started_on), 7, 2)
+  ELSE substr(coalesce(nullif(c.registered_on, ''), c.started_on, ''), 1, 10)
+END)`;
+
+function foundedMonths(value: string | undefined): string {
+  return value === "3" || value === "6" || value === "12" ? value : "";
+}
 
 /**
  * Bara aktiva företag som inte spärrat reklam.
@@ -133,21 +144,35 @@ type BuiltWhere =
   | { idle: false; empty: true }
   | { idle: false; empty: false; sql: string; args: Record<string, string> };
 
+function employeeClassValues(label: string): string[] {
+  return [...new Set(employeeBands(label).flatMap((band) => SIZE_VALUES[band] ?? []))];
+}
+
 function where(selection: Selection): BuiltWhere {
   const filter = selectionSniFilter(selection);
   if (filter.kind === "none") return { idle: false, empty: true };
-  const city = selection.city.trim();
+  const cities = listParts(selection.city);
   const forms = selection.forms ?? [];
-  const county = countyCode(selection.county ?? "");
-  const sizes = SIZE_VALUES[selection.employees ?? ""] ?? [];
-  const narrowed = Boolean(city || forms.length > 0 || county || sizes.length > 0);
+  const counties = listParts(selection.county ?? "").map(countyCode).filter((code): code is string => Boolean(code));
+  const sizes = employeeClassValues(selection.employees ?? "");
+  const months = foundedMonths(selection.founded);
+  const narrowed = Boolean(cities.length || forms.length > 0 || counties.length || sizes.length > 0 || months);
   if (filter.kind === "any" && !narrowed) return { idle: true };
 
   const clauses = [SELLABLE];
   const args: Record<string, string> = {};
-  if (city) {
-    clauses.push(`${CITY_SQL} LIKE @city`);
-    args.city = `%${foldCity(city)}%`;
+  if (cities.length || counties.length) {
+    const parts: string[] = [];
+    cities.forEach((city, index) => {
+      args[`city${index}`] = `%${foldCity(city)}%`;
+      parts.push(`${CITY_SQL} LIKE @city${index}`);
+    });
+    counties.forEach((code, index) => {
+      args[`county${index}`] = code;
+      args[`countyShort${index}`] = code.replace(/^0/, "");
+      parts.push(`(c.county_code = @county${index} OR c.county_code = @countyShort${index})`);
+    });
+    clauses.push(`(${parts.join(" OR ")})`);
   }
   if (filter.kind === "codes") {
     filter.codes.forEach((code, index) => {
@@ -164,11 +189,6 @@ function where(selection: Selection): BuiltWhere {
       "EXISTS (SELECT 1 FROM industries i WHERE i.org_nr = c.org_nr AND (i.sni LIKE @prefix OR replace(i.sni, '.', '') LIKE @prefix))",
     );
   }
-  if (county) {
-    args.county = county;
-    args.countyShort = county.replace(/^0/, "");
-    clauses.push("(c.county_code = @county OR c.county_code = @countyShort)");
-  }
   if (sizes.length > 0) {
     sizes.forEach((value, index) => {
       args[`size${index}`] = value;
@@ -184,6 +204,10 @@ function where(selection: Selection): BuiltWhere {
     });
     const names = codes.map((_, index) => `@form${index}`);
     clauses.push(`c.legal_form IN (${names.join(", ")})`);
+  }
+  if (months) {
+    args.startedAfter = `-${months} months`;
+    clauses.push(`length(trim(${START_DATE})) >= 10 AND ${START_DATE} >= date('now', @startedAfter)`);
   }
   return { idle: false, empty: false, sql: clauses.join(" AND "), args };
 }
@@ -304,11 +328,11 @@ function countWhere(file: string, sql: string, args: Record<string, string>, wit
 
 function exampleUrval(selection: Selection): UrvalResult {
   const filter = selectionSniFilter(selection);
-  const city = foldCity(selection.city.trim());
+  const cities = listParts(selection.city).map(foldCity);
   const forms = selection.forms ?? [];
-  const county = (selection.county ?? "").trim();
-  const employees = (selection.employees ?? "").trim();
-  const narrowed = Boolean(city || forms.length > 0 || county || employees);
+  const counties = listParts(selection.county ?? "");
+  const bands = employeeBands(selection.employees ?? "");
+  const narrowed = Boolean(cities.length || forms.length > 0 || counties.length || bands.length);
   if (filter.kind === "any" && !narrowed) {
     return {
       ...exampleEstimate(selection),
@@ -320,9 +344,12 @@ function exampleUrval(selection: Selection): UrvalResult {
   }
   const rows = COMPANIES.filter((company) => {
     if (forms.length > 0 && !forms.includes(company.form)) return false;
-    if (city && !foldCity(company.city).includes(city)) return false;
-    if (county && company.county !== county) return false;
-    if (employees && company.employees !== employees) return false;
+    if (cities.length || counties.length) {
+      const cityHit = cities.some((city) => foldCity(company.city).includes(city));
+      const countyHit = counties.includes(company.county);
+      if (!cityHit && !countyHit) return false;
+    }
+    if (bands.length && !bands.includes(company.employees)) return false;
     if (filter.kind === "codes" && !filter.codes.includes(company.sni)) return false;
     if (filter.kind === "prefix" && !company.sni.startsWith(filter.prefix)) return false;
     return true;

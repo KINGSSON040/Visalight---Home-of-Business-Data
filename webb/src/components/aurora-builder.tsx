@@ -4,14 +4,16 @@ import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useCountUp } from "@/components/count-up";
 import {
-  EMPLOYEE_BANDS,
+  EMPLOYEE_RANGES,
   FORM_GROUPS,
   INDUSTRIES,
   selectionIndustries,
   describeSelection,
+  listParts,
   selectionForCount,
   selectionToQuery,
   suggestSegment,
+  togglePart,
   type Selection,
   type Suggestion,
 } from "@/lib/catalog";
@@ -33,6 +35,24 @@ const QUICK_PLACES = [
 ];
 
 type Patch = (patch: Partial<Selection>) => void;
+
+function industryPairs(selection: Selection): { sni: string; label: string }[] {
+  const snis = listParts(selection.sni ?? "");
+  const labels = listParts(selection.bransch ?? "");
+  if (snis.length) {
+    return snis.map((sni, index) => ({
+      sni,
+      label: labels[index] || selectionIndustries().find((item) => item.sni === sni)?.label || sni,
+    }));
+  }
+  return labels.map((label) => ({ sni: "", label }));
+}
+
+function withIndustry(selection: Selection, sni: string, label: string): Partial<Selection> {
+  const pairs = industryPairs(selection);
+  const next = pairs.some((item) => item.sni === sni) ? pairs.filter((item) => item.sni !== sni) : [...pairs, { sni, label }];
+  return { sni: next.map((item) => item.sni).filter(Boolean).join(","), bransch: next.map((item) => item.label).join(",") };
+}
 
 function dotted(sni: string): string {
   return sni.length === 5 ? `${sni.slice(0, 2)}.${sni.slice(2)}` : sni;
@@ -67,14 +87,17 @@ export function AuroraBuilder({
     return () => window.clearTimeout(timer);
   }, [urval.companies]);
 
-  const bransch = (draft.bransch ?? "").trim();
-  const industryBricks =
-    draft.sni || bransch
-      ? [{ key: "bransch", text: draft.sni ? `${dotted(draft.sni)} ${selectionIndustries().find((item) => item.sni === draft.sni)?.label ?? bransch}` : bransch, clear: { sni: "", bransch: "" } }]
-      : [];
+  const industries = industryPairs(draft);
+  const cities = listParts(draft.city);
+  const counties = listParts(draft.county ?? "");
+  const industryBricks = industries.map((item) => ({
+    key: item.sni || item.label,
+    text: item.sni ? `${dotted(item.sni)} ${item.label}` : item.label,
+    clear: withIndustry(draft, item.sni, item.label),
+  }));
   const regionBricks = [
-    ...(draft.county ? [{ key: "lan", text: draft.county, clear: { county: "" } }] : []),
-    ...(draft.city.trim() ? [{ key: "ort", text: draft.city.trim(), clear: { city: "" } }] : []),
+    ...cities.map((city) => ({ key: `ort-${city}`, text: city, clear: { city: togglePart(draft.city, city) } })),
+    ...counties.map((county) => ({ key: `lan-${county}`, text: county, clear: { county: togglePart(draft.county ?? "", county) } })),
   ];
 
   return (
@@ -88,23 +111,23 @@ export function AuroraBuilder({
         <Step no="01" title="Bransch">
           <BrickSearch
             kinds={["bransch"]}
-            placeholder={industryBricks.length ? "Byt bransch…" : "Skriv bransch eller SNI, t.ex. frisör"}
+            placeholder={industryBricks.length ? "Lägg till bransch…" : "Skriv bransch eller SNI, t.ex. frisör"}
             label="Bransch eller SNI-kod"
             bricks={industryBricks}
             tone="green"
             onChange={onChange}
-            pick={(item) => onChange({ bransch: item.apply.bransch ?? "", sni: item.apply.sni ?? "", query: "" })}
+            pick={(item) => onChange({ ...withIndustry(draft, item.apply.sni ?? "", item.apply.bransch ?? item.title), query: "" })}
           />
           <div className="mt-1.5 flex flex-wrap gap-1.5">
             {QUICK_BRANSCH.map((item) => {
-              const on = draft.sni === item.sni;
+              const on = listParts(draft.sni).includes(item.sni);
               const industry = INDUSTRIES.find((row) => row.sni === item.sni);
               return (
                 <button
                   key={item.sni}
                   type="button"
                   aria-pressed={on}
-                  onClick={() => onChange(on ? { sni: "", bransch: "" } : { sni: item.sni, bransch: industry?.label ?? "" })}
+                  onClick={() => onChange(withIndustry(draft, item.sni, industry?.label ?? item.label))}
                   className="chip rounded-full px-2.5 py-1 text-xs font-semibold"
                 >
                   {item.label}
@@ -117,30 +140,36 @@ export function AuroraBuilder({
         <Step no="02" title="Region">
           <BrickSearch
             kinds={["ort", "lan"]}
-            placeholder={regionBricks.length ? "Lägg till ort eller byt län…" : "Hela Sverige, eller skriv ort eller län"}
+            placeholder={regionBricks.length ? "Lägg till ort eller län…" : "Hela Sverige, eller skriv ort eller län"}
             label="Ort eller län"
             bricks={regionBricks}
             tone="magenta"
             onChange={onChange}
-            pick={(item) => onChange(item.kind === "ort" ? { city: item.apply.city ?? "" } : { county: item.apply.county ?? "" })}
+            pick={(item) =>
+              onChange(
+                item.kind === "ort"
+                  ? { city: togglePart(draft.city, item.apply.city ?? item.title) }
+                  : { county: togglePart(draft.county ?? "", item.apply.county ?? "") },
+              )
+            }
           />
           <div className="mt-1.5 flex flex-wrap gap-1.5">
             <button
               type="button"
-              aria-pressed={!draft.city && !draft.county}
+              aria-pressed={cities.length === 0 && counties.length === 0}
               onClick={() => onChange({ city: "", county: "" })}
               className="chip rounded-full px-2.5 py-1 text-xs font-semibold"
             >
               Hela Sverige
             </button>
             {QUICK_PLACES.map((place) => {
-              const on = !draft.city && draft.county === place.county;
+              const on = counties.includes(place.county);
               return (
                 <button
                   key={place.county}
                   type="button"
                   aria-pressed={on}
-                  onClick={() => onChange({ city: "", county: on ? "" : place.county })}
+                  onClick={() => onChange({ county: togglePart(draft.county ?? "", place.county) })}
                   className="chip rounded-full px-2.5 py-1 text-xs font-semibold"
                 >
                   {place.label}
@@ -158,13 +187,38 @@ export function AuroraBuilder({
             className="field-box mt-1 h-10 w-full rounded-xl px-3 text-sm font-medium"
           >
             <option value="">Alla storlekar</option>
-            {EMPLOYEE_BANDS.map((band) => (
-              <option key={band} value={band}>
-                {band}
+            {EMPLOYEE_RANGES.map((range) => (
+              <option key={range.label} value={range.label}>
+                {range.label}
               </option>
             ))}
           </select>
         </label>
+
+        <div>
+          <p className="text-xs font-semibold">Nystartade</p>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            {[
+              { label: "Alla", value: "" },
+              { label: "3 månader", value: "3" },
+              { label: "6 månader", value: "6" },
+              { label: "12 månader", value: "12" },
+            ].map((choice) => (
+              <button
+                key={choice.label}
+                type="button"
+                aria-pressed={(draft.founded ?? "") === choice.value}
+                onClick={() => onChange({ founded: choice.value })}
+                className="chip rounded-full px-2.5 py-1 text-xs font-semibold"
+              >
+                {choice.label}
+              </button>
+            ))}
+          </div>
+          <p className="mt-1.5 text-xs leading-5 text-muted">
+            Registret synkas en gång i veckan. Nya bolag kommer med då.
+          </p>
+        </div>
 
         <Step
           no="03"

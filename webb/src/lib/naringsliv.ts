@@ -1,4 +1,4 @@
-import { COUNTIES, INDUSTRIES, selectionSniFilter, type Selection } from "@/lib/catalog";
+import { COUNTIES, INDUSTRIES, employeeBands, listParts, selectionSniFilter, type Selection } from "@/lib/catalog";
 import { quote } from "@/lib/pricing";
 import type { UrvalResult } from "@/lib/urval";
 
@@ -165,13 +165,26 @@ export function exampleEstimate(selection: Selection, stats: RegisterStats = exa
     share = known.length ? known.reduce((sum, code) => sum + EXAMPLE_INDUSTRY_COUNTS[code], 0) / stats.total : 0.004;
   }
   if (filter.kind === "prefix") share = 0.02;
-  const city = fold(selection.city ?? "");
-  const county = stats.byCounty.find((item) => item.label === (selection.county ?? "").trim());
-  if (city) share *= CITY_SHARE[city] ?? 0.006;
-  else if (county) share *= county.count / stats.total;
+  const cities = listParts(selection.city ?? "").map(fold);
+  const counties = listParts(selection.county ?? "");
+  if (cities.length || counties.length) {
+    let region = 0;
+    for (const city of cities) region += CITY_SHARE[city] ?? 0.006;
+    for (const label of counties) {
+      const row = stats.byCounty.find((item) => item.label === label);
+      if (row) region += row.count / stats.total;
+    }
+    share *= Math.min(1, region);
+  }
   const forms = selection.forms ?? [];
   if (forms.length) share *= Math.min(1, forms.reduce((sum, form) => sum + (FORM_SHARE[form] ?? 0.01), 0));
-  if (selection.employees) share *= SIZE_SHARE[selection.employees] ?? 0.01;
+  const bands = employeeBands(selection.employees ?? "");
+  if (bands.length) share *= Math.min(1, bands.reduce((sum, band) => sum + (SIZE_SHARE[band] ?? 0), 0));
+  const months = selection.founded === "3" || selection.founded === "6" || selection.founded === "12" ? Number(selection.founded) : 0;
+  if (months) {
+    const recent = stats.monthly.slice(-months).reduce((sum, row) => sum + row.count, 0);
+    share *= recent > 0 && stats.total > 0 ? recent / stats.total : 0;
+  }
   const companies = Math.round(stats.total * share);
   const withPhone = Math.round(companies * 0.62);
   const withEmail = Math.round(companies * 0.41);

@@ -26,6 +26,8 @@ export type Selection = {
   forms: string[];
   /** Storleksklass, samma text som i EMPLOYEE_BANDS. Tomt betyder alla storlekar. */
   employees: string;
+  /** Nystartade: "3", "6" eller "12" månader. Tomt betyder alla åldrar. */
+  founded: string;
   phones: boolean;
   signatory: boolean;
   emails: boolean;
@@ -229,6 +231,30 @@ export function countyCode(label: string): string | null {
 /** Storleksklasser i samma indelning som SCB brukar redovisa anställda. */
 export const EMPLOYEE_BANDS = ["0", "1–4", "5–9", "10–19", "20–49", "50–99", "100–199", "200 eller fler"];
 
+/** Intervall som täcker flera storleksklasser. Byggaren väljer ett intervall, inte en enda klass. */
+export const EMPLOYEE_RANGES: { label: string; bands: string[] }[] = [
+  { label: "1–9", bands: ["1–4", "5–9"] },
+  { label: "10–49", bands: ["10–19", "20–49"] },
+  { label: "50–99", bands: ["50–99"] },
+  { label: "1–99", bands: ["1–4", "5–9", "10–19", "20–49", "50–99"] },
+];
+
+export function listParts(value: string): string[] {
+  return value.split(",").map((part) => part.trim()).filter(Boolean);
+}
+
+export function togglePart(current: string, value: string): string {
+  const items = listParts(current);
+  const next = items.includes(value) ? items.filter((item) => item !== value) : [...items, value];
+  return next.join(",");
+}
+
+export function employeeBands(label: string): string[] {
+  const range = EMPLOYEE_RANGES.find((item) => item.label === label);
+  if (range) return range.bands;
+  return EMPLOYEE_BANDS.includes(label) ? [label] : [];
+}
+
 /** Påhittade bolag. Tomma kontaktfält är tomma med flit. */
 export const COMPANIES: Company[] = [
   company("559100-1001", "Exempelbageriet Nord AB", "Exempelgatan 4", "111 22", "Stockholm", "56110", ["010-000 00 01", "010-000 00 02"], ["010-000 00 91"], ["bakern@exempel.test"], "ab"),
@@ -271,6 +297,7 @@ export const defaultSelection: Selection = {
   sni: "",
   forms: [],
   employees: "",
+  founded: "",
   phones: true,
   signatory: true,
   emails: true,
@@ -302,6 +329,7 @@ export function hasSegment(selection: Selection): boolean {
       (selection.bransch ?? "").trim() ||
       selection.sni ||
       (selection.employees ?? "").trim() ||
+      (selection.founded ?? "").trim() ||
       formsOf(selection).length > 0,
   );
 }
@@ -494,10 +522,16 @@ function spellingsFor(digits: string): string[] {
   return [...new Set([digits, industry?.sni ?? "", ...(industry?.legacy ?? [])].flatMap(sniSpellings))];
 }
 
+function sniTokens(value: string): string[] {
+  return listParts(value)
+    .map((part) => (LEGACY_SNI[part] ?? part).replace(/\D/g, ""))
+    .filter((code) => code.length >= 2);
+}
+
 /** Vilka SNI-koder ett kundurval ska träffa, inklusive SNI 2007 om registret fortfarande har den. */
 export function selectionSniFilter(selection: { sni?: string; bransch?: string; query?: string }): SniFilter {
-  const chosen = (selection.sni ?? "").replace(/\D/g, "");
-  if (chosen) return { kind: "codes", codes: spellingsFor(chosen) };
+  const chosen = sniTokens(selection.sni ?? "");
+  if (chosen.length) return { kind: "codes", codes: [...new Set(chosen.flatMap(spellingsFor))] };
   const text = [selection.bransch ?? "", selection.query ?? ""].join(" ").trim();
   if (!text) return { kind: "any" };
   const needle = fold(text);
@@ -669,6 +703,7 @@ export function selectionToQuery(selection: Selection): string {
   if ((selection.bransch ?? "").trim()) params.set("bransch", selection.bransch.trim());
   if (selection.sni) params.set("sni", selection.sni);
   if ((selection.employees ?? "").trim()) params.set("anst", selection.employees.trim());
+  if ((selection.founded ?? "").trim()) params.set("nya", selection.founded.trim());
   const forms = formsOf(selection);
   if (forms.length) params.set("form", forms.join(","));
   params.set("tel", selection.phones ? "1" : "0");
@@ -677,39 +712,41 @@ export function selectionToQuery(selection: Selection): string {
   return params.toString();
 }
 
-export function selectionFromQuery(params: URLSearchParams): Selection {
-  const sniParam = (LEGACY_SNI[params.get("sni") ?? ""] ?? params.get("sni") ?? "").replace(/\D/g, "");
-  const branschParam = params.get("bransch") ?? "";
+function industryToken(token: string): { sni: string; label: string } | null {
+  const digits = (LEGACY_SNI[token] ?? token).replace(/\D/g, "");
   const pool = selectionIndustries();
   const byLabel = pool.find(
-    (item) =>
-      branschParam &&
-      (fold(item.label) === fold(branschParam) || item.words.some((word) => fold(word) === fold(branschParam))),
+    (item) => fold(item.label) === fold(token) || item.words.some((word) => fold(word) === fold(token)),
   );
-  const byCode = pool.find(
-    (item) => item.sni === sniParam || (item.legacy ?? []).some((code) => code.replace(/\D/g, "") === sniParam),
-  );
-  let sni = "";
-  let bransch = branschParam;
-  if (byLabel) {
-    sni = byLabel.sni;
-    bransch = byLabel.label;
-  } else if (byCode) {
-    sni = byCode.sni;
-    bransch = branschParam || byCode.label;
+  const byCode = digits
+    ? pool.find((item) => item.sni === digits || (item.legacy ?? []).some((code) => code.replace(/\D/g, "") === digits))
+    : undefined;
+  const hit = byLabel ?? byCode;
+  return hit ? { sni: hit.sni, label: hit.label } : null;
+}
+
+export function selectionFromQuery(params: URLSearchParams): Selection {
+  const resolved = new Map<string, string>();
+  for (const token of [...listParts(params.get("bransch") ?? ""), ...sniTokens(params.get("sni") ?? "")]) {
+    const hit = industryToken(token);
+    if (hit) resolved.set(hit.sni, hit.label);
   }
+  const anst = params.get("anst") ?? "";
   const forms = (params.get("form") ?? "")
     .split(",")
     .map((code) => code.trim())
     .filter((code) => LEGAL_FORMS.some((item) => item.code === code));
   return {
     query: params.get("q") ?? "",
-    city: params.get("ort") ?? "",
-    county: COUNTIES.some((item) => item.label === (params.get("lan") ?? "")) ? (params.get("lan") ?? "") : "",
-    bransch,
-    sni,
+    city: listParts(params.get("ort") ?? "").join(","),
+    county: listParts(params.get("lan") ?? "")
+      .filter((label) => COUNTIES.some((item) => item.label === label))
+      .join(","),
+    bransch: resolved.size ? [...resolved.values()].join(",") : listParts(params.get("bransch") ?? "").join(","),
+    sni: [...resolved.keys()].join(","),
     forms,
-    employees: EMPLOYEE_BANDS.includes(params.get("anst") ?? "") ? (params.get("anst") ?? "") : "",
+    employees: EMPLOYEE_RANGES.some((item) => item.label === anst) || EMPLOYEE_BANDS.includes(anst) ? anst : "",
+    founded: ["3", "6", "12"].includes(params.get("nya") ?? "") ? (params.get("nya") ?? "") : "",
     phones: params.get("tel") !== "0",
     signatory: params.get("firma") !== "0",
     emails: params.get("epost") !== "0",
@@ -733,6 +770,7 @@ export function sameSearch(a: Selection, b: Selection): boolean {
     (a.bransch ?? "").trim() === (b.bransch ?? "").trim() &&
     (a.sni ?? "") === (b.sni ?? "") &&
     (a.employees ?? "").trim() === (b.employees ?? "").trim() &&
+    (a.founded ?? "").trim() === (b.founded ?? "").trim() &&
     forms(a) === forms(b)
   );
 }
@@ -748,25 +786,29 @@ export function filterCompanies(selection: Selection): Company[] {
   const raw = fold(selection.query.trim());
   const queryDigits = selection.query.replace(/\D/g, "");
   const orgQuery = selection.query.trim().toLowerCase().replace(/[-\s]/g, "");
-  const bransch = (selection.bransch ?? "").trim();
-  const branschFold = fold(bransch);
-  const branschDigits = bransch.replace(/\D/g, "");
-  const cityFold = fold(selection.city.trim());
+  const branscher = listParts(selection.bransch ?? "");
+  const cities = listParts(selection.city).map(fold);
+  const counties = listParts(selection.county ?? "");
+  const bands = employeeBands(selection.employees ?? "");
+  const snis = listParts(selection.sni ?? "");
 
   return COMPANIES.filter((item) => {
     if (forms.length > 0 && !forms.includes(item.form)) return false;
-    if (cityFold) {
+    if (cities.length || counties.length) {
       const itemCity = fold(item.city);
-      if (itemCity !== cityFold && !itemCity.includes(cityFold)) return false;
+      const cityHit = cities.some((city) => itemCity === city || itemCity.includes(city));
+      const countyHit = counties.includes(item.county);
+      if (!cityHit && !countyHit) return false;
     }
-    if ((selection.county ?? "").trim() && item.county !== selection.county.trim()) return false;
-    if ((selection.employees ?? "").trim() && item.employees !== selection.employees.trim()) return false;
+    if (bands.length && !bands.includes(item.employees)) return false;
     const industry = INDUSTRIES.find((entry) => entry.sni === item.sni);
-    if (selection.sni) {
-      if (!item.sni.startsWith(selection.sni)) return false;
-    } else if (bransch) {
-      const labelHit = fold(item.industry).includes(branschFold);
-      const wordHit = industry ? industryMatches(industry, branschFold, branschDigits) : false;
+    if (snis.length) {
+      if (!snis.some((code) => item.sni === code || item.sni.startsWith(code))) return false;
+    } else if (branscher.length) {
+      const labelHit = branscher.some((name) => fold(item.industry).includes(fold(name)));
+      const wordHit = industry
+        ? branscher.some((name) => industryMatches(industry, fold(name), name.replace(/\D/g, "")))
+        : false;
       if (!labelHit && !wordHit) return false;
     }
     if (!raw) return true;
@@ -823,13 +865,14 @@ export function summarize(selection: Selection): Summary {
 
 export function describeSelection(selection: Selection): string {
   const forms = formsOf(selection).map(legalFormLabel);
-  const bransch = (selection.bransch ?? "").trim();
+  const places = [...listParts(selection.city), ...listParts(selection.county ?? "")];
+  const branscher = listParts(selection.bransch ?? "");
   const parts = [
-    selection.city.trim() || (selection.county ?? "").trim() || "Alla områden",
-    selection.city.trim() && (selection.county ?? "").trim() ? selection.county.trim() : "",
-    bransch || (selection.sni ? industryLabel(selection.sni) : "Alla branscher"),
+    places.join(", ") || "Alla områden",
+    branscher.join(", ") || (selection.sni ? listParts(selection.sni).map(industryLabel).join(", ") : "Alla branscher"),
     forms.length ? forms.join(", ") : "Alla bolagsformer",
     (selection.employees ?? "").trim() ? `${selection.employees.trim()} anställda` : "",
+    (selection.founded ?? "").trim() ? `Nystartade ${selection.founded.trim()} månader` : "",
   ].filter(Boolean);
   if (selection.query.trim()) parts.push(`"${selection.query.trim()}"`);
   return parts.join(" · ");

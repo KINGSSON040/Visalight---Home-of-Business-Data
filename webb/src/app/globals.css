@@ -442,11 +442,11 @@ body:has(.customer-site) {
 .bar-track { background: #f3e9f0; }
 
 .bar-fill {
-  background: #1b1023;
+  background: #f0a3cc;
   transition: width 1.1s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.bar-fill.magenta { background: #1b1023; }
+.bar-fill.magenta { background: #d6007a; }
 
 .marquee { mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
 

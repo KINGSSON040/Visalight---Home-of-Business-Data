@@ -69,12 +69,12 @@ function Sparkline({ values }: { values: number[] }) {
     <svg viewBox="0 0 100 32" preserveAspectRatio="none" className="mt-2 h-10 w-full" role="img" aria-label="Nya företag per månad, senaste tolv månaderna">
       <defs>
         <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#1b1023" stopOpacity="0.4" />
-          <stop offset="1" stopColor="#1b1023" stopOpacity="0" />
+          <stop offset="0" stopColor="#d6007a" stopOpacity="0.35" />
+          <stop offset="1" stopColor="#d6007a" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={`0,32 ${points.join(" ")} 100,32`} fill="url(#spark-fill)" />
-      <polyline points={points.join(" ")} fill="none" stroke="#1b1023" strokeWidth="1.8" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+      <polyline points={points.join(" ")} fill="none" stroke="#d6007a" strokeWidth="1.8" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -162,7 +162,7 @@ export function MonthlyChart({ stats }: { stats: RegisterStats }) {
           <div key={item.month} className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1">
             <span className="text-[0.6rem] text-muted tabular-nums sm:text-[0.65rem]">{formatCount(item.count)}</span>
             <span
-              className="w-full rounded-t-sm bg-[#1b1023] transition-[height] duration-1000 ease-out motion-reduce:transition-none"
+              className="w-full rounded-t-sm bg-[#f0a3cc] transition-[height] duration-1000 ease-out motion-reduce:transition-none"
               style={{ height: seen ? `${(item.count / max) * 78}%` : "0%" }}
             />
             <span className="text-[0.65rem] text-muted">{monthLabel(item.month)}</span>
