@@ -121,7 +121,7 @@ export function CustomerHome({
       <section className="mx-auto grid max-w-6xl items-start gap-x-12 gap-y-8 px-4 pt-8 pb-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:pt-12">
         <div className="min-w-0 lg:pt-2">
           <p className="text-xs font-semibold tracking-[0.14em] text-muted uppercase">Företagsdata</p>
-          <h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] sm:text-5xl lg:text-6xl">
+          <h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.03em] text-magenta sm:text-5xl lg:text-6xl">
             Alla Sveriges företag.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-muted">
